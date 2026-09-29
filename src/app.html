@@ -6,15 +6,15 @@
 :root{
   --bg:#F5F3F7;--surface:#FFFFFF;--ink:#221A2B;--muted:#6B6177;--line:#E3DDE9;
   --accent:#A8234A;--accent-ink:#FFFFFF;--accent-soft:#F6E3EA;
-  --ok:#3F7A2E;--ok-soft:#E5F0DF;--warn:#9A5E0C;--warn-soft:#F7ECDA;
-  --shadow:0 1px 2px rgba(34,26,43,.06),0 6px 20px rgba(34,26,43,.06);--shadow-up:0 -4px 20px rgba(34,26,43,.08);
+  --ok:#3A722A;--ok-soft:#E5F0DF;--warn:#8F570A;--warn-soft:#F7ECDA;
+  --field:#8F859B;--shadow:0 1px 2px rgba(34,26,43,.06),0 6px 20px rgba(34,26,43,.06);--shadow-up:0 -4px 20px rgba(34,26,43,.08);
   --display:"Secular One","Assistant",Arial,sans-serif;
   --body:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
-    --bg:#151119;--surface:#1F1925;--ink:#EFE9F3;--muted:#A69BB2;--line:#342B3D;
+    --bg:#151119;--surface:#1F1925;--ink:#EFE9F3;--muted:#A69BB2;--line:#342B3D;--field:#75697F;
     --accent:#F06C90;--accent-ink:#1A0F14;--accent-soft:#3A1C27;
     --ok:#8CC77A;--ok-soft:#1F2D1B;--warn:#E0A955;--warn-soft:#33260F;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);--shadow-up:0 -4px 20px rgba(0,0,0,.35);
@@ -22,7 +22,7 @@
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --bg:#151119;--surface:#1F1925;--ink:#EFE9F3;--muted:#A69BB2;--line:#342B3D;
+  --bg:#151119;--surface:#1F1925;--ink:#EFE9F3;--muted:#A69BB2;--line:#342B3D;--field:#75697F;
   --accent:#F06C90;--accent-ink:#1A0F14;--accent-soft:#3A1C27;
   --ok:#8CC77A;--ok-soft:#1F2D1B;--warn:#E0A955;--warn-soft:#33260F;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);--shadow-up:0 -4px 20px rgba(0,0,0,.35);
@@ -55,7 +55,7 @@ h1 span{color:var(--accent)}
 .banner{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:14px}
 .banner button{font:600 13px var(--body);border:1px solid currentColor;background:transparent;color:inherit;border-radius:999px;padding:4px 12px;cursor:pointer}
 .search{display:flex;gap:8px;margin-bottom:14px}
-input[type="search"],input[type="text"]{width:100%;font:16px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+input[type="search"],input[type="text"]{width:100%;font:16px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--field);border-radius:10px;padding:10px 12px}
 :is(input,select,textarea,button,a,summary):focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 :is(input,select,textarea):focus{border-color:var(--accent)}
 .btn,.chip,.bchip,.buy a,.buy button,.tabs button,.way,.ob-res{transition:background .15s,border-color .15s,color .15s,transform .1s,filter .15s}
@@ -129,7 +129,7 @@ details[open] summary::before{transform:rotate(-90deg)}
 .brow:last-child{border-bottom:0}
 .brow-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .brow-h b{font-size:15px}
-select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:7px 10px;max-width:100%}
+select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--field);border-radius:10px;padding:7px 10px;max-width:100%}
 .bchip{font:600 13px var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:4px 10px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .bchip small{color:var(--muted);font-weight:400}
 .bchip .x{opacity:.6}
@@ -183,13 +183,20 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
   .tabs .tab-d{display:none}
   .tabs .count{position:absolute;top:1px;inset-inline-end:calc(50% - 36px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:var(--accent-ink);font-size:11px;line-height:18px;text-align:center}
   .tabs .count:empty{display:none}
+  html{scroll-padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   .chip{min-height:40px}
+  .chips,.seg{gap:8px}
   .bchip{min-height:36px}
   .ob-skip{min-height:44px;padding:8px 12px}
   .jump{display:inline-block}
   #typeSeg,#styleSeg,#suggestSeg{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding:2px 16px 6px;-webkit-mask-image:linear-gradient(to left,#000 88%,transparent);mask-image:linear-gradient(to left,#000 88%,transparent)}
   #typeSeg::-webkit-scrollbar,#styleSeg::-webkit-scrollbar,#suggestSeg::-webkit-scrollbar{display:none}
   #typeSeg .chip,#styleSeg .chip,#suggestSeg .chip{flex:none;white-space:nowrap}
+}
+@media (max-width:860px) and (max-height:500px){
+  .tabs button{flex-direction:row;gap:6px;min-height:44px}
+  .tabs .count{position:static}
+  .app{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
 }
 .menu-top{display:grid;gap:12px}
 .photo-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -214,7 +221,7 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
 .fields select{flex:none;width:66px;min-width:66px}
 .fields input{min-width:0}
 .fields label{display:grid;gap:2px;font-size:12px;color:var(--muted);font-weight:600}
-.fields input{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 8px;width:100%;font-variant-numeric:tabular-nums}
+.fields input{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--field);border-radius:8px;padding:7px 8px;width:100%;font-variant-numeric:tabular-nums}
 .wine .meta{font-size:12px;color:var(--muted)}
 .stats{display:grid;gap:4px;font-size:14px}
 .stats .row{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed var(--line);padding-bottom:3px}
@@ -226,7 +233,7 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
 .verdict.bad{background:var(--warn-soft);color:var(--warn)}
 .paste{margin-top:10px}
 .paste summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--accent)}
-.paste textarea{width:100%;font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;resize:vertical}
+.paste textarea{width:100%;font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--field);border-radius:10px;padding:10px;margin:8px 0;resize:vertical}
 .menu-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .ob{position:fixed;inset:0;z-index:50;background:var(--bg);overflow-y:auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 .ob-in{max-width:600px;margin:0 auto;padding-inline:16px;padding-block:20px 120px;display:grid;gap:16px}
@@ -281,7 +288,7 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
   </header>
 
   <nav class="tabs" role="tablist">
-    <button role="tab" class="tab-m" aria-selected="false" data-tab="bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4v4l2 3v12a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V9l2-3z"/><path d="M8 13h8"/></svg>הבר שלי <span class="count" id="tabCount"></span></button>
+    <button role="tab" class="tab-m" aria-selected="false" data-tab="bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4v4l2 3v12a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V9l2-3z"/><path d="M8 13h8"/></svg>הבר שלי <span class="count" id="tabCount" aria-hidden="true"></span></button>
     <button role="tab" class="tab-m" aria-selected="true" data-tab="mix"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16l-8 9z"/><path d="M12 13v7M8 20h8"/><path d="M15 2l-2 5"/></svg>מה נכין?</button>
     <button role="tab" class="tab-d" aria-selected="true" data-tab="home">הבר והמתכונים</button>
     <button role="tab" aria-selected="false" data-tab="shop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>לקנות</button>
@@ -1118,7 +1125,9 @@ function renderInventory(){
   const cc=$("customChips");cc.innerHTML="";
   state.custom.forEach((name,idx)=>cc.append(el("button",{type:"button",class:"chip","aria-pressed":"true","aria-label":"הסרת "+name,onclick:()=>{state.custom.splice(idx,1);commit()}},name,el("span",{class:"x"},"✕"))));
   $("exampleBanner").hidden=!state.example;
-  $("tabCount").textContent=(state.items.length+state.custom.length)||"";
+  const nItems=state.items.length+state.custom.length;
+  $("tabCount").textContent=nItems||"";
+  $("tabCount").parentElement.setAttribute("aria-label","הבר שלי"+(nItems?", "+nItems+" פריטים":""));
   renderBottles();
 }
 

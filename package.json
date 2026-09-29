@@ -1,0 +1,14 @@
+{
+  "name": "home-bar",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "npm run build && vercel dev"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.129.0",
+    "@supabase/supabase-js": "^2.117.2"
+  },
+  "engines": { "node": ">=20" }
+}

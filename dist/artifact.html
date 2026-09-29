@@ -200,6 +200,7 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
 }
 .menu-top{display:grid;gap:12px}
 .photo-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.photo-row[hidden]{display:none}
 .photo-row input[type="file"]{font:14px var(--body);color:var(--ink);max-width:100%}
 .status{font-size:13px;color:var(--muted);min-height:1.2em}
 .status.err{color:var(--warn)}
@@ -506,7 +507,9 @@ const PLATFORM=window.HB_PLATFORM||{
   async ai(){
     const s=window.claude&&window.claude.use?await window.claude.use("sample"):null;
     if(!s)return null;
-    return {json:(task,params,opts={})=>{const t=HB_PROMPTS[task](params);return s.json(t.prompt,{images:opts.images,signal:opts.signal,modelTier:t.tier})}};
+    return {json:(task,params,opts={})=>{const t=HB_PROMPTS[task](params);return s.json(t.prompt,{images:opts.images,signal:opts.signal,modelTier:t.tier})},
+      // false when this view can't send photos (e.g. some phone apps); null when it can't tell
+      images:()=>s.limits?s.limits().then(c=>!!(c&&c.images),()=>null):Promise.resolve(null)};
   },
   // This person's bar document: {ref:{get,set,onSnapshot}, legacy?} or null (browser-only storage)
   async bar(){
@@ -1620,6 +1623,8 @@ function sampleError(e){
 let photoUnsupported=false;
 function markNoImages(){
   photoUnsupported=true;$("menuPhoto").disabled=true;$("readMenu").disabled=true;$("pasteBox").open=true;obSetPhoto(false);
+  document.querySelector("#photoBox .photo-row").hidden=true;
+  setStatus("צילום לא זמין בתצוגה הזאת (בטלפון זה קורה לרוב באפליקציה של Claude). אפשר לפתוח את הקישור בדפדפן, או להדביק טקסט מהתפריט.");
 }
 // Re-encode to JPEG (max 1600 px) so iPhone HEIC photos and huge files are accepted.
 async function prepImage(file){
@@ -1720,8 +1725,9 @@ $("menuCountry").addEventListener("change",e=>{shop.country=e.target.value;setPr
   try{
     sampleApi=await PLATFORM.ai();
     if(!sampleApi)throw 0;
-    // Photos stay enabled; a real images_unavailable rejection is what turns them off.
-    obSetPhoto(true);
+    // Ask up front whether this view can send photos; if it can't tell, keep them on and let a real rejection decide.
+    const img=sampleApi.images?await sampleApi.images():null;
+    if(img===false)markNoImages();else obSetPhoto(true);
     renderMenu();
   }catch(e){sampleApi=null;$("photoBox").hidden=true;setTimeout(()=>obSetPhoto(false),0);renderMenu()}
 })();

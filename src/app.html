@@ -7,7 +7,7 @@
   --bg:#F5F3F7;--surface:#FFFFFF;--ink:#221A2B;--muted:#6B6177;--line:#E3DDE9;
   --accent:#A8234A;--accent-ink:#FFFFFF;--accent-soft:#F6E3EA;
   --ok:#3F7A2E;--ok-soft:#E5F0DF;--warn:#9A5E0C;--warn-soft:#F7ECDA;
-  --shadow:0 1px 2px rgba(34,26,43,.06),0 6px 20px rgba(34,26,43,.06);
+  --shadow:0 1px 2px rgba(34,26,43,.06),0 6px 20px rgba(34,26,43,.06);--shadow-up:0 -4px 20px rgba(34,26,43,.08);
   --display:"Secular One","Assistant",Arial,sans-serif;
   --body:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
 }
@@ -17,7 +17,7 @@
     --bg:#151119;--surface:#1F1925;--ink:#EFE9F3;--muted:#A69BB2;--line:#342B3D;
     --accent:#F06C90;--accent-ink:#1A0F14;--accent-soft:#3A1C27;
     --ok:#8CC77A;--ok-soft:#1F2D1B;--warn:#E0A955;--warn-soft:#33260F;
-    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);--shadow-up:0 -4px 20px rgba(0,0,0,.35);
   }
 }
 :root[data-theme="dark"]{
@@ -25,7 +25,7 @@
   --bg:#151119;--surface:#1F1925;--ink:#EFE9F3;--muted:#A69BB2;--line:#342B3D;
   --accent:#F06C90;--accent-ink:#1A0F14;--accent-soft:#3A1C27;
   --ok:#8CC77A;--ok-soft:#1F2D1B;--warn:#E0A955;--warn-soft:#33260F;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);--shadow-up:0 -4px 20px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
@@ -38,7 +38,9 @@ h1 span{color:var(--accent)}
 .sync i{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
 .sync.on i{background:var(--ok)}
 .tabs{display:flex;max-width:520px;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;margin-bottom:16px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;box-shadow:var(--shadow)}
-.tabs button{flex:1;border:0;background:transparent;color:var(--ink);font:600 15px var(--body);padding:9px 10px;border-radius:999px;cursor:pointer}
+.tabs button{flex:1;border:0;background:transparent;color:var(--ink);font:600 15px var(--body);padding:9px 10px;border-radius:999px;cursor:pointer;position:relative}
+.tabs svg{display:none;width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabs button:not([aria-selected="true"]):hover{background:var(--accent-soft)}
 .tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
 .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:24px;align-items:start}
 @media (max-width:860px){
@@ -54,7 +56,14 @@ h1 span{color:var(--accent)}
 .banner button{font:600 13px var(--body);border:1px solid currentColor;background:transparent;color:inherit;border-radius:999px;padding:4px 12px;cursor:pointer}
 .search{display:flex;gap:8px;margin-bottom:14px}
 input[type="search"],input[type="text"]{width:100%;font:16px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+:is(input,select,textarea,button,a,summary):focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+:is(input,select,textarea):focus{border-color:var(--accent)}
+.btn,.chip,.bchip,.buy a,.buy button,.tabs button,.way,.ob-res{transition:background .15s,border-color .15s,color .15s,transform .1s,filter .15s}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost:hover{background:var(--accent-soft);filter:none}
+:is(.btn,.chip,.bchip,.way,.ob-res,.buy a,.buy button):active{transform:scale(.97)}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none;transform:none}
+.bchip:hover{border-color:var(--accent)}
 .cat{margin-top:14px}
 .cat:first-of-type{margin-top:0}
 .cat-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
@@ -73,7 +82,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline
 .count{font-variant-numeric:tabular-nums}
 
 .mood{display:grid;gap:14px;margin-bottom:18px}
-.mood label.lbl{display:block;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+.lbl{display:block;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 .seg .chip[aria-pressed="true"]::before{content:none}
 .mood-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -95,6 +104,8 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline
 .tag{font-size:12px;background:var(--accent-soft);color:var(--ink);border-radius:6px;padding:1px 8px}
 .missing{font-size:13px;background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:4px 8px}
 details summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--accent);list-style:none}
+.drink details{margin-top:auto;border-top:1px solid var(--line);padding-top:4px}
+.drink details summary{display:flex;align-items:center;min-height:36px}
 details summary::-webkit-details-marker{display:none}
 details summary::before{content:"◂ ";display:inline-block;transition:transform .15s}
 details[open] summary::before{transform:rotate(-90deg)}
@@ -140,7 +151,7 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
 .shop-controls label{display:grid;gap:4px;font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--muted)}
 .suggest{margin-bottom:16px}
 .suggest .chip small{font-weight:400;opacity:.85}
-.shop-filters{display:grid;gap:10px;margin-bottom:6px}
+.shop-filters{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-bottom:6px}
 .shop-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:12px}
 .bottle-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow)}
 .bottle-card h4{margin:0;font-size:18px}
@@ -159,12 +170,34 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
 .missing button{font:700 12px var(--body);background:transparent;border:0;color:inherit;text-decoration:underline;cursor:pointer;padding:0 4px}
 .app:not([data-view="menu"]) #pane-menu{display:none}
 @media (min-width:861px){.app[data-view="menu"] .grid{display:none}}
-@media (max-width:480px){.tabs button{font-size:13.5px;padding:8px 4px}.tabs .count{display:none}}
+/* phones: bottom tab bar, compact header, bigger tap targets, scrolling chip rows */
+.jump{display:none}
+@media (max-width:860px){
+  .app{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+  header.top{flex-wrap:nowrap;align-items:center;margin-bottom:12px}
+  .tagline{display:none}
+  .tabs{position:fixed;top:auto;bottom:0;inset-inline:0;max-width:none;margin:0;gap:4px;border-radius:18px 18px 0 0;border-width:1px 0 0;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:var(--shadow-up);z-index:20}
+  .tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:54px;padding:6px 2px;border-radius:12px;font-size:12.5px;line-height:1.2}
+  .tabs button[aria-selected="true"]{background:var(--accent-soft);color:var(--accent)}
+  .tabs svg{display:block}
+  .tabs .tab-d{display:none}
+  .tabs .count{position:absolute;top:1px;inset-inline-end:calc(50% - 36px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:var(--accent-ink);font-size:11px;line-height:18px;text-align:center}
+  .tabs .count:empty{display:none}
+  .chip{min-height:40px}
+  .bchip{min-height:36px}
+  .ob-skip{min-height:44px;padding:8px 12px}
+  .jump{display:inline-block}
+  #typeSeg,#styleSeg,#suggestSeg{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding:2px 16px 6px;-webkit-mask-image:linear-gradient(to left,#000 88%,transparent);mask-image:linear-gradient(to left,#000 88%,transparent)}
+  #typeSeg::-webkit-scrollbar,#styleSeg::-webkit-scrollbar,#suggestSeg::-webkit-scrollbar{display:none}
+  #typeSeg .chip,#styleSeg .chip,#suggestSeg .chip{flex:none;white-space:nowrap}
+}
 .menu-top{display:grid;gap:12px}
 .photo-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .photo-row input[type="file"]{font:14px var(--body);color:var(--ink);max-width:100%}
 .status{font-size:13px;color:var(--muted);min-height:1.2em}
 .status.err{color:var(--warn)}
+#bottleRows>.status{margin:6px 0 0}
+#bottleRows>.status:empty{min-height:0;margin:0}
 .summary{background:var(--ok-soft);color:var(--ink);border-radius:12px;padding:12px 14px;display:grid;gap:4px;margin:16px 0 4px}
 .summary b{color:var(--ok)}
 .summary.plain{background:var(--surface);border:1px solid var(--line)}
@@ -248,11 +281,11 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
   </header>
 
   <nav class="tabs" role="tablist">
-    <button role="tab" class="tab-m" aria-selected="false" data-tab="bar">הבר שלי <span class="count" id="tabCount"></span></button>
-    <button role="tab" class="tab-m" aria-selected="true" data-tab="mix">מה נכין?</button>
+    <button role="tab" class="tab-m" aria-selected="false" data-tab="bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4v4l2 3v12a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V9l2-3z"/><path d="M8 13h8"/></svg>הבר שלי <span class="count" id="tabCount"></span></button>
+    <button role="tab" class="tab-m" aria-selected="true" data-tab="mix"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16l-8 9z"/><path d="M12 13v7M8 20h8"/><path d="M15 2l-2 5"/></svg>מה נכין?</button>
     <button role="tab" class="tab-d" aria-selected="true" data-tab="home">הבר והמתכונים</button>
-    <button role="tab" aria-selected="false" data-tab="shop">לקנות</button>
-    <button role="tab" aria-selected="false" data-tab="menu">במסעדה</button>
+    <button role="tab" aria-selected="false" data-tab="shop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>לקנות</button>
+    <button role="tab" aria-selected="false" data-tab="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8l-.5 6a3.5 3.5 0 0 1-7 0z"/><path d="M12 12.5V20M8.5 20h7"/></svg>במסעדה</button>
   </nav>
 
   <div class="grid">
@@ -314,6 +347,7 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
         <div class="mood-actions">
           <button class="btn" type="button" id="surpriseBtn">תפתיעו אותי</button>
           <button class="btn ghost" type="button" id="resetMood">איפוס בחירה</button>
+          <button class="btn ghost jump" type="button" id="jumpResults">לתוצאות</button>
         </div>
       </div>
 
@@ -353,7 +387,7 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
     <div class="card menu-top">
       <div>
         <label class="lbl" for="wineSearch">הוספת יין מהתפריט</label>
-        <input type="search" id="wineSearch" placeholder="שם היין, למשל ירדן קברנה או Cloudy Bay" autocomplete="off">
+        <input type="search" id="wineSearch" placeholder="שם היין, למשל ירדן קברנה" autocomplete="off">
         <div class="ob-results" id="wineResults" style="margin-top:8px"></div>
       </div>
       <div id="photoBox">
@@ -1084,7 +1118,7 @@ function renderInventory(){
   const cc=$("customChips");cc.innerHTML="";
   state.custom.forEach((name,idx)=>cc.append(el("button",{type:"button",class:"chip","aria-pressed":"true","aria-label":"הסרת "+name,onclick:()=>{state.custom.splice(idx,1);commit()}},name,el("span",{class:"x"},"✕"))));
   $("exampleBanner").hidden=!state.example;
-  $("tabCount").textContent="("+(state.items.length+state.custom.length)+")";
+  $("tabCount").textContent=(state.items.length+state.custom.length)||"";
   renderBottles();
 }
 
@@ -1113,7 +1147,7 @@ function addToBar(e){
 function makeableCount(){const H=have();return DRINKS.filter(d=>!analyze(d,H).length).length}
 function renderBottles(){
   const box=$("bottleRows");box.innerHTML="";
-  const inp=el("input",{type:"search",id:"bottleSearch",placeholder:"חיפוש בקבוק: Woodford Double Oaked, לפרויג, קואנטרו…",autocomplete:"off",value:bottleQ});
+  const inp=el("input",{type:"search",id:"bottleSearch",placeholder:"חיפוש בקבוק: לפרויג, קואנטרו…",autocomplete:"off",value:bottleQ});
   const res=el("div",{class:"ob-results",style:"margin-top:8px"});
   inp.addEventListener("input",()=>{bottleQ=inp.value;finder(res,bottleQ,addToBar)});
   inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();const f=res.querySelector(".ob-res");if(f)f.click()}});
@@ -1214,6 +1248,7 @@ function renderResults(){
   if(near.length)near.forEach(({d,m})=>rl.append(drinkCard(d,H,m)));
   else rl.append(el("div",{class:"empty"},"אין כרגע קוקטיילים שחסר להם רק מרכיב אחד."));
   $("surpriseBtn").disabled=!now.length;
+  $("jumpResults").textContent="לתוצאות ("+now.length+") ↓";
 }
 
 function render(){renderInventory();renderMood();renderResults();if(document.querySelector(".app").dataset.view==="shop")renderShop()}
@@ -1237,6 +1272,7 @@ $("importBar").addEventListener("click",()=>{
   state={...c,example:false};$("importText").value="";commit();
   $("moveStatus").textContent="יובאו "+state.items.length+" פריטים ו-"+state.bottles.length+" בקבוקים.";
 });
+$("jumpResults").addEventListener("click",()=>$("nowList").previousElementSibling.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"}));
 $("resetMood").addEventListener("click",()=>{mood={strength:0,tastes:[],withs:[]};render()});
 $("surpriseBtn").addEventListener("click",()=>{
   const cards=[...$("nowList").querySelectorAll(".drink")];if(!cards.length)return;
@@ -1245,7 +1281,10 @@ $("surpriseBtn").addEventListener("click",()=>{
   void c.offsetWidth;c.classList.add("flash");c.querySelector("details").open=true;
   c.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});
 });
-document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab==="home"?"mix":b.dataset.tab)));
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{
+  const t=b.dataset.tab==="home"?"mix":b.dataset.tab;
+  if(document.querySelector(".app").dataset.view!==t){setTab(t);window.scrollTo(0,0)}
+}));
 function setTab(t){
   document.querySelector(".app").dataset.view=t;
   document.querySelectorAll(".tabs button").forEach(b=>{
@@ -1332,6 +1371,9 @@ function renderShop(){
   const styles=STYLES[shop.type]||{},ss=$("styleSeg");ss.innerHTML="";
   [["","כל הסגנונות",null]].concat(Object.entries(styles).filter(([,s])=>s.n).map(([k,s])=>[k,s.n,s.t])).forEach(([k,n,t])=>ss.append(
     el("button",{type:"button",class:"chip","aria-pressed":String(shop.style===k),title:t?t.map(x=>NOTE[x]).join(", "):null,onclick:()=>{shop.style=k;renderShop()}},n)));
+  // On phones these rows scroll sideways; keep the selected chip visible after a re-render.
+  [ts,ss].forEach(row=>{const a=row.querySelector('[aria-pressed="true"]');if(!a||row.scrollWidth<=row.clientWidth)return;
+    const r=a.getBoundingClientRect(),p=row.getBoundingClientRect();row.scrollLeft+=(r.left+r.width/2)-(p.left+p.width/2)});
 
   const q=shop.q.trim().toLowerCase();
   let list=[];
@@ -1798,7 +1840,7 @@ function renderOb(bump){
       inp.addEventListener("change",()=>{if(inp.files[0])obIdentify(inp.files[0])});
       panel.append(el("label",{class:"lbl",for:"obPhoto"},"צילום"),inp,st);
     }else{
-      const inp=el("input",{type:"search",id:"obSearch",placeholder:"למשל: Woodford Double Oaked, לפרויג, קמפרי",autocomplete:"off",value:ob.q});
+      const inp=el("input",{type:"search",id:"obSearch",placeholder:"למשל: לפרויג, קמפרי, Woodford",autocomplete:"off",value:ob.q});
       const res=el("div",{class:"ob-results"});
       const draw=()=>{
         finder(res,ob.q,e=>{if(e.custom){ob.manual=e.custom;renderOb()}else obAdd([e])});

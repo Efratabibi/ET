@@ -235,6 +235,7 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
 .paste summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--accent)}
 .paste textarea{width:100%;font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--field);border-radius:10px;padding:10px;margin:8px 0;resize:vertical}
 .menu-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.menu-actions[hidden]{display:none}
 .ob{position:fixed;inset:0;z-index:50;background:var(--bg);overflow-y:auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 .ob-in{max-width:600px;margin:0 auto;padding-inline:16px;padding-block:20px 120px;display:grid;gap:16px}
 #obBody{display:grid;gap:14px}
@@ -300,10 +301,6 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
       <h2>הבר שלי</h2>
       <div class="reopen"><p class="sub" style="margin:0">לחיצה מוסיפה בקבוק, לחיצה נוספת מורידה אותו. נשמר אוטומטית.</p><button class="btn" type="button" id="openOb">הוספה שלב אחר שלב</button></div>
       <div class="card">
-        <div class="banner" id="exampleBanner" hidden>
-          <span>זה בר לדוגמה. סמנו את מה שיש לכם באמת.</span>
-          <button type="button" id="clearBtn">נקה הכל</button>
-        </div>
         <div class="bottles top">
           <h3>הוספת בקבוק</h3>
           <p>חפשו לפי שם, בעברית או באנגלית. ההמלצות יותאמו לטעם של הבקבוק: ג׳ין פרחוני, ויסקי מעושן, טקילה מיושנת וכו׳.</p>
@@ -331,6 +328,7 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
           <button class="btn" type="button" id="importBar">ייבוא</button>
           <p class="status" id="moveStatus"></p>
         </details>
+        <div class="menu-actions" id="clearWrap"><button class="btn ghost" type="button" id="clearBtn">ניקוי הבר</button></div>
       </div>
     </section>
 
@@ -1020,37 +1018,35 @@ const DRINKS=[
 
 /* ---------- state ---------- */
 let uidN=0;const uid=()=>"b"+Date.now().toString(36)+(uidN++).toString(36);
-const EXAMPLE={items:["gin","vodka","white_rum","bourbon","scotch","campari","sweet_vermouth","triple_sec","prosecco","lime","lemon","tonic","soda","simple_syrup","mint","orange","honey","bitters"],
- custom:[],example:true,
- bottles:[{id:"ex1",type:"gin",name:"Tanqueray",style:"london"},{id:"ex2",type:"gin",name:"Hendrick's",style:"modern"},{id:"ex3",type:"bourbon",name:"Buffalo Trace",style:"classic"},{id:"ex4",type:"scotch",name:"Laphroaig 10",style:"peat"}]};
 const LS_KEY="homebar.v1";
-let state=clean(loadLocal())||JSON.parse(JSON.stringify(EXAMPLE));
+let state=clean(loadLocal())||{items:[],custom:[],bottles:[],learned:[]};
 let mood={strength:0,tastes:[],withs:[]};
 let filterText="",openOther=null;
 let db=null,docRef=null,saveTimer=null,lastRemote="";
 
 function clean(d){
   if(!d||typeof d!=="object")return null;
+  // Earlier versions started from a sample bar; a bar still in that state starts empty.
+  const sample=!!d.example;
   return {
-    items:Array.isArray(d.items)?d.items.filter(x=>NAME[x]):[],
-    custom:Array.isArray(d.custom)?d.custom.map(String).slice(0,100):[],
-    bottles:Array.isArray(d.bottles)?d.bottles.filter(b=>b&&STYLES[b.type]&&STYLES[b.type][b.style]&&b.name).map(b=>({id:String(b.id||uid()),type:b.type,name:String(b.name).slice(0,60),style:b.style})):[],
-    learned:Array.isArray(d.learned)?d.learned.filter(l=>l&&l.name&&STYLES[l.type]&&STYLES[l.type][l.style]).slice(0,200).map(l=>({name:String(l.name).slice(0,70),type:l.type,style:l.style,il:Array.isArray(l.il)?l.il.slice(0,2):[null,null],us:Array.isArray(l.us)?l.us.slice(0,2):[null,null]})):[],
-    example:!!d.example
+    items:!sample&&Array.isArray(d.items)?d.items.filter(x=>NAME[x]):[],
+    custom:!sample&&Array.isArray(d.custom)?d.custom.map(String).slice(0,100):[],
+    bottles:!sample&&Array.isArray(d.bottles)?d.bottles.filter(b=>b&&STYLES[b.type]&&STYLES[b.type][b.style]&&b.name).map(b=>({id:String(b.id||uid()),type:b.type,name:String(b.name).slice(0,60),style:b.style})):[],
+    learned:Array.isArray(d.learned)?d.learned.filter(l=>l&&l.name&&STYLES[l.type]&&STYLES[l.type][l.style]).slice(0,200).map(l=>({name:String(l.name).slice(0,70),type:l.type,style:l.style,il:Array.isArray(l.il)?l.il.slice(0,2):[null,null],us:Array.isArray(l.us)?l.us.slice(0,2):[null,null]})):[]
   };
 }
 function loadLocal(){try{const r=localStorage.getItem(LS_KEY);return r?JSON.parse(r):null}catch(e){return null}}
 function saveLocal(){try{localStorage.setItem(LS_KEY,JSON.stringify(state))}catch(e){}}
 function have(){return new Set(state.items)}
+function barEmpty(){return !state.items.length&&!state.custom.length&&!state.bottles.length}
 function payloadKey(s){return JSON.stringify({items:s.items,custom:s.custom,bottles:s.bottles,learned:s.learned||[]})}
 
 function commit(){
-  state.example=false;
   saveLocal();render();
   if(docRef){
     clearTimeout(saveTimer);
     saveTimer=setTimeout(()=>{
-      const payload={items:state.items,custom:state.custom,bottles:state.bottles,learned:state.learned||[],example:false,updatedAt:Date.now()};
+      const payload={items:state.items,custom:state.custom,bottles:state.bottles,learned:state.learned||[],updatedAt:Date.now()};
       lastRemote=payloadKey(payload);
       docRef.set(payload).then(()=>setSync(true,"נשמר בחשבון")).catch(()=>setSync(false,"לא נשמר בענן, נשמר בדפדפן"));
     },500);
@@ -1124,7 +1120,7 @@ function renderInventory(){
   if(!box.children.length)box.append(el("p",{class:"note"},"לא נמצא. אפשר להוסיף את זה למטה בתור פריט משלכם."));
   const cc=$("customChips");cc.innerHTML="";
   state.custom.forEach((name,idx)=>cc.append(el("button",{type:"button",class:"chip","aria-pressed":"true","aria-label":"הסרת "+name,onclick:()=>{state.custom.splice(idx,1);commit()}},name,el("span",{class:"x"},"✕"))));
-  $("exampleBanner").hidden=!state.example;
+  $("clearWrap").hidden=barEmpty();
   const nItems=state.items.length+state.custom.length;
   $("tabCount").textContent=nItems||"";
   $("tabCount").parentElement.setAttribute("aria-label","הבר שלי"+(nItems?", "+nItems+" פריטים":""));
@@ -1145,7 +1141,6 @@ function toggle(id){
 let bottleQ="",bottleManual=null;
 function addToBar(e){
   if(e.custom){bottleManual=e.custom;renderBottles();return}
-  if(state.example){state.items=[];state.bottles=[];state.custom=[];mood.withs=[]}
   const before=makeableCount();
   if(!state.items.includes(e.id))state.items.push(e.id);
   if(e.name&&STYLES[e.id]&&STYLES[e.id][e.style]&&!state.bottles.some(b=>b.type===e.id&&b.name===e.name))state.bottles.push({id:uid(),type:e.id,name:e.name,style:e.style});
@@ -1253,7 +1248,7 @@ function renderResults(){
   $("nowCount").textContent=now.length+" קוקטיילים";
   $("nearCount").textContent=near.length+" קוקטיילים";
   if(now.length)now.forEach(d=>nl.append(drinkCard(d,H,[])));
-  else nl.append(el("div",{class:"empty"},state.items.length?"אין קוקטייל שמתאים לבחירה הזאת עם מה שיש בבית. נסו לשחרר טעם, חוזק או מרכיב, או הציצו ברשימה למטה.":"הבר ריק. הוסיפו כמה בקבוקים ב״הבר שלי״."));
+  else nl.append(el("div",{class:"empty"},state.items.length?"אין קוקטייל שמתאים לבחירה הזאת עם מה שיש בבית. נסו לשחרר טעם, חוזק או מרכיב, או הציצו ברשימה למטה.":el("div",{},"הבר עוד ריק. מוסיפים מה יש בבית, ומיד רואים מה אפשר להכין.",el("div",{class:"menu-actions",style:"justify-content:center"},el("button",{class:"btn",type:"button",onclick:openOb},"בואו נבנה את הבר")))));
   if(near.length)near.forEach(({d,m})=>rl.append(drinkCard(d,H,m)));
   else rl.append(el("div",{class:"empty"},"אין כרגע קוקטיילים שחסר להם רק מרכיב אחד."));
   $("surpriseBtn").disabled=!now.length;
@@ -1264,7 +1259,14 @@ function render(){renderInventory();renderMood();renderResults();if(document.que
 
 /* ---------- events ---------- */
 $("filter").addEventListener("input",e=>{filterText=e.target.value;renderInventory()});
-$("clearBtn").addEventListener("click",()=>{state.items=[];state.custom=[];state.bottles=[];mood.withs=[];commit()});
+// Two taps to clear, so one stray tap can't wipe the bar.
+let clearArmed=null;
+$("clearBtn").addEventListener("click",()=>{
+  const b=$("clearBtn");
+  if(!clearArmed){b.textContent="בטוח? לחיצה נוספת מוחקת הכל";clearArmed=setTimeout(()=>{clearArmed=null;b.textContent="ניקוי הבר"},4000);return}
+  clearTimeout(clearArmed);clearArmed=null;b.textContent="ניקוי הבר";
+  state.items=[];state.custom=[];state.bottles=[];mood.withs=[];commit();
+});
 $("customForm").addEventListener("submit",e=>{
   e.preventDefault();const v=$("customName").value.trim();
   if(v&&!state.custom.includes(v)){state.custom.push(v);$("customName").value="";commit()}
@@ -1278,7 +1280,7 @@ $("importBar").addEventListener("click",()=>{
   let d=null;try{d=JSON.parse($("importText").value)}catch(e){}
   const c=d&&d.homebar?clean(d):null;
   if(!c){$("moveStatus").textContent="זה לא נראה כמו בר שהועתק מהאפליקציה. בדקו שהדבקתם את כל הטקסט.";return}
-  state={...c,example:false};$("importText").value="";commit();
+  state=c;$("importText").value="";commit();
   $("moveStatus").textContent="יובאו "+state.items.length+" פריטים ו-"+state.bottles.length+" בקבוקים.";
 });
 $("jumpResults").addEventListener("click",()=>$("nowList").previousElementSibling.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"}));
@@ -1372,7 +1374,7 @@ function renderShop(){
 
   const sug=suggestions(),sg=$("suggestSeg");sg.innerHTML="";
   if(!shop.type)shop.type=sug.length?sug[0].t:"gin";
-  if(!sug.length)sg.append(el("span",{class:"note"},"כל משקאות הבסיס שפותחים קוקטיילים חדשים כבר בבר שלך."));
+  if(!sug.length)sg.append(el("span",{class:"note"},barEmpty()?"הוסיפו כמה דברים לבר, ונמליץ מה כדאי לקנות.":"כל משקאות הבסיס שפותחים קוקטיילים חדשים כבר בבר שלך."));
   sug.forEach(({t,n})=>sg.append(el("button",{type:"button",class:"chip","aria-pressed":String(shop.type===t),onclick:()=>{shop.type=t;shop.style="";renderShop()}},NAME[t],el("small",{}," · עוד "+n+" קוקטיילים"))));
 
   const ts=$("typeSeg");ts.innerHTML="";
@@ -1773,9 +1775,8 @@ function bestNext(exclude){
   Object.keys(NAME).forEach(id=>{if(H.has(id)||(exclude&&exclude.has(id)))return;const n=unlockCount(id);if(n&&(!best||n>best.n))best={id,n}});
   return best;
 }
-// Add through onboarding; first real add replaces the example bar.
+// Add through onboarding.
 function obAdd(entries){
-  if(state.example){state.items=[];state.bottles=[];state.custom=[];mood.withs=[]}
   const before=new Set(makeable()),labels=[];
   entries.forEach(e=>{
     if(e.custom){if(!state.custom.includes(e.custom))state.custom.push(e.custom);labels.push(e.custom);ob.added.push({k:"c:"+e.custom,label:e.custom});return}
@@ -1896,14 +1897,14 @@ async function obIdentify(file){
   }catch(e){const msg=sampleError(e);ob.busy=false;ob.notice=msg;renderOb()}
 }
 function obSetPhoto(ok){ob.photoOK=!!ok;if(!ok&&ob.way==="photo")ob.way="type";if(!$("ob").hidden)renderOb()}
-function openOb(){ob={...ob,step:state.example?0:1,q:"",last:null,added:[],way:ob.photoOK?ob.way:"type"};$("ob").hidden=false;document.body.style.overflow="hidden";renderOb()}
+function openOb(){ob={...ob,step:barEmpty()?0:1,q:"",last:null,added:[],way:ob.photoOK?ob.way:"type"};$("ob").hidden=false;document.body.style.overflow="hidden";renderOb()}
 function closeOb(){$("ob").hidden=true;document.body.style.overflow="";try{localStorage.setItem(OB_KEY,"1")}catch(e){}}
 function finishOb(){closeOb();setTab("mix");window.scrollTo({top:0})}
 $("obClose").addEventListener("click",closeOb);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("ob").hidden)closeOb()});
 $("openOb").addEventListener("click",openOb);
 let obSeen=null;try{obSeen=localStorage.getItem(OB_KEY)}catch(e){}
-if(state.example&&!obSeen)setTimeout(()=>{if(state.example)openOb()},0);
+if(barEmpty()&&!obSeen)setTimeout(()=>{if(barEmpty())openOb()},0);
 
 render();
 setTab(startTab);
@@ -1915,7 +1916,7 @@ function applyRemote(d){
   const bids=new Set(state.bottles.map(b=>"b:"+b.id)),H=have();
   mood.withs=mood.withs.filter(k=>k.startsWith("b:")?bids.has(k):k.startsWith("i:")?H.has(k.slice(2)):true);
   saveLocal();render();
-  if(!state.example&&!$("ob").hidden&&ob.step===0)closeOb();
+  if(!barEmpty()&&!$("ob").hidden&&ob.step===0)closeOb();
 }
 (async()=>{
   try{
@@ -1928,8 +1929,8 @@ function applyRemote(d){
       // One-time move from the old shared document, then remove the shared copy.
       let moved=null;
       if(bar.legacy){const old=await bar.legacy.get().catch(()=>null);if(old&&old.exists){applyRemote(old.data()||{});moved=bar.legacy}}
-      if(moved||!state.example){
-        const payload={items:state.items,custom:state.custom,bottles:state.bottles,learned:state.learned||[],example:false,updatedAt:Date.now()};
+      if(moved||!barEmpty()){
+        const payload={items:state.items,custom:state.custom,bottles:state.bottles,learned:state.learned||[],updatedAt:Date.now()};
         lastRemote=payloadKey(payload);await docRef.set(payload);
         if(moved)await moved.delete().catch(()=>{});   // only after the private copy is saved
       }

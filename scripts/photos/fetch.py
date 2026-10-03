@@ -9,7 +9,7 @@ import json, os, re, sys, time, urllib.parse, urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CACHE = os.path.join(ROOT, ".photo-cache", "search")
-UA = "HomeBar/1.0 (personal cocktail app; bottle thumbnails)"
+UA = "AllCohol/1.0 (personal cocktail app; bottle thumbnails)"
 FIELDS = "code,product_name,product_name_en,product_name_fr,product_name_he,generic_name,brands,quantity,categories_tags,image_front_url,image_front_small_url"
 
 

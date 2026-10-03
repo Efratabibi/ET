@@ -1,4 +1,4 @@
-// POST /api/claude — runs one Home Bar task on Claude for a signed-in user.
+// POST /api/claude — runs one All Cohol task on Claude for a signed-in user.
 // Body: {task, params, images?: [dataURL]}. The prompt is built here from src/prompts.cjs,
 // so the client can only choose a known task, never send its own prompt.
 import Anthropic from "@anthropic-ai/sdk";

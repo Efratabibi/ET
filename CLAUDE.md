@@ -1,4 +1,4 @@
-# Home Bar — notes for Claude
+# All Cohol — notes for Claude
 
 - One source, two targets. Edit `src/app.html` / `src/i18n/*.js` / `src/prompts.cjs`, then `npm run build`.
   - `dist/artifact.html` is published to the existing claude.ai Artifact

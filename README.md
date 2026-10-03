@@ -1,4 +1,4 @@
-# Home Bar
+# All Cohol
 
 An app that knows what's in your bar, suggests cocktails for your mood, helps you buy bottles, and (parked for now) compares wine prices at a restaurant. The interface is in Hebrew by default, with English one tap away.
 
@@ -58,7 +58,7 @@ Steps marked **[you]** need your accounts.
    - New project. Region: Frankfurt, the closest to Israel.
    - SQL Editor → paste `supabase/schema.sql` → Run.
    - Authentication → Providers: Email is on by default. Google needs an OAuth client from Google Cloud Console; the provider page explains how. Once it works, set `AUTH_GOOGLE=on` in Vercel to show the "Continue with Google" button.
-   - Authentication → Email Templates → Magic Link: add `{{ .Token }}` to the message, so the email carries a 6-digit code as well as the link. The site opens on a sign-in screen that takes the code, which matters on phones where an installed app and the mail link open in different browsers.
+   - Sign-in is by an email link. The sign-in screen also takes a 6-digit code, which helps on phones where an app installed to the home screen and the mail link open in different browsers. Supabase lets you edit the email (Authentication → Email Templates → Magic Link: add `{{ .Token }}`) only after custom SMTP is set up.
    - Supabase's built-in email is rate-limited (a few emails an hour). Before inviting many people, turn on Google sign-in or set up custom SMTP under Authentication → Emails.
    - Authentication → URL Configuration: set Site URL to the address Vercel gives you.
    - Project Settings → API: copy `URL`, `anon` and `service_role`. These go straight into Vercel, never into a chat.

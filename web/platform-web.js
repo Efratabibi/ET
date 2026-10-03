@@ -1,4 +1,4 @@
-/* Web platform for Home Bar: Supabase sign-in and storage, Claude through /api/claude.
+/* Web platform for All Cohol: Supabase sign-in and storage, Claude through /api/claude.
    Loaded before the app. Sets window.HB_PLATFORM, which the app uses instead of the
    claude.ai artifact capabilities. Config comes from window.HB_CONFIG (written at build). */
 (function(){

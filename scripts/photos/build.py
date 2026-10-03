@@ -19,7 +19,7 @@ from PIL import Image, ImageChops, ImageDraw
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CACHE = os.path.join(ROOT, ".photo-cache")
-UA = "HomeBar/1.0 (personal cocktail app; bottle thumbnails)"
+UA = "AllCohol/1.0 (personal cocktail app; bottle thumbnails)"
 THUMB = (80, 112)  # max box in px: shown at 40×56 CSS px, sharp on 2× screens
 
 # Words that mean "this is not the bottle itself".

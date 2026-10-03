@@ -26,11 +26,23 @@ def credit(name):
     page = get("https://commons.wikimedia.org/wiki/" + urllib.parse.quote("File:" + name.replace(" ", "_")),
                os.path.join(CACHE, "files", re.sub(r"[^A-Za-z0-9]+", "_", name)[:80] + ".html"))
     page = (page or b"").decode("utf-8", "ignore")
-    m = re.search(r'id="fileinfotpl_aut"[^>]*>.*?</td>\s*<td[^>]*>(.*?)</td>', page, re.S)
+    m = re.search(r'>Author</t[dh]>\s*<td[^>]*>(.*?)</td>', page, re.S)
     author = text(m.group(1)) if m else ""
     author = re.sub(r"\s*\(talk.*$", "", author)[:80]
-    lic = re.search(r'class="licensetpl_short"[^>]*>(.*?)<', page, re.S)
-    lic = text(lic.group(1)) if lic else ("Public domain" if "public domain" in page.lower() else "")
+    # The first licence on the page, shortened: "CC BY-SA 4.0", "CC BY 2.0", "CC0", "Public domain".
+    decl = " ".join(text(x) for x in re.findall(r'rlicense-declaration">(.*?)</div>', page, re.S)) or text(page)
+    m = re.search(r"Attribution[- ]Share ?Alike (\d\.\d)", decl, re.I)
+    m2 = re.search(r"Attribution (\d\.\d)", decl)
+    if m:
+        lic = "CC BY-SA " + m.group(1)
+    elif m2:
+        lic = "CC BY " + m2.group(1)
+    elif re.search(r"CC0|Public Domain Dedication", decl):
+        lic = "CC0"
+    elif re.search(r"public domain", decl, re.I):
+        lic = "Public domain"
+    else:
+        lic = ""
     return author, lic
 
 

@@ -120,12 +120,16 @@ input::placeholder,textarea::placeholder{color:var(--faint)}
 .results-h h3{font:600 20px var(--display);text-transform:uppercase;letter-spacing:var(--track-h);margin:0;font-synthesis:none}
 .results-h small{color:var(--gold);font:600 15px var(--display);font-variant-numeric:tabular-nums}
 .list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
-.drink{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:8px;align-content:start;color:var(--ink);text-align:start;font:inherit;cursor:pointer;width:100%}
+.drink{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:52px minmax(0,1fr);column-gap:14px;align-items:start;color:var(--ink);text-align:start;font:inherit;cursor:pointer;width:100%}
 .drink:hover{border-color:var(--gold)}
 .drink.near{background:var(--deep)}
 .drink.near h4{color:#CFC7BD}
 .drink.flash{animation:flash 1.2s ease}
 @keyframes flash{0%{box-shadow:0 0 0 3px var(--gold)}100%{box-shadow:none}}
+.drink-main{display:grid;gap:8px;min-width:0}
+.art-box{display:block;width:52px;height:74px;color:var(--muted)}.art-box svg{display:block;width:100%;height:100%}
+.art-box.sm{width:36px;height:50px;flex:none}
+.art-box.photo{border-radius:10px;overflow:hidden;background:var(--deep)}.art-box.photo img{display:block;width:100%;height:100%;object-fit:cover}
 .drink-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .drink h4{margin:0;font:600 22px/1.05 var(--display);text-transform:uppercase;letter-spacing:.01em;font-synthesis:none}
 .drink .alt{color:var(--muted);font-size:13px}
@@ -147,8 +151,11 @@ html[lang="he"] .empty{font-style:normal;font-family:var(--body)}
 /* recipe sheet: a cream card over the app */
 .recipe{position:fixed;inset:0;z-index:60;background:var(--cream);color:var(--cream-ink);overflow-y:auto;overscroll-behavior:contain}
 .recipe[hidden]{display:none}
-.rc-top{position:relative;height:calc(150px + env(safe-area-inset-top,0px));background:repeating-linear-gradient(135deg,#E2DACD 0 10px,#DAD1C3 10px 20px);display:grid;place-items:end center;padding-bottom:18px}
-.rc-top .glass-ic{width:56px;height:56px;stroke:var(--cream-text);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
+.rc-top{position:relative;height:calc(230px + env(safe-area-inset-top,0px));background:repeating-linear-gradient(135deg,#E2DACD 0 10px,#DAD1C3 10px 20px);display:grid;place-items:end center;padding-bottom:18px}
+.rc-art{color:#5E554C;display:grid;place-items:end center}
+.rc-top.photo{background:#151210;padding:0}.rc-top.photo .rc-art{position:absolute;inset:0;display:block}
+.rc-photo{display:block;width:100%;height:100%;object-fit:cover}
+.rc-credit{font-size:12px;color:var(--cream-muted);margin:0}.rc-credit a{color:inherit}.rc-art svg{display:block;height:190px;width:auto;filter:drop-shadow(0 6px 10px rgba(60,40,20,.15))}
 .rc-back{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));inset-inline-start:16px;width:44px;height:44px;border-radius:50%;border:0;background:var(--cream);display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.12);cursor:pointer}
 .rc-back svg{width:20px;height:20px;fill:none;stroke:var(--cream-ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 [dir="rtl"] .rc-back svg{transform:scaleX(-1)}
@@ -408,7 +415,7 @@ details summary::-webkit-details-marker{display:none}
 .done-big .n{font:600 clamp(110px,36vw,150px)/.78 var(--display);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 .done-big .w{font:600 28px/1 var(--display);text-transform:uppercase;padding-bottom:6px;font-synthesis:none;max-width:7em}
 .done-list{display:grid;border-top:1px solid var(--line)}
-.done-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.done-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
 .done-row b{display:block;font-size:18px}
 .done-row small{display:block;font-size:13px;color:var(--muted)}
 .chip .plus{font-size:11px;color:var(--ok);font-weight:700}
@@ -588,7 +595,7 @@ details summary::-webkit-details-marker{display:none}
 <div class="recipe" id="recipe" hidden role="dialog" aria-modal="true" aria-labelledby="rcName">
   <div class="rc-top">
     <button class="rc-back" type="button" id="rcBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-    <svg class="glass-ic" viewBox="0 0 48 48" aria-hidden="true"><path d="M10 8h28l-12 16v14M16 40h16M14 13h20"/></svg>
+    <div class="rc-art" id="rcArt"></div>
   </div>
   <div class="rc-body" id="rcBody"></div>
 </div>
@@ -630,10 +637,10 @@ const PLATFORM=window.HB_PLATFORM||{
 /* ---------- catalog ---------- */
 const CATS=[ // names come from the locale
  {id:"spirit",items:["vodka","gin","white_rum","dark_rum","tequila","mezcal","bourbon","rye","scotch","irish","japanese","world_whisky","brandy","arak","cachaca","pisco"].map(id=>[id])},
- {id:"liqueur",items:["triple_sec","campari","aperol","sweet_vermouth","dry_vermouth","kahlua","amaretto","baileys","limoncello","elderflower","peach","blue_curacao","cassis","maraschino","chartreuse","amaro"].map(id=>[id])},
+ {id:"liqueur",items:["triple_sec","campari","aperol","sweet_vermouth","dry_vermouth","kahlua","amaretto","baileys","limoncello","elderflower","peach","blue_curacao","cassis","maraschino","chartreuse","amaro","absinthe"].map(id=>[id])},
  {id:"wine",items:["prosecco","white_wine","red_wine","beer"].map(id=>[id])},
  {id:"mixer",items:["orange","cranberry","pineapple","grapefruit","tomato","soda","tonic","cola","ginger_beer","sprite","coffee"].map(id=>[id])},
- {id:"pantry",items:["lime","lemon","mint","basil","ginger","sugar","simple_syrup","honey","grenadine","bitters","cream","coconut_cream","egg_white"].map(id=>[id])}
+ {id:"pantry",items:["lime","lemon","mint","basil","ginger","sugar","simple_syrup","honey","grenadine","bitters","cream","coconut_cream","egg_white","orgeat","cucumber","berries","passion_fruit"].map(id=>[id])}
 ];
 const NAME={},CAT_OF={};CATS.forEach(c=>c.items.forEach(([id])=>{CAT_OF[id]=c.id}));
 // Sugar and simple syrup stand in for each other.
@@ -1146,7 +1153,7 @@ const DRINKS=[ // names, methods, glasses and tips come from the locale
  {id:"cuba_libre",s:1,t:["sweet", "fresh"],i:[["white_rum|dark_rum",50],["cola",120],["lime",10]],f:{g: ["vanilla", "spicy"]}},
  {id:"dark_n_stormy",s:1,t:["fresh"],i:[["dark_rum",50],["ginger_beer",120],["lime",10]],f:{g: ["rich", "spicy", "vanilla"]}},
  {id:"pina_colada",s:1,t:["creamy", "sweet", "fruity"],i:[["white_rum|dark_rum",50],["pineapple",90],["coconut_cream",40]],f:{g: ["sweet", "vanilla"]}},
- {id:"mai_tai",s:2,t:["fruity", "sour", "sweet"],i:[["dark_rum",45],["triple_sec",15],["amaretto",15],["lime",25],["white_rum",15,true]],f:{g: ["rich", "fruity", "oaky"], b: ["spicy"]}},
+ {id:"mai_tai",s:2,t:["fruity", "sour", "sweet"],i:[["dark_rum",45],["triple_sec",15],["orgeat|amaretto",15],["lime",25],["white_rum",15,true]],f:{g: ["rich", "fruity", "oaky"], b: ["spicy"]}},
  {id:"rum_punch",s:1,t:["fruity", "sweet"],i:[["dark_rum|white_rum",45],["pineapple",60],["orange",60],["lime",15],["grenadine",10]],f:{g: ["fruity", "rich", "spicy"]}},
  {id:"caipirinha",s:2,t:["sour", "sweet"],i:[["cachaca",60],["lime","lime_cubed"],["sugar|simple_syrup","tsp_2"]]},
  {id:"pisco_sour",s:2,t:["sour"],i:[["pisco",60],["lime",30],["simple_syrup|sugar",20],["egg_white","egg_white"]]},
@@ -1164,7 +1171,85 @@ const DRINKS=[ // names, methods, glasses and tips come from the locale
  {id:"spritzer",s:1,t:["fresh"],i:[["white_wine",120],["soda",60]]},
  {id:"shandy",s:1,t:["fresh", "sweet"],i:[["beer",200],["sprite",150]]},
  {id:"arak_grapefruit",s:1,t:["fresh", "fruity"],i:[["arak",50],["grapefruit",150]]},
- {id:"arak_lemon_mint",s:1,t:["fresh", "sour", "sweet"],i:[["arak",50],["lemon",30],["mint","handful"],["simple_syrup|sugar",20],["soda","top",true]]}
+ {id:"arak_lemon_mint",s:1,t:["fresh", "sour", "sweet"],i:[["arak",50],["lemon",30],["mint","handful"],["simple_syrup|sugar",20],["soda","top",true]]},
+ {id:"bramble",s:2,t:["sour", "fruity"],i:[["gin",50],["lemon",25],["simple_syrup|sugar",15],["cassis",15]],f:{g: ["juniper", "citrus"]}},
+ {id:"aviation",s:2,t:["sour"],i:[["gin",50],["maraschino",15],["lemon",20]],f:{g: ["floral", "juniper"]}},
+ {id:"clover_club",s:2,t:["sour", "fruity"],i:[["gin",45],["lemon",20],["simple_syrup|sugar",15],["berries","berries_4"],["egg_white","egg_white",true]],f:{g: ["juniper", "floral"]}},
+ {id:"corpse_reviver_2",s:2,t:["sour"],i:[["gin",25],["triple_sec",25],["lemon",25],["dry_vermouth",25],["absinthe","rinse",true]],f:{g: ["juniper", "citrus"]}},
+ {id:"martinez",s:3,t:["boozy", "sweet"],i:[["gin",45],["sweet_vermouth",45],["maraschino","tsp"],["bitters","dash_2"]],f:{g: ["juniper", "herbal"]}},
+ {id:"gin_fizz",s:1,t:["fresh", "sour"],i:[["gin",50],["lemon",25],["simple_syrup|sugar",15],["soda","top"]],f:{g: ["juniper", "citrus"]}},
+ {id:"gin_rickey",s:1,t:["fresh", "sour"],i:[["gin",50],["lime",15],["soda","top"]],f:{g: ["juniper", "citrus"]}},
+ {id:"elderflower_tonic",s:1,t:["fresh", "sweet"],i:[["gin",40],["elderflower",15],["tonic","top"],["cucumber","slices_3",true]],f:{g: ["floral", "citrus"]}},
+ {id:"negroni_sbagliato",s:1,t:["bitter", "fresh"],i:[["campari",30],["sweet_vermouth",30],["prosecco","top"]]},
+ {id:"eastside",s:2,t:["fresh", "sour"],i:[["gin",60],["lime",25],["simple_syrup|sugar",20],["mint","leaves_6"],["cucumber","slices_3"]],f:{g: ["floral", "citrus"]}},
+ {id:"army_navy",s:2,t:["sour", "sweet"],i:[["gin",60],["lemon",25],["orgeat",15]],f:{g: ["juniper"]}},
+ {id:"bijou",s:3,t:["boozy", "sweet"],i:[["gin",30],["sweet_vermouth",30],["chartreuse",30],["bitters","dash_2"]],f:{g: ["juniper", "herbal"]}},
+ {id:"vesper",s:3,t:["boozy"],i:[["gin",45],["vodka",15],["dry_vermouth",10]],f:{g: ["juniper", "citrus"]}},
+ {id:"monkey_gland",s:2,t:["fruity", "sweet"],i:[["gin",50],["orange",30],["grenadine","tsp"],["absinthe","rinse",true]],f:{g: ["juniper", "citrus"]}},
+ {id:"gin_gin_mule",s:1,t:["fresh"],i:[["gin",45],["lime",20],["simple_syrup|sugar",15],["mint","leaves_6"],["ginger_beer","top"]],f:{g: ["juniper", "citrus"]}},
+ {id:"french_martini",s:2,t:["fruity", "sweet"],i:[["vodka",45],["pineapple",45],["cassis",15]],f:{g: ["clean"]}},
+ {id:"vodka_martini",s:3,t:["boozy"],i:[["vodka",60],["dry_vermouth",10]],f:{g: ["clean"]}},
+ {id:"kamikaze",s:2,t:["sour"],i:[["vodka",30],["triple_sec",30],["lime",30]],f:{g: ["clean"]}},
+ {id:"lemon_drop",s:2,t:["sour", "sweet"],i:[["vodka",45],["triple_sec",15],["lemon",25],["simple_syrup|sugar",15]],f:{g: ["clean", "citrus"]}},
+ {id:"greyhound",s:1,t:["fresh", "fruity"],i:[["vodka",50],["grapefruit",120]],f:{g: ["clean"]}},
+ {id:"madras",s:1,t:["fruity", "sweet"],i:[["vodka",45],["cranberry",90],["orange",30]],f:{g: ["clean"]}},
+ {id:"bay_breeze",s:1,t:["fruity", "sweet"],i:[["vodka",45],["cranberry",90],["pineapple",30]],f:{g: ["clean"]}},
+ {id:"woo_woo",s:1,t:["fruity", "sweet"],i:[["vodka",30],["peach",30],["cranberry",90]],f:{g: ["clean"]}},
+ {id:"pornstar_martini",s:2,t:["fruity", "sweet"],i:[["vodka",45],["passion_fruit","fruit_1"],["lime",15],["simple_syrup|sugar",15],["prosecco",50,true]],f:{g: ["clean", "sweet"]}},
+ {id:"vodka_tonic",s:1,t:["fresh", "bitter"],i:[["vodka",50],["tonic",150],["lime","wedge",true]],f:{g: ["clean"]}},
+ {id:"vodka_soda",s:1,t:["fresh"],i:[["vodka",50],["soda",150],["lime","wedge",true]],f:{g: ["clean"]}},
+ {id:"caipiroska",s:2,t:["sour", "sweet"],i:[["vodka",50],["lime","lime_cubed"],["simple_syrup|sugar","tsp_2"]],f:{g: ["clean"]}},
+ {id:"electric_lemonade",s:1,t:["fresh", "sour", "sweet"],i:[["vodka",45],["blue_curacao",15],["lemon",25],["simple_syrup|sugar",15],["sprite","top"]],f:{g: ["clean"]}},
+ {id:"limonana",s:1,t:["fresh", "sour"],i:[["vodka|arak",45],["lemon",30],["simple_syrup|sugar",25],["mint","handful"]],f:{g: ["clean"]}},
+ {id:"colorado_bulldog",s:2,t:["creamy", "sweet"],i:[["vodka",45],["kahlua",30],["cream",30],["cola","top"]]},
+ {id:"godmother",s:3,t:["sweet", "boozy"],i:[["vodka",50],["amaretto",25]]},
+ {id:"godfather",s:3,t:["sweet", "boozy"],i:[["scotch|bourbon",50],["amaretto",25]],f:{g: ["smooth", "honey", "vanilla"]}},
+ {id:"french_connection",s:3,t:["sweet", "boozy"],i:[["brandy",45],["amaretto",25]]},
+ {id:"brave_bull",s:3,t:["sweet", "boozy"],i:[["tequila",45],["kahlua",30]],f:{g: ["agave", "vanilla"]}},
+ {id:"sazerac",s:3,t:["boozy"],i:[["rye|brandy",60],["simple_syrup|sugar","tsp"],["bitters","dash_2"],["absinthe","rinse",true]],f:{g: ["spicy"]}},
+ {id:"new_york_sour",s:2,t:["sour", "fruity"],i:[["bourbon|rye",60],["lemon",25],["simple_syrup|sugar",20],["red_wine",15]],f:{g: ["vanilla", "spicy"]}},
+ {id:"brown_derby",s:2,t:["sour", "sweet"],i:[["bourbon",45],["grapefruit",30],["honey",15]],f:{g: ["vanilla", "sweet"]}},
+ {id:"whiskey_smash",s:2,t:["fresh", "sour"],i:[["bourbon|rye",60],["lemon",25],["simple_syrup|sugar",15],["mint","leaves_8"]],f:{g: ["vanilla", "sweet"]}},
+ {id:"boilermaker",s:2,t:["boozy"],i:[["bourbon|rye|scotch|irish|japanese|world_whisky",45],["beer",330]]},
+ {id:"whiskey_ginger",s:1,t:["fresh", "sweet"],i:[["bourbon|rye|scotch|irish|japanese|world_whisky",50],["ginger_beer",150],["lime","wedge",true]],f:{g: ["smooth", "honey", "spicy"]}},
+ {id:"bourbon_cola",s:1,t:["sweet"],i:[["bourbon|rye|irish",50],["cola",150]],f:{g: ["vanilla", "sweet"]}},
+ {id:"kentucky_mule",s:1,t:["fresh"],i:[["bourbon",50],["ginger_beer",120],["lime",15]],f:{g: ["vanilla", "spicy"]}},
+ {id:"old_pal",s:3,t:["bitter", "boozy"],i:[["rye|bourbon",30],["campari",30],["dry_vermouth",30]],f:{g: ["spicy", "dry"]}},
+ {id:"ward_eight",s:2,t:["sour", "fruity"],i:[["rye|bourbon",60],["lemon",20],["orange",20],["grenadine",10]],f:{g: ["spicy"]}},
+ {id:"scofflaw",s:2,t:["sour", "fruity"],i:[["rye|bourbon",45],["dry_vermouth",30],["lemon",15],["grenadine",15]],f:{g: ["spicy"]}},
+ {id:"john_collins",s:1,t:["fresh", "sour"],i:[["bourbon",50],["lemon",25],["simple_syrup|sugar",15],["soda","top"]],f:{g: ["vanilla"]}},
+ {id:"paper_plane",s:2,t:["sour", "bitter"],i:[["bourbon",25],["aperol",25],["amaro",25],["lemon",25]],f:{g: ["vanilla", "sweet"]}},
+ {id:"hemingway_daiquiri",s:2,t:["sour"],i:[["white_rum",60],["maraschino",15],["grapefruit",25],["lime",15]],f:{g: ["clean"]}},
+ {id:"strawberry_daiquiri",s:2,t:["fruity", "sweet"],i:[["white_rum",50],["lime",25],["simple_syrup|sugar",15],["berries","berries_4"]],f:{g: ["clean", "sweet"]}},
+ {id:"el_presidente",s:3,t:["boozy", "sweet"],i:[["white_rum",45],["dry_vermouth",20],["triple_sec",10],["grenadine","tsp"]],f:{g: ["clean"]}},
+ {id:"planters_punch",s:2,t:["fruity", "sour", "sweet"],i:[["dark_rum",60],["lime",30],["simple_syrup|sugar",15],["grenadine",10],["bitters","dash_2"],["soda","top",true]],f:{g: ["rich", "fruity"]}},
+ {id:"painkiller",s:2,t:["creamy", "fruity", "sweet"],i:[["dark_rum",60],["pineapple",120],["orange",30],["coconut_cream",30]],f:{g: ["rich", "vanilla"]}},
+ {id:"hurricane",s:3,t:["fruity", "sweet"],i:[["white_rum",50],["dark_rum",50],["passion_fruit","fruit_1"],["orange",30],["lime",15],["grenadine",10]],f:{g: ["rich", "fruity"]}},
+ {id:"rum_old_fashioned",s:3,t:["boozy", "sweet"],i:[["dark_rum",60],["simple_syrup|sugar","tsp"],["bitters","dash_2"]],f:{g: ["vanilla", "oaky", "rich"]}},
+ {id:"queens_park_swizzle",s:2,t:["fresh", "sour"],i:[["dark_rum",60],["lime",25],["simple_syrup|sugar",15],["mint","leaves_8"],["bitters","dash_2"]],f:{g: ["rich", "vanilla"]}},
+ {id:"blue_hawaiian",s:1,t:["creamy", "fruity", "sweet"],i:[["white_rum",30],["blue_curacao",15],["pineapple",60],["coconut_cream",30]],f:{g: ["clean", "sweet"]}},
+ {id:"canchanchara",s:2,t:["sour", "sweet"],i:[["white_rum",60],["lime",25],["honey",15]],f:{g: ["clean"]}},
+ {id:"jungle_bird",s:2,t:["bitter", "fruity"],i:[["dark_rum",45],["campari",20],["pineapple",45],["lime",15],["simple_syrup|sugar",15]],f:{g: ["rich", "fruity"]}},
+ {id:"batida_de_coco",s:1,t:["creamy", "sweet"],i:[["cachaca",50],["coconut_cream",50],["simple_syrup|sugar",10]]},
+ {id:"matador",s:1,t:["fruity", "fresh"],i:[["tequila",45],["pineapple",90],["lime",15]],f:{g: ["agave"]}},
+ {id:"ranch_water",s:1,t:["fresh", "sour"],i:[["tequila",50],["lime",25],["soda","top"]],f:{g: ["agave", "citrus"]}},
+ {id:"mexican_mule",s:1,t:["fresh"],i:[["tequila|mezcal",50],["ginger_beer",120],["lime",15]],f:{g: ["agave"]}},
+ {id:"mezcal_margarita",s:2,t:["sour"],i:[["mezcal",50],["triple_sec",20],["lime",25]]},
+ {id:"naked_and_famous",s:2,t:["sour", "bitter"],i:[["mezcal",25],["chartreuse",25],["aperol",25],["lime",25]]},
+ {id:"siesta",s:2,t:["sour", "bitter", "fruity"],i:[["tequila",45],["campari",15],["lime",20],["grapefruit",20],["simple_syrup|sugar",15]],f:{g: ["agave", "citrus"]}},
+ {id:"bloody_maria",s:1,t:["sour"],i:[["tequila",50],["tomato",120],["lemon",15]],f:{g: ["agave", "peppery"]}},
+ {id:"between_the_sheets",s:3,t:["sour", "boozy"],i:[["brandy",30],["white_rum",30],["triple_sec",30],["lemon",15]]},
+ {id:"chilcano",s:1,t:["fresh"],i:[["pisco",50],["ginger_beer",120],["lime",15],["bitters","dash_2"]]},
+ {id:"death_in_the_afternoon",s:2,t:["fresh", "bitter"],i:[["absinthe",20],["prosecco",120]]},
+ {id:"garibaldi",s:1,t:["bitter", "fruity", "fresh"],i:[["campari",45],["orange",120]]},
+ {id:"campari_soda",s:1,t:["bitter", "fresh"],i:[["campari",50],["soda",100]]},
+ {id:"aperol_sour",s:1,t:["sour", "bitter"],i:[["aperol",45],["lemon",25],["simple_syrup|sugar",10],["egg_white","egg_white",true]]},
+ {id:"spaghett",s:1,t:["bitter", "fresh"],i:[["beer",330],["aperol",30],["lemon",15]]},
+ {id:"michelada",s:1,t:["sour"],i:[["beer",330],["lime",25],["tomato",60]]},
+ {id:"kir",s:1,t:["fruity"],i:[["white_wine",120],["cassis",15]]},
+ {id:"rossini",s:1,t:["fruity", "fresh"],i:[["prosecco",120],["berries","berries_4"],["simple_syrup|sugar","tsp",true]]},
+ {id:"kalimotxo",s:1,t:["sweet", "fresh"],i:[["red_wine",120],["cola",120]]},
+ {id:"fuzzy_navel",s:1,t:["sweet", "fruity"],i:[["peach",45],["orange",120]]}
 ];
 
 /* ---------- state ---------- */
@@ -1371,16 +1456,122 @@ function whereBuyType(missing){return missing.length?ids(missing[0]).find(x=>PRE
 
 function drinkCard(d,H,missing){
   const fi=fitInfo(d,bottlePicks(d));
+  const pic=drinkPic(d,H);
   const card=el("article",{class:"drink"+(missing.length?" near":""),tabindex:"0",role:"button","aria-haspopup":"dialog",
-      onclick:()=>openRecipe(d),onkeydown:e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openRecipe(d)}}},
+      onclick:()=>openRecipe(d),onkeydown:e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openRecipe(d)}}},pic,el("div",{class:"drink-main"},
     el("div",{class:"drink-top"},el("h4",{},d.name),meterEl(d.s)),
     d.alt?el("div",{class:"alt",lang:"en",dir:"ltr"},d.alt):null,
     fi?el("div",{class:"with"},t("drink.with"),el("b",{},fi.b.name)):null,
     el("div",{class:"tags"},d.t.map(x=>el("span",{class:"tag"},TASTE_NAME[x]))),
     missing.length?el("div",{class:"missing"},el("span",{},t("drink.missing",missing.map(specName).join(", "))),
-      (()=>{const ty=whereBuyType(missing);return ty?el("button",{type:"button",onclick:e=>{e.stopPropagation();openShop(ty)}},t("drink.whereBuy")):null})()):null);
+      (()=>{const ty=whereBuyType(missing);return ty?el("button",{type:"button",onclick:e=>{e.stopPropagation();openShop(ty)}},t("drink.whereBuy")):null})()):null));
   card.dataset.id=d.id;
   return card;
+}
+
+/* ---------- cocktail pictures: drawn from the recipe (glass, colour, ice, layers, garnish) ---------- */
+// viewBox 0 0 100 140. o: glass outline, c: the inside (clip), top: liquid surface, rim: [x,y] where garnish sits, ice: holds ice.
+const GLASS={
+ rocks:{o:"M18 58 L22 128 Q22 132 26 132 L74 132 Q78 132 78 128 L82 58",c:"M19.5 58 L23.5 125 L76.5 125 L80.5 58 Z",top:70,rim:[80,58],ice:1},
+ highball:{o:"M30 20 L33 130 Q33 134 37 134 L63 134 Q67 134 67 130 L70 20",c:"M31.5 20 L35 127 L65 127 L68.5 20 Z",top:36,rim:[69,20],ice:1},
+ coupe:{o:"M12 46 Q14 82 50 84 Q86 82 88 46 M50 84 V124 M32 127 Q50 120 68 127",c:"M12 46 Q14 82 50 84 Q86 82 88 46 Z",top:51,rim:[87,46]},
+ martini:{o:"M10 32 L50 80 L90 32 M50 80 V124 M32 127 Q50 120 68 127",c:"M10 32 L50 80 L90 32 Z",top:38,rim:[89,32]},
+ wine:{o:"M28 20 C25 64 34 86 50 86 C66 86 75 64 72 20 M50 86 V124 M34 127 Q50 121 66 127",c:"M28 20 C25 64 34 86 50 86 C66 86 75 64 72 20 Z",top:46,rim:[72,20],ice:1},
+ balloon:{o:"M20 22 C14 72 30 92 50 92 C70 92 86 72 80 22 M50 92 V124 M34 127 Q50 121 66 127",c:"M20 22 C14 72 30 92 50 92 C70 92 86 72 80 22 Z",top:44,rim:[80,22],ice:1},
+ flute:{o:"M40 12 C37 58 42 82 50 82 C58 82 63 58 60 12 M50 82 V124 M38 127 Q50 121 62 127",c:"M40 12 C37 58 42 82 50 82 C58 82 63 58 60 12 Z",top:24,rim:[60,12]},
+ mug:{o:"M22 46 L24 128 Q24 132 28 132 L68 132 Q72 132 72 128 L74 46 M73 64 Q92 64 92 86 Q92 106 71 106",c:"M23.5 46 L25.5 126 L70.5 126 L72.5 46 Z",top:58,rim:[74,46],ice:1},
+ hurricane:{o:"M30 12 C28 38 40 50 37 70 C34 92 28 104 36 114 Q41 120 50 120 Q59 120 64 114 C72 104 66 92 63 70 C60 50 72 38 70 12 M50 120 V128 M36 132 H64",c:"M30 12 C28 38 40 50 37 70 C34 92 28 104 36 114 Q41 120 50 120 Q59 120 64 114 C72 104 66 92 63 70 C60 50 72 38 70 12 Z",top:26,rim:[70,12],ice:1},
+ beer:{o:"M26 16 L33 130 Q33 134 37 134 L63 134 Q67 134 67 130 L74 16",c:"M27.5 16 L34.5 127 L65.5 127 L72.5 16 Z",top:30,rim:[73,16]},
+ shot:{o:"M33 84 L37 130 Q37 132 40 132 L60 132 Q63 132 63 130 L67 84",c:"M34.5 84 L38.5 128 L61.5 128 L65.5 84 Z",top:92,rim:[66,84]},
+ pitcher:{o:"M24 36 L28 128 Q28 132 32 132 L68 132 Q72 132 72 128 L76 36 L82 30 M75 52 Q92 54 90 78 Q88 100 71 102",c:"M25.5 36 L29.5 126 L70.5 126 L74.5 36 Z",top:52,rim:[76,36],ice:1}
+};
+function glassOf(d){
+  const g=(LOCALES.en.drink[d.id].g||"").toLowerCase();
+  return /balloon/.test(g)?"balloon":/copper|mug|heatproof/.test(g)?"mug":/metal/.test(g)?"rocks":/martini/.test(g)?"martini":/cocktail/.test(g)?"coupe":
+    /flute|champagne/.test(g)?"flute":/hurricane/.test(g)?"hurricane":/beer/.test(g)?"beer":/shot/.test(g)?"shot":/pitcher/.test(g)?"pitcher":
+    /wine/.test(g)?"wine":/highball/.test(g)?"highball":"rocks";
+}
+// What each ingredient adds to the colour. Clear ones only lighten the mix.
+const ING_COLOR={orange:"#F5A623",cranberry:"#C0233A",pineapple:"#F2D14B",grapefruit:"#F2A48C",tomato:"#C2321E",cola:"#3B1E12",ginger_beer:"#D9B56A",
+ coffee:"#2B160C",lime:"#DDE3A0",lemon:"#F1E9A6",cream:"#F3E9D2",coconut_cream:"#F5F0E4",grenadine:"#B5122E",honey:"#D9A13A",berries:"#D6334B",
+ passion_fruit:"#E8A33B",orgeat:"#EDE3CF",simple_syrup:null,sugar:null,soda:null,tonic:null,sprite:null,bitters:"#7A2E12",egg_white:null,mint:null,basil:null,ginger:null,cucumber:null};
+const hexRgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+function drinkMix(d,H){
+  let r=0,g=0,b=0,w=0,clear=0;
+  d.i.forEach(([spec,amt,opt])=>{
+    if(opt)return;
+    const id=ids(spec).find(x=>H&&H.has(x))||ids(spec)[0];
+    const ml=typeof amt==="number"?amt:amt==="top"?110:amt==="dash_2"||amt==="dash_5ml"?2:amt==="tsp"||amt==="tsp_2"?6:12;
+    let c=id in ING_COLOR?ING_COLOR[id]:LIQUID[id];
+    if(id==="bitters"&&ml<5)return;
+    if(!c||c==="clear"){clear+=ml;return}
+    const [R,G,B]=hexRgb(c);r+=R*ml;g+=G*ml;b+=B*ml;w+=ml;
+  });
+  // Clear spirits and soda dilute the colour toward a pale straw.
+  const pale=[241,236,223],cw=clear*.6;
+  if(!w)return {c:"rgb(241,236,223)",a:.55};
+  const R=(r+pale[0]*cw)/(w+cw),G=(g+pale[1]*cw)/(w+cw),B=(b+pale[2]*cw)/(w+cw);
+  return {c:"rgb("+[R,G,B].map(Math.round).join(",")+")",a:w/(w+clear)<.15?.6:.92};
+}
+const BUBBLY=new Set(["soda","tonic","sprite","cola","ginger_beer","prosecco","beer"]);
+let artN=0;
+function cocktailArt(d,H){
+  const key=glassOf(d),G=GLASS[key],id="ca"+(artN++),en=LOCALES.en.drink[d.id],m=(en.m||"").toLowerCase();
+  const has=x=>d.i.some(([spec,,opt])=>!opt&&ids(spec).includes(x)),hasAny2=x=>d.i.some(([spec])=>ids(spec).includes(x));
+  const mix=drinkMix(d,H);
+  let top=G.top,s='<svg viewBox="0 0 100 140" class="art" aria-hidden="true"><defs><clipPath id="'+id+'"><path d="'+G.c+'"/></clipPath></defs>';
+  s+='<path d="'+G.c+'" fill="currentColor" opacity=".06"/>';
+  s+='<g clip-path="url(#'+id+')">';
+  if(d.id==="b_52"){
+    [["#2B160C",0],["#D2B98F",1/3],["#F2A75A",2/3]].forEach(([c,f])=>{s+='<rect x="0" y="'+(top+(132-top)*(1-f-1/3))+'" width="100" height="'+((132-top)/3+1)+'" fill="'+c+'"/>'});
+  }else{
+    s+='<rect x="0" y="'+top+'" width="100" height="140" fill="'+mix.c+'" opacity="'+mix.a+'"/>';
+    // A layer that sinks (sunrise) or floats (cream, wine, foam).
+    if(/sinks/.test(m)&&has("grenadine"))s+='<rect x="0" y="'+(top+(132-top)*.62)+'" width="100" height="80" fill="#B5122E" opacity=".85"/>';
+    const fl=/float|floated/.test(m)?(has("cream")?"#F6EEDC":has("red_wine")?"#6E0F24":null):null;
+    if(fl)s+='<rect x="0" y="'+top+'" width="100" height="'+Math.max(7,(132-top)*.16)+'" fill="'+fl+'"/>';
+    if(/drizzle the cassis/.test(m))s+='<path d="M30 '+(top+4)+' q8 22 -2 44 q14 -16 10 -40 M58 '+(top+2)+' q6 18 -4 34" stroke="#4A0E2E" stroke-width="5" fill="none" opacity=".8"/>';
+    const foam=hasAny2("egg_white")||/foam|foamy|fluffy/.test(m)||key==="beer";
+    if(foam)s+='<rect x="0" y="'+(top-3)+'" width="100" height="'+(key==="beer"?14:8)+'" fill="#FBF6EA"/>';
+    if(G.ice&&!/no ice|without ice/.test(m)&&key!=="beer"){
+      const span=132-top,n=key==="rocks"?2:3;
+      for(let k=0;k<n;k++){const y=top+4+k*span/(n+.3),x=k%2?52:34;s+='<rect x="'+x+'" y="'+y.toFixed(1)+'" width="18" height="18" rx="3" fill="#fff" opacity=".22" stroke="#fff" stroke-opacity=".45" transform="rotate('+(k%2?-12:9)+' '+(x+9)+' '+(y+9).toFixed(1)+')"/>'}
+    }
+    if(d.i.some(([spec])=>ids(spec).some(x=>BUBBLY.has(x)))){
+      for(let k=0;k<7;k++){const x=36+((k*37)%30),y=top+12+((k*53)%Math.max(20,(118-top)));s+='<circle cx="'+x+'" cy="'+y+'" r="'+(1+k%2)+'" fill="#fff" opacity=".55"/>'}
+    }
+  }
+  s+='</g>';
+  s+='<path d="'+G.o+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+  // Garnish on the rim.
+  const [rx,ry]=G.rim;
+  if(/salt/.test(m)&&/rim/.test(m))for(let k=0;k<9;k++){const t=k/8,x=100-rx+(2*rx-100)*t;s+='<circle cx="'+x.toFixed(1)+'" cy="'+(ry+ (k%2?1.5:-1))+'" r="1.6" fill="#fff"/>'}
+  if((key==="highball"||key==="hurricane")&&!/neat/.test(m))s+='<path d="M58 '+(top+30)+' L70 '+(ry-16)+'" stroke="#A8234A" stroke-width="3.2" stroke-linecap="round"/>';
+  const gar=/olive/.test(m)?"olive":/cherry/.test(m)?"cherry":/coffee bean/.test(m)||d.id==="espresso_martini"?"beans":hasAny2("mint")?"mint":hasAny2("cucumber")?"cucumber":
+    hasAny2("berries")?"berry":/orange (peel|slice)/.test(m)||has("orange")?"orange":hasAny2("lime")?"lime":hasAny2("lemon")||/lemon peel/.test(m)?"lemon":has("pineapple")?"pineapple":null;
+  if(gar==="lime")s+='<path d="M'+(rx-10)+' '+ry+' a12 12 0 0 0 22 0 z" fill="#8CC63F" stroke="#4E7A1E" stroke-width="1.4"/><path d="M'+(rx-8)+' '+(ry+1)+' a10 10 0 0 0 18 0" fill="#D7EFA8"/>';
+  if(gar==="lemon")s+='<circle cx="'+rx+'" cy="'+(ry-2)+'" r="11" fill="#F4D64A" stroke="#C9A41A" stroke-width="1.4"/><circle cx="'+rx+'" cy="'+(ry-2)+'" r="7.5" fill="#FBEFA6"/><path d="M'+(rx-7)+' '+(ry-2)+'h14M'+rx+' '+(ry-9)+'v14" stroke="#F4D64A" stroke-width="1.2"/>';
+  if(gar==="orange")s+='<circle cx="'+rx+'" cy="'+(ry-2)+'" r="12" fill="#F28C28" stroke="#C4650F" stroke-width="1.4"/><circle cx="'+rx+'" cy="'+(ry-2)+'" r="8.5" fill="#F9B868"/><path d="M'+(rx-8)+' '+(ry-2)+'h16M'+rx+' '+(ry-10)+'v16" stroke="#F28C28" stroke-width="1.2"/>';
+  if(gar==="cucumber")s+='<circle cx="'+rx+'" cy="'+(ry-2)+'" r="11" fill="#5E9C3A"/><circle cx="'+rx+'" cy="'+(ry-2)+'" r="8.5" fill="#D9EFC2"/>';
+  if(gar==="pineapple")s+='<path d="M'+(rx-12)+' '+ry+' L'+rx+' '+(ry-18)+' L'+(rx+10)+' '+ry+' Z" fill="#F2C94C" stroke="#C99A1A" stroke-width="1.4"/><path d="M'+rx+' '+(ry-18)+' l-5 -9 M'+rx+' '+(ry-18)+' l5 -10" stroke="#5E9C3A" stroke-width="2.4" stroke-linecap="round"/>';
+  if(gar==="berry")s+='<path d="M'+(rx-9)+' '+(ry-8)+' Q'+rx+' '+(ry+14)+' '+(rx+9)+' '+(ry-8)+' Q'+rx+' '+(ry-14)+' '+(rx-9)+' '+(ry-8)+' Z" fill="#D6334B"/><path d="M'+(rx-6)+' '+(ry-11)+' l6 -5 l6 5" stroke="#5E9C3A" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
+  if(gar==="mint"){const cx=50,cy=top-8;s+='<g fill="#4FA34A" stroke="#2E6B2B" stroke-width="1"><ellipse cx="'+(cx-7)+'" cy="'+cy+'" rx="7" ry="4" transform="rotate(-35 '+(cx-7)+' '+cy+')"/><ellipse cx="'+(cx+6)+'" cy="'+(cy-3)+'" rx="7" ry="4" transform="rotate(30 '+(cx+6)+' '+(cy-3)+')"/><ellipse cx="'+cx+'" cy="'+(cy-10)+'" rx="4" ry="7"/></g>'}
+  if(gar==="cherry"){const cx=key==="martini"?50:56,cy=top+(key==="martini"?14:8);s+='<path d="M'+cx+' '+(cy-4)+' q4 -16 14 -22" stroke="#4E3A1E" stroke-width="1.6" fill="none"/><circle cx="'+cx+'" cy="'+cy+'" r="6" fill="#B0122C"/>'}
+  if(gar==="olive")s+='<path d="M34 '+(top-14)+' L64 '+(top+22)+'" stroke="#8C847B" stroke-width="1.6"/><ellipse cx="54" cy="'+(top+10)+'" rx="6.5" ry="5" fill="#7A8F2E"/><circle cx="56" cy="'+(top+9)+'" r="2" fill="#C2321E"/>';
+  if(gar==="beans")[[-8,0],[0,-2],[8,0]].forEach(([dx,dy])=>{s+='<ellipse cx="'+(50+dx)+'" cy="'+(top+dy-1)+'" rx="3.4" ry="2.4" fill="#3B1E12"/>'});
+  return s+'</svg>';
+}
+
+// Real photos (web/cocktails.json, from Wikimedia Commons) where we have them, the drawing otherwise.
+let SHOTS=null;
+fetch("cocktails.json").then(r=>r.ok?r.json():null).then(d=>{if(!d)return;SHOTS=d;render();if(rcOpen)openRecipe(rcOpen)}).catch(()=>{});
+function drinkPic(d,H,cls){
+  const box=el("span",{class:"art-box"+(cls?" "+cls:"")});
+  if(SHOTS&&SHOTS[d.id]){
+    box.classList.add("photo");
+    box.append(el("img",{src:"cocktails/"+d.id+".webp",alt:"",loading:"lazy",decoding:"async",onerror:()=>{box.classList.remove("photo");box.innerHTML=cocktailArt(d,H)}}));
+  }else box.innerHTML=cocktailArt(d,H);
+  return box;
 }
 
 /* ---------- recipe sheet ---------- */
@@ -1388,6 +1579,9 @@ let rcOpen=null;
 function openRecipe(d){
   const H=have(),missing=analyze(d,H),picks=bottlePicks(d),fi=fitInfo(d,picks);
   const body=$("rcBody");body.innerHTML="";
+  const shot=SHOTS&&SHOTS[d.id],art=$("rcArt");art.innerHTML="";art.parentElement.classList.toggle("photo",!!shot);
+  if(shot)art.append(el("img",{class:"rc-photo",src:"cocktails/"+d.id+".webp",alt:"",onerror:()=>{art.parentElement.classList.remove("photo");art.innerHTML=cocktailArt(d,H)}}));
+  else art.innerHTML=cocktailArt(d,H);
   const ings=el("ul",{class:"ings"},d.i.map(([spec,amt,opt],idx)=>{
     const ok=hasAny(spec,H);
     return el("li",{class:ok?"have":opt?"opt":"no"},
@@ -1410,7 +1604,8 @@ function openRecipe(d){
     el("div",{style:"display:grid;gap:8px"},el("h3",{class:"rc-h"},t("rec.method")),el("p",{class:"method"},d.m)),
     fi&&fi.others.length?el("p",{class:"rc-fit"},t("drink.also",fi.others.join(", "))):null,
     fi&&fi.tip?el("div",{class:"rc-tip"},el("span",{class:"k"},t("rec.tip")),el("span",{class:"v"},fi.tip)):null,
-    ty?el("button",{class:"btn rc-buy",type:"button",onclick:()=>{closeRecipe();openShop(ty)}},t("rec.whereBuy",NAME[ty])):null].filter(Boolean));
+    ty?el("button",{class:"btn rc-buy",type:"button",onclick:()=>{closeRecipe();openShop(ty)}},t("rec.whereBuy",NAME[ty])):null,
+    shot?el("p",{class:"rc-credit"},t("rec.photo"),el("a",{href:shot.src,target:"_blank",rel:"noopener"},[shot.by,shot.lic,"Wikimedia Commons"].filter(Boolean).join(" · "))):null].filter(Boolean));
   const r=$("recipe");
   if(r.hidden){r.hidden=false;document.body.style.overflow="hidden";try{history.pushState({recipe:1},"")}catch(e){}}
   rcOpen=d;r.scrollTop=0;$("rcBack").focus();
@@ -1875,7 +2070,7 @@ $("menuCountry").addEventListener("change",e=>{shop.country=e.target.value;setPr
 const LIQUID={vodka:"clear",gin:"clear",white_rum:"clear",mezcal:"clear",arak:"clear",cachaca:"clear",pisco:"clear",maraschino:"clear",triple_sec:"clear",
  tequila:"clear",dark_rum:"#8A4B1C",bourbon:"#B5651D",rye:"#A85A1A",scotch:"#C07A2A",irish:"#C68A3A",japanese:"#B8732A",world_whisky:"#B06A24",brandy:"#93441A",
  campari:"#C8102E",aperol:"#F26B21",sweet_vermouth:"#6B1A1A",dry_vermouth:"#E6DDB4",kahlua:"#2B1A12",amaretto:"#A0521D",baileys:"#D2B98F",limoncello:"#EFCF2F",
- elderflower:"#EFE6BE",peach:"#F2A774",blue_curacao:"#1E7FD0",cassis:"#4A0E2E",chartreuse:"#7DB33A",amaro:"#3B2414",bitters:"#7A2E12",
+ elderflower:"#EFE6BE",peach:"#F2A774",blue_curacao:"#1E7FD0",cassis:"#4A0E2E",chartreuse:"#7DB33A",absinthe:"#9BC53D",amaro:"#3B2414",bitters:"#7A2E12",
  red_wine:"#6E0F24",white_wine:"#E6D57E",rose:"#EE9AA2",prosecco:"#EBDB8C",beer:"#D9A13A"};
 const BOTTLE={ // [glass outline, top of the liquid] in a 24×48 box
  tall:["M10 2h4v9c0 2 5 3 5 7v26a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V18c0-4 5-5 5-7z",22],
@@ -2060,7 +2255,7 @@ const OB_STEPS=[
  {key:"spirits",ids:()=>typesOf("spirit","liqueur"),pick:true,photo:true,next:"ob.next.wine"},
  {key:"wine",ids:()=>typesOf("wine"),pick:true,next:"ob.next.kitchen"},
  {key:"kitchen",ids:()=>["lemon","sugar","honey","soda","cola","sprite","orange","coffee","mint","egg_white"],next:"ob.next.extras"},
- {key:"extras",ids:()=>["lime","tonic","ginger_beer","cranberry","pineapple","grapefruit","tomato","cream","coconut_cream","simple_syrup","grenadine","bitters","basil","ginger"],next:"ob.next.result"}
+ {key:"extras",ids:()=>["lime","tonic","ginger_beer","cranberry","pineapple","grapefruit","tomato","cream","coconut_cream","simple_syrup","grenadine","bitters","basil","ginger","cucumber","berries","orgeat","passion_fruit"],next:"ob.next.result"}
 ];
 function counterEl(bump,reach){
   const n=reach?reachable():makeable().length,Lst=ob.last;
@@ -2175,7 +2370,8 @@ function renderOb(bump){
       :el("h2",{id:"obTitle"},t("ob.doneTitle",0)),
     el("p",{class:"lead"},can.length?t("ob.doneLead"):t("ob.doneLeadNone")),
     can.length?el("div",{class:"done-list"},can.slice(0,6).map(d=>el("div",{class:"done-row"},
-      el("span",{},el("b",{},d.name),el("small",{},d.i.filter(x=>!x[2]).map(([spec])=>NAME[ids(spec).find(id=>H.has(id))||ids(spec)[0]]).join(" · "))),
+      drinkPic(d,H,"sm"),
+      el("span",{style:"flex:1;min-width:0"},el("b",{},d.name),el("small",{},d.i.filter(x=>!x[2]).map(([spec])=>NAME[ids(spec).find(id=>H.has(id))||ids(spec)[0]]).join(" · "))),
       meterEl(d.s)))):null,
     nx?el("div",{class:"unlock"},el("div",{},...(()=>{const [a,x,b]=t("ob.doneBest",NAME[nx.id],nx.n);return [el("b",{},a),x,b]})())):null].filter(Boolean));
   foot.append(el("button",{class:"btn ghost",type:"button",onclick:finishBar},t("ob.toBar")));

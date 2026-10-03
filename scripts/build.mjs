@@ -1,7 +1,7 @@
 // Builds both targets from src/:
 //   dist/artifact.html  — the claude.ai version (published as the Artifact)
 //   public/             — the web app for Vercel (index.html + static files)
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, readdirSync } from "node:fs";
 
 const read = (p) => readFileSync(new URL("../" + p, import.meta.url), "utf8");
 const out = (p) => new URL("../" + p, import.meta.url);
@@ -50,6 +50,12 @@ for (const f of ["platform-web.js", "manifest.webmanifest", "sw.js", "icon.svg",
   copyFileSync(out("web/" + f), out("public/" + f));
 // Bottle photos (scripts/photos/build.py); the app shows drawn bottles without them.
 if (existsSync(out("web/photos.json"))) copyFileSync(out("web/photos.json"), out("public/photos.json"));
+// Cocktail photos (scripts/photos/cocktails_*.py); without them each cocktail shows its drawing.
+if (existsSync(out("web/cocktails.json"))) {
+  copyFileSync(out("web/cocktails.json"), out("public/cocktails.json"));
+  mkdirSync(out("public/cocktails"), { recursive: true });
+  for (const f of readdirSync(out("web/cocktails"))) copyFileSync(out("web/cocktails/" + f), out("public/cocktails/" + f));
+}
 copyFileSync(out("node_modules/@supabase/supabase-js/dist/umd/supabase.js"), out("public/supabase.js"));
 
 console.log("built dist/artifact.html and public/");

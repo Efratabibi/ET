@@ -50,6 +50,15 @@ python3 scripts/photos/build.py   # strict matching, writes web/photos.json and 
 
 `build.py` also writes contact sheets to `.photo-cache/` for checking matches by eye. Wrong matches go in `data/photo-overrides.json` (`{"Name": null}` blocks a photo; `{"Name": "<barcode>"}` pins one). Bottles without a photo show a drawn bottle in the drink's shape and colour.
 
+Cocktail photos come from [Wikimedia Commons](https://commons.wikimedia.org) (each under its own free licence; the recipe card credits the author and licence).
+
+```bash
+python3 scripts/photos/cocktails_fetch.py   # up to 6 candidates per cocktail, contact sheets in .photo-cache/cocktails/
+python3 scripts/photos/cocktails_build.py   # builds the picks in data/cocktail-photo-picks.json into web/cocktails/ and web/cocktails.json
+```
+
+Pick by eye from the contact sheets. A cocktail without a pick keeps its drawn picture.
+
 ## Moving to the web version: checklist
 
 Steps marked **[you]** need your accounts.

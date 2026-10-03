@@ -3,7 +3,7 @@
 - One source, two targets. Edit `src/app.html` / `src/i18n/*.js` / `src/prompts.cjs`, then `npm run build`.
   - `dist/artifact.html` is published to the existing claude.ai Artifact
     (https://claude.ai/artifact/JBkPbYd8g8tZq1YdS8jTjK, capabilities `db`, `sample`, `user`). Pass that `url` when publishing,
-    with `files: {"photos.json": "web/photos.json"}` when the photos changed.
+    with `files` for `photos.json`, `cocktails.json` and `cocktails/<id>.webp` (from `web/`) when photos changed.
   - `public/` is the Vercel web build (gitignored, built on deploy).
 - The app talks to its host only through `PLATFORM` (top of the main script in `src/app.html`):
   `PLATFORM.ai()` → `{json(task, params, {images, signal}), images?()}` (`images()` resolves false when the view cannot send photos) and `PLATFORM.bar()` → `{ref:{get,set,onSnapshot}, legacy}`.
@@ -16,7 +16,7 @@
   Catalog data holds ids; names come from the locales. Prompts get `lang` for the language of notes.
 - Prices always state the bottle size. Catalog: `B(...)` bottle rows and `W(...)` wine rows in `src/app.html`
   (wine notes are English terms; `he.js` `wineTerm` translates them).
-- Bottle photos: `scripts/photos/fetch.py` then `build.py` (see README). Check the contact sheets before publishing;
+- Bottle photos: `scripts/photos/fetch.py` then `build.py`; cocktail photos: `cocktails_fetch.py`, picks in `data/cocktail-photo-picks.json`, then `cocktails_build.py` (see README). Check the contact sheets before publishing;
   a wrong photo is worse than the drawn bottle.
 - Everything in the repository is in English (code, comments, docs); Hebrew appears only as translations and search aliases.
 - The user is not a developer: explain setup steps in plain Hebrew and never ask for secrets in chat.

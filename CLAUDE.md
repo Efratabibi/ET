@@ -5,7 +5,7 @@
     (https://claude.ai/artifact/JBkPbYd8g8tZq1YdS8jTjK, capabilities `db`, `sample`, `user`) — pass that `url` when publishing.
   - `public/` is the Vercel web build (gitignored, built on deploy).
 - The app talks to its host only through `PLATFORM` (top of the main script in `src/app.html`):
-  `PLATFORM.ai()` → `{json(task, params, {images, signal})}` and `PLATFORM.bar()` → `{ref:{get,set,onSnapshot}, legacy}`.
+  `PLATFORM.ai()` → `{json(task, params, {images, signal}), images?()}` (`images()` resolves false when the view cannot send photos) and `PLATFORM.bar()` → `{ref:{get,set,onSnapshot}, legacy}`.
   The artifact implementation is the default; `web/platform-web.js` sets `window.HB_PLATFORM` for the web build.
 - New Claude features: add a task to `src/prompts.cjs` (prompt + strict JSON schema: every property required,
   `additionalProperties:false`, nullable as `["type","null"]`) and call `sampleApi.json("<task>", params)`.

@@ -10,6 +10,12 @@
     const {data}=await sb.auth.getSession();
     return data.session;
   }
+  // Text in the page's current language, from the app's locales (src/i18n).
+  function tr(key,...args){
+    const all=window.HB_LOCALES||{},L=all[document.documentElement.lang]||all.he;
+    const v=L&&key in L.ui?L.ui[key]:all.en&&all.en.ui[key];
+    return typeof v==="function"?v(...args):(v??key);
+  }
   function toDataUrl(blob){
     return new Promise((ok,bad)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=bad;r.readAsDataURL(blob)});
   }
@@ -68,12 +74,15 @@
   document.head.appendChild(css);
 
   function dialog(){
-    const wrap=document.createElement("div");wrap.className="acct";wrap.dir="rtl";
-    wrap.innerHTML='<form class="card"><h2>התחברות</h2><p class="note" style="margin:0">הבר נשמר בחשבון שלך ומסתנכרן בין מכשירים.</p>'+
-      '<button class="btn" type="button" data-google>המשך עם Google</button>'+
-      '<label class="lbl" for="acct-email">או קישור כניסה במייל</label><input id="acct-email" type="email" required placeholder="name@example.com" autocomplete="email">'+
-      '<button class="btn ghost" type="submit">שליחת קישור</button><p class="status" data-msg></p>'+
-      '<button class="ob-skip" type="button" data-close>סגירה</button></form>';
+    const wrap=document.createElement("div");wrap.className="acct";
+    wrap.innerHTML='<form class="card"><h2></h2><p class="note" style="margin:0" data-lead></p>'+
+      '<button class="btn" type="button" data-google></button>'+
+      '<label class="lbl" for="acct-email"></label><input id="acct-email" type="email" required placeholder="name@example.com" autocomplete="email">'+
+      '<button class="btn ghost" type="submit"></button><p class="status" data-msg></p>'+
+      '<button class="ob-skip" type="button" data-close></button></form>';
+    const set=(sel,key)=>{wrap.querySelector(sel).textContent=tr(key)};
+    set("h2","acct.title");set("[data-lead]","acct.lead");set("[data-google]","acct.google");set("label","acct.emailLabel");
+    set("[type=submit]","acct.send");set("[data-close]","common.close");
     const msg=wrap.querySelector("[data-msg]");
     wrap.querySelector("[data-close]").onclick=()=>wrap.remove();
     wrap.addEventListener("click",e=>{if(e.target===wrap)wrap.remove()});
@@ -82,15 +91,15 @@
       e.preventDefault();
       const email=wrap.querySelector("#acct-email").value.trim();
       const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin}});
-      msg.textContent=error?"לא הצלחנו לשלוח. בדקו את הכתובת ונסו שוב.":"שלחנו קישור ל-"+email+". פתחו אותו מהמכשיר הזה.";
+      msg.textContent=error?tr("acct.sendFailed"):tr("acct.sent",email);
     };
     document.body.appendChild(wrap);wrap.querySelector("input").focus();
   }
 
   async function paintAccount(){
     const s=await session(),el=document.getElementById("sync");if(!el)return;
-    el.title=s?"התנתקות":"התחברות";
-    if(!s){const t=document.getElementById("syncText");if(t)t.textContent="שמור בדפדפן הזה · התחברות"}
+    el.title=s?tr("acct.signOut"):tr("acct.signIn");
+    if(!s){const t=document.getElementById("syncText");if(t)t.textContent=tr("sync.local")+" · "+tr("acct.signIn")}
     el.onclick=async()=>{
       if(!s)return dialog();
       await sb.auth.signOut();location.reload();
@@ -98,4 +107,5 @@
   }
   sb.auth.onAuthStateChange((event)=>{if(event==="SIGNED_IN"&&!sessionStorage.getItem("hb-signed")){sessionStorage.setItem("hb-signed","1");location.reload()}});
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",paintAccount);else paintAccount();
+  window.addEventListener("hb-lang",paintAccount); // the app switched language
 })();

@@ -33,6 +33,20 @@ BAD_PHRASES = ["sans alcool", "alcohol free", "non alcoholic", "0.0%", "0,0%", "
 SOFT = set("the original classic year years old yo ans jahre anos años aged single malt scotch whisky whiskey bourbon gin vodka rum tequila de".split())
 
 
+WINE_CATS = {"wines", "red-wines", "white-wines", "rose-wines", "sparkling-wines", "champagnes", "proseccos", "cavas",
+             "still-wines", "wines-from-france", "wines-from-italy", "wines-from-spain"}
+OTHER_CATS = {"spirits", "liqueurs", "beers", "ciders", "vodkas", "gins", "rums", "whiskies", "tequilas", "brandies"}
+WINE_TYPES = {"wine", "prosecco", "red_wine", "white_wine"}
+
+
+def family_ok(item, p):
+    """A vodka can't be a champagne (Chopin is both a vodka and a champagne house), and the other way round."""
+    cats = {c.split(":")[-1] for c in p.get("categories_tags", [])}
+    if item["type"] in WINE_TYPES:
+        return not (cats & OTHER_CATS) or bool(cats & WINE_CATS)
+    return not (cats & WINE_CATS) and "beers" not in cats
+
+
 def norm(s):
     s = unicodedata.normalize("NFD", str(s or "")).encode("ascii", "ignore").decode().lower()
     s = s.replace("&", " and ").replace("’", "'")
@@ -86,7 +100,7 @@ def score(item, p):
     text = norm(name + " " + brands)
     words = set(toks(name + " " + brands))
     low = " " + norm(name) + " "
-    if not p.get("image_front_small_url") or not name.strip():
+    if not p.get("image_front_small_url") or not name.strip() or not family_ok(item, p):
         return None
     if any(b in words for b in BAD) or any(ph in (name + " " + brands).lower() for ph in BAD_PHRASES):
         return None
@@ -94,8 +108,10 @@ def score(item, p):
         # the brand must be on the label or in the brand field
         if norm(item["brand"]) not in text:
             return None
+    # The expression must be on the product name itself; the brand field alone often lists a whole range.
     need = [t for t in toks(item["expr"]) if t not in SOFT]
-    if any(t not in words for t in need):
+    in_name = set(toks(name))
+    if any(t not in in_name for t in need):
         return None
     size = litres(p.get("quantity"))
     if size is not None and size < 0.3:
@@ -162,7 +178,10 @@ def main():
         url = pick.get("image_front_url") or pick["image_front_small_url"]
         url = re.sub(r"\.(\d+|full)\.jpg$", ".400.jpg", url)
         try:
-            data, small = thumb(fetch(url))
+            img = fetch(url)
+            if sum(img.convert("L").resize((16, 16)).getdata()) / 256 < 45:
+                continue  # too dark to recognise anything at thumbnail size
+            data, small = thumb(img)
         except Exception as e:
             print("image failed", it["name"], e, file=sys.stderr)
             continue

@@ -35,8 +35,213 @@
   "url": "https://world.openfoodfacts.org/product/5000289929981"
  },
  "Bombay Sapphire": {
-  "code": "5010677714006",
-  "product": "Gin Bombay",
-  "url": "https://world.openfoodfacts.org/product/5010677714006"
+  "code": "5010677713009",
+  "product": "Bombay Sapphire",
+  "url": "https://world.openfoodfacts.org/product/5010677713009"
+ },
+ "Hendrick's": {
+  "code": "5010327755014",
+  "product": "Gin",
+  "url": "https://world.openfoodfacts.org/product/5010327755014"
+ },
+ "Monkey 47": {
+  "code": "42213277",
+  "product": "Schwarzwald Dry Gin",
+  "url": "https://world.openfoodfacts.org/product/42213277"
+ },
+ "The Botanist": {
+  "code": "5055807400596",
+  "product": "Islay Dry Gin",
+  "url": "https://world.openfoodfacts.org/product/5055807400596"
+ },
+ "Roku": {
+  "code": "4901777305359",
+  "product": "Roku Japanese Craft Gin",
+  "url": "https://world.openfoodfacts.org/product/4901777305359"
+ },
+ "Malfy Con Limone": {
+  "code": "5000299296042",
+  "product": "Gin con Limone",
+  "url": "https://world.openfoodfacts.org/product/5000299296042"
+ },
+ "Malfy Originale": {
+  "code": "5000299296882",
+  "product": "missoni gin originale",
+  "url": "https://world.openfoodfacts.org/product/5000299296882"
+ },
+ "Malfy Con Arancia": {
+  "code": "5000299296080",
+  "product": "Gin con arancia",
+  "url": "https://world.openfoodfacts.org/product/5000299296080"
+ },
+ "Gin Mare": {
+  "code": "8411640000459",
+  "product": "Gin Mare",
+  "url": "https://world.openfoodfacts.org/product/8411640000459"
+ },
+ "Brockmans": {
+  "code": "5010296169164",
+  "product": "BROCKMAN'S PREMIUM GIN Intensely Smooth",
+  "url": "https://world.openfoodfacts.org/product/5010296169164"
+ },
+ "Bulldog": {
+  "code": "0897076002010",
+  "product": "Bulldog - London Dry Gin",
+  "url": "https://world.openfoodfacts.org/product/0897076002010"
+ },
+ "Nordés": {
+  "code": "8435449500002",
+  "product": "Nordes Atlantic Galician Gin",
+  "url": "https://world.openfoodfacts.org/product/8435449500002"
+ },
+ "Absolut": {
+  "code": "7312040017683",
+  "product": "Absolut Vodka",
+  "url": "https://world.openfoodfacts.org/product/7312040017683"
+ },
+ "Absolut Citron": {
+  "code": "7312040090105",
+  "product": "absolut citron",
+  "url": "https://world.openfoodfacts.org/product/7312040090105"
+ },
+ "Absolut Raspberri": {
+  "code": "7312040350056",
+  "product": "Vodka raspberri",
+  "url": "https://world.openfoodfacts.org/product/7312040350056"
+ },
+ "Grey Goose": {
+  "code": "0080480280017",
+  "product": "Grey goose original",
+  "url": "https://world.openfoodfacts.org/product/0080480280017"
+ },
+ "Belvedere": {
+  "code": "5901867807021",
+  "product": "Vodka",
+  "url": "https://world.openfoodfacts.org/product/5901867807021"
+ },
+ "Ketel One": {
+  "code": "8711566013701",
+  "product": "Vodka",
+  "url": "https://world.openfoodfacts.org/product/8711566013701"
+ },
+ "Stolichnaya": {
+  "code": "4750021000065",
+  "product": "Stolichnaya Vodka",
+  "url": "https://world.openfoodfacts.org/product/4750021000065"
+ },
+ "Russian Standard": {
+  "code": "4603400000043",
+  "product": "Водка «Русский стандарт»",
+  "url": "https://world.openfoodfacts.org/product/4603400000043"
+ },
+ "Russian Standard Platinum": {
+  "code": "4603400000180",
+  "product": "Russian Standard Platinum Vodka",
+  "url": "https://world.openfoodfacts.org/product/4603400000180"
+ },
+ "Finlandia": {
+  "code": "6412709021776",
+  "product": "Finlandia Vodka",
+  "url": "https://world.openfoodfacts.org/product/6412709021776"
+ },
+ "Beluga Noble": {
+  "code": "3890000781019",
+  "product": "Beluga Noble Vodka",
+  "url": "https://world.openfoodfacts.org/product/3890000781019"
+ },
+ "Tito's": {
+  "code": "0619947000112",
+  "product": "Tito's handmade vodka",
+  "url": "https://world.openfoodfacts.org/product/0619947000112"
+ },
+ "Wyborowa": {
+  "code": "5900191013917",
+  "product": "Wyborowa Vodka",
+  "url": "https://world.openfoodfacts.org/product/5900191013917"
+ },
+ "Nemiroff": {
+  "code": "4823021805593",
+  "product": "Nemiroff",
+  "url": "https://world.openfoodfacts.org/product/4823021805593"
+ },
+ "Bacardi Carta Blanca": {
+  "code": "5010677014205",
+  "product": "Carta blanca",
+  "url": "https://world.openfoodfacts.org/product/5010677014205"
+ },
+ "Bacardi Spiced": {
+  "code": "7610113007518",
+  "product": "Bacardi spiced",
+  "url": "https://world.openfoodfacts.org/product/7610113007518"
+ },
+ "Bacardi Ocho": {
+  "code": "7610113001516",
+  "product": "Bacardi rhum 8ans -reserva ocho-rare gold rhum",
+  "url": "https://world.openfoodfacts.org/product/7610113001516"
+ },
+ "Havana Club 3 Años": {
+  "code": "8501110080231",
+  "product": "Havana Club 3 ans",
+  "url": "https://world.openfoodfacts.org/product/8501110080231"
+ },
+ "Havana Club Especial": {
+  "code": "8501110080927",
+  "product": "Especial",
+  "url": "https://world.openfoodfacts.org/product/8501110080927"
+ },
+ "Havana Club 7 Años": {
+  "code": "8501110080439",
+  "product": "Añejo 7 Años",
+  "url": "https://world.openfoodfacts.org/product/8501110080439"
+ },
+ "Plantation 3 Stars": {
+  "code": "3460410529053",
+  "product": "Plantation 3 Stars",
+  "url": "https://world.openfoodfacts.org/product/3460410529053"
+ },
+ "Plantation Stiggins' Fancy Pineapple": {
+  "code": "3460410529862",
+  "product": "Ром Ананасовый Pineapple Stiggin's Fancy",
+  "url": "https://world.openfoodfacts.org/product/3460410529862"
+ },
+ "Captain Morgan Spiced Gold": {
+  "code": "5000299223017",
+  "product": "Captain Morgan Spiced Gold",
+  "url": "https://world.openfoodfacts.org/product/5000299223017"
+ },
+ "Captain Morgan Black Spiced": {
+  "code": "5000281033273",
+  "product": "Black Spiced Spirit Drink",
+  "url": "https://world.openfoodfacts.org/product/5000281033273"
+ },
+ "Captain Morgan Dark": {
+  "code": "5000281022482",
+  "product": "Captain Morgen Dark Rum",
+  "url": "https://world.openfoodfacts.org/product/5000281022482"
+ },
+ "Captain Morgan White": {
+  "code": "5000281040899",
+  "product": "Caribbean White Rum",
+  "url": "https://world.openfoodfacts.org/product/5000281040899"
+ },
+ "Brugal Añejo": {
+  "code": "7460855200353",
+  "product": "Brugal Añejo Rhum 38º",
+  "url": "https://world.openfoodfacts.org/product/7460855200353"
+ },
+ "Diplomático Reserva Exclusiva": {
+  "code": "5099873029343",
+  "product": "Diplomatico Reserva Exclusiva",
+  "url": "https://world.openfoodfacts.org/product/5099873029343"
+ },
+ "Diplomático Mantuano": {
+  "code": "7594003626624",
+  "product": "Diplomático Mantuano",
+  "url": "https://world.openfoodfacts.org/product/7594003626624"
+ },
+ "Kraken Black Spiced": {
+  "code": "0811538013062",
+  "product": "The Kraken Black Spiced Rum",
+  "url": "https://world.openfoodfacts.org/product/0811538013062"
  }
 }

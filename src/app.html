@@ -266,6 +266,9 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
 .ob-res:hover{border-color:var(--accent)}
 .ob-res small{color:var(--muted)}
 .ob-res .plus{font-weight:700;color:var(--accent);white-space:nowrap}
+.ob-res>span:not(.thumb):not(.plus){flex:1;min-width:0}
+.ob-res .thumb{flex:none;display:block;width:26px;height:52px}
+.ob-res .thumb svg{display:block;width:100%;height:100%}
 .unlock{border-radius:14px;padding:12px 14px;background:var(--ok-soft);color:var(--ink);display:grid;gap:4px;animation:pop .35s ease}
 .unlock b{color:var(--ok)}
 .unlock.none{background:var(--surface);border:1px dashed var(--line)}
@@ -1597,12 +1600,12 @@ function renderWineResults(){
   const box=$("wineResults");box.innerHTML="";const q=wineQ.trim();if(!q)return;
   const il=shop.country==="il";
   localWines(q).forEach(w=>box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine({name:w.display,note:w.note+" · "+w.name,rl:il?w.il[0]:null,rh:il?w.il[1]:null})},
-    el("span",{},w.display," ",el("small",{},w.name+" · "+w.note+(il&&w.il[0]?" · בחנות "+ltr("₪"+w.il[0]+"–"+w.il[1])+" ל-750 מ״ל":""))),el("span",{class:"plus"},"+ הוספה"))));
+    bottleThumb(null,null,w.note+" "+w.display),el("span",{},w.display," ",el("small",{},w.name+" · "+w.note+(il&&w.il[0]?" · בחנות "+ltr("₪"+w.il[0]+"–"+w.il[1])+" ל-750 מ״ל":""))),el("span",{class:"plus"},"+ הוספה"))));
   if(wineAI&&wineAI.q===q){
     if(wineAI.loading)box.append(el("p",{class:"status"},"Claude מחפש…"));
     else if(wineAI.err)box.append(el("p",{class:"status err"},wineAI.err));
     else wineAI.items.forEach(w=>box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine(w)},
-      el("span",{},w.name," ",el("small",{},(w.note||"")+(w.rl?" · בחנות "+ltr(COUNTRIES[shop.country].cur+fmtN(w.rl)+(w.rh&&w.rh!==w.rl?"–"+fmtN(w.rh):""))+" ל-750 מ״ל":""))),el("span",{class:"plus"},"+ הוספה"))));
+      bottleThumb(null,null,(w.note||"")+" "+w.name),el("span",{},w.name," ",el("small",{},(w.note||"")+(w.rl?" · בחנות "+ltr(COUNTRIES[shop.country].cur+fmtN(w.rl)+(w.rh&&w.rh!==w.rl?"–"+fmtN(w.rh):""))+" ל-750 מ״ל":""))),el("span",{class:"plus"},"+ הוספה"))));
   }
   if(sampleApi&&!(wineAI&&wineAI.q===q&&!wineAI.err))box.append(el("button",{type:"button",class:"ob-res",onclick:()=>searchWineAI(q)},
     el("span",{},"חיפוש ״"+q+"״ עם Claude ",el("small",{},"לכל יין שלא ברשימה, כולל הערכת מחיר בחנות")),el("span",{class:"plus"},"חיפוש")));
@@ -1676,6 +1679,44 @@ $("menuCountry").addEventListener("change",e=>{shop.country=e.target.value;setPr
   }catch(e){sampleApi=null;$("photoBox").hidden=true;setTimeout(()=>obSetPhoto(false),0);renderMenu()}
 })();
 
+/* ---------- bottle thumbnails: a drawn bottle in the drink's shape and colour ---------- */
+// "clear" drinks take the theme's line colour so they read as clear glass in both themes.
+const LIQUID={vodka:"clear",gin:"clear",white_rum:"clear",mezcal:"clear",arak:"clear",cachaca:"clear",pisco:"clear",maraschino:"clear",triple_sec:"clear",
+ tequila:"clear",dark_rum:"#8A4B1C",bourbon:"#B5651D",rye:"#A85A1A",scotch:"#C07A2A",irish:"#C68A3A",japanese:"#B8732A",world_whisky:"#B06A24",brandy:"#93441A",
+ campari:"#C8102E",aperol:"#F26B21",sweet_vermouth:"#6B1A1A",dry_vermouth:"#E6DDB4",kahlua:"#2B1A12",amaretto:"#A0521D",baileys:"#D2B98F",limoncello:"#EFCF2F",
+ elderflower:"#EFE6BE",peach:"#F2A774",blue_curacao:"#1E7FD0",cassis:"#4A0E2E",chartreuse:"#7DB33A",amaro:"#3B2414",bitters:"#7A2E12",
+ red_wine:"#6E0F24",white_wine:"#E6D57E",rose:"#EE9AA2",prosecco:"#EBDB8C",beer:"#D9A13A"};
+const BOTTLE={ // [glass outline, top of the liquid] in a 24×48 box
+ tall:["M10 2h4v9c0 2 5 3 5 7v26a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V18c0-4 5-5 5-7z",22],
+ square:["M10 3h4v7h4a2 2 0 0 1 2 2v32a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2h4z",20],
+ wine:["M10.5 1h3v13c0 3 5.5 4 5.5 9v21a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V23c0-5 5.5-6 5.5-9z",25],
+ round:["M10 3h4v8c4 1 7 5 7 11v20a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V22c0-6 3-10 7-11z",23],
+ small:["M10 12h4v5c2 1 4 2 4 5v20a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V22c0-3 2-4 4-5z",26]
+};
+const wineKind=n=>/מבעבע|שמפניה|קאווה|פרוסקו/.test(n||"")?"prosecco":/רוזה/.test(n||"")?"rose":/לבן/.test(n||"")?"white_wine":"red_wine";
+let thumbN=0;
+// type: catalog id (or null for a wine known only by its Hebrew note); style picks aged vs. clear tequila.
+function bottleThumb(type,style,note){
+  const t=type&&type!=="red_wine"&&type!=="white_wine"?type:(note?wineKind(note):type);
+  const shape=["red_wine","white_wine","rose","prosecco"].includes(t)?"wine"
+    :["bourbon","rye","scotch","irish","japanese","world_whisky","brandy","dark_rum"].includes(t)?"square"
+    :CAT_OF[t]==="liqueur"?"round":CAT_OF[t]==="spirit"?"tall":"small";
+  let liquid=LIQUID[t]||"clear";
+  const fizz=t==="prosecco";
+  if(fizz&&/רוזה|ros[eé]/i.test(note||""))liquid=LIQUID.rose;
+  if(t==="tequila"&&(style==="reposado"||style==="anejo"))liquid="#C98A2B";
+  const [path,top]=BOTTLE[shape],id="bt"+(thumbN++);
+  const fill=liquid==="clear"?"var(--line)":liquid;
+  const span=el("span",{class:"thumb","aria-hidden":"true"});
+  span.innerHTML='<svg viewBox="0 0 24 48"><clipPath id="'+id+'"><path d="'+path+'"/></clipPath>'+
+    '<path d="'+path+'" fill="var(--bg)"/>'+
+    '<rect x="0" y="'+top+'" width="24" height="'+(48-top)+'" fill="'+fill+'" clip-path="url(#'+id+')"/>'+
+    '<rect x="0" y="'+(top+6)+'" width="24" height="8" fill="var(--surface)" opacity=".85" clip-path="url(#'+id+')"/>'+
+    (fizz?'<path d="M10.5 1h3v9h-3z" fill="#C9A227"/>':'')+
+    '<path d="'+path+'" fill="none" stroke="var(--muted)" stroke-width="1.2" stroke-linejoin="round"/></svg>';
+  return span;
+}
+
 /* ---------- bottle finder: one search used by onboarding, the bar and the shop ---------- */
 let itemIdx=null,itemIdxKey="";
 function learnedProducts(){return (state.learned||[]).map(l=>({name:l.name,brand:"",he:l.he||"",type:l.type,style:l.style,il:l.il||[null,null],us:l.us||[null,null],learned:true}))}
@@ -1732,6 +1773,7 @@ function finder(box,q,onPick,opts={}){
   hits.forEach(e=>{
     const owned=e.kind==="type"?H.has(e.id):state.bottles.some(b=>b.name===e.name);
     box.append(el("button",{type:"button",class:"ob-res",onclick:()=>{if(e.kind==="product"){rememberLearned(e);onPick({id:e.type,name:e.name,style:e.style})}else onPick({id:e.id})}},
+      e.kind==="type"?bottleThumb(e.id):bottleThumb(e.type,e.style,e.wineNote?e.wineNote+" "+e.name:null),
       el("span",{},e.kind==="type"?NAME[e.id]:e.name," ",el("small",{},e.kind==="type"?(owned?"כבר בבר":"סוג משקה · "+CATS.find(c=>c.id===CAT_OF[e.id]).name):productSub(e)+(owned?" · כבר בבר":""))),
       el("span",{class:"plus"},"+ הוספה")));
   });
@@ -1740,7 +1782,7 @@ function finder(box,q,onPick,opts={}){
     if(ai.loading)box.append(el("p",{class:"status"},"Claude מזהה את הבקבוק…"));
     else if(ai.err)box.append(el("p",{class:"status err"},ai.err));
     else ai.items.forEach(e=>box.append(el("button",{type:"button",class:"ob-res",onclick:()=>{rememberLearned(e);onPick({id:e.type,name:e.name,style:e.style})}},
-      el("span",{},e.name," ",el("small",{},productSub(e))),el("span",{class:"plus"},"+ הוספה"))));
+      bottleThumb(e.type,e.style),el("span",{},e.name," ",el("small",{},productSub(e))),el("span",{class:"plus"},"+ הוספה"))));
   }
   if(sampleApi&&!(ai&&ai.q===q&&!ai.err))box.append(el("button",{type:"button",class:"ob-res",onclick:async()=>{
       finder.ai={q,loading:true,items:[]};finder(box,q,onPick,opts);

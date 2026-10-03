@@ -7,14 +7,14 @@
   --bg:#F5F3F7;--surface:#FFFFFF;--ink:#221A2B;--muted:#6B6177;--line:#E3DDE9;
   --accent:#A8234A;--accent-ink:#FFFFFF;--accent-soft:#F6E3EA;
   --ok:#3A722A;--ok-soft:#E5F0DF;--warn:#8F570A;--warn-soft:#F7ECDA;
-  --field:#8F859B;--shadow:0 1px 2px rgba(34,26,43,.06),0 6px 20px rgba(34,26,43,.06);--shadow-up:0 -4px 20px rgba(34,26,43,.08);
+  --field:#8F859B;--photo-bg:#FFFFFF;--shadow:0 1px 2px rgba(34,26,43,.06),0 6px 20px rgba(34,26,43,.06);--shadow-up:0 -4px 20px rgba(34,26,43,.08);
   --display:"Secular One","Assistant",Arial,sans-serif;
   --body:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
-    --bg:#151119;--surface:#1F1925;--ink:#EFE9F3;--muted:#A69BB2;--line:#342B3D;--field:#75697F;
+    --bg:#151119;--surface:#1F1925;--ink:#EFE9F3;--muted:#A69BB2;--line:#342B3D;--field:#75697F;--photo-bg:#EDE9F0;
     --accent:#F06C90;--accent-ink:#1A0F14;--accent-soft:#3A1C27;
     --ok:#8CC77A;--ok-soft:#1F2D1B;--warn:#E0A955;--warn-soft:#33260F;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);--shadow-up:0 -4px 20px rgba(0,0,0,.35);
@@ -22,7 +22,7 @@
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --bg:#151119;--surface:#1F1925;--ink:#EFE9F3;--muted:#A69BB2;--line:#342B3D;--field:#75697F;
+  --bg:#151119;--surface:#1F1925;--ink:#EFE9F3;--muted:#A69BB2;--line:#342B3D;--field:#75697F;--photo-bg:#EDE9F0;
   --accent:#F06C90;--accent-ink:#1A0F14;--accent-soft:#3A1C27;
   --ok:#8CC77A;--ok-soft:#1F2D1B;--warn:#E0A955;--warn-soft:#33260F;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);--shadow-up:0 -4px 20px rgba(0,0,0,.35);
@@ -79,6 +79,7 @@ input[type="search"],input[type="text"]{width:100%;font:16px var(--body);color:v
 .btn{font:700 14px var(--body);border:0;background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:10px 16px;cursor:pointer;white-space:nowrap}
 .btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
 .note{font-size:12px;color:var(--muted);margin:6px 0 0}
+.note a{color:inherit}
 .count{font-variant-numeric:tabular-nums}
 
 .mood{display:grid;gap:14px;margin-bottom:18px}
@@ -267,8 +268,10 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
 .ob-res small{color:var(--muted)}
 .ob-res .plus{font-weight:700;color:var(--accent);white-space:nowrap}
 .ob-res>span:not(.thumb):not(.plus){flex:1;min-width:0}
-.ob-res .thumb{flex:none;display:block;width:26px;height:52px}
-.ob-res .thumb svg{display:block;width:100%;height:100%}
+.ob-res .thumb{flex:none;display:flex;align-items:center;justify-content:center;width:40px;height:56px}
+.ob-res .thumb svg{display:block;width:26px;height:52px}
+.ob-res .thumb.photo{background:var(--photo-bg);border-radius:6px;overflow:hidden}
+.ob-res .thumb img{display:block;width:100%;height:100%;object-fit:contain}
 .unlock{border-radius:14px;padding:12px 14px;background:var(--ok-soft);color:var(--ink);display:grid;gap:4px;animation:pop .35s ease}
 .unlock b{color:var(--ok)}
 .unlock.none{background:var(--surface);border:1px dashed var(--line)}
@@ -309,6 +312,7 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
           <h3>הוספת בקבוק</h3>
           <p>חפשו לפי שם, בעברית או באנגלית. ההמלצות יותאמו לטעם של הבקבוק: ג׳ין פרחוני, ויסקי מעושן, טקילה מיושנת וכו׳.</p>
           <div id="bottleRows"></div>
+          <p class="note photo-credit" hidden>תמונות הבקבוקים: <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>, ברישיון CC BY-SA.</p>
         </div>
         <h3 class="chips-title">או סימון מהיר לפי סוג</h3>
         <div class="search"><input type="search" id="filter" placeholder="סינון הרשימה: ג׳ין, ליים, טוניק…" autocomplete="off"></div>
@@ -427,6 +431,7 @@ select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px so
       <button class="btn ghost" type="button" id="estimateRetail" hidden>הערכת מחיר בחנות עם Claude</button>
       <button class="btn ghost" type="button" id="clearMenu">ניקוי התפריט</button>
     </div>
+    <p class="note photo-credit" hidden>תמונות הבקבוקים: <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>, ברישיון CC BY-SA.</p>
     <p class="disclaimer">המחיר בחנות הוא הערכה של Claude לפי שם היין, ולא מחיר עדכני. לבקבוק ולכוס יש הערכה נפרדת. מכפיל של עד פי 2 נחשב הוגן במסעדה, פי 3 רגיל, ומעל זה יקר. מכפיל הכוס משווה את מחיר הכוס למחיר של אותה כמות יין מבקבוק שקונים בחנות. בקבוק שאינו 750 מ״ל מושווה לפי נפח.</p>
   </section>
 </div>
@@ -1600,7 +1605,7 @@ function renderWineResults(){
   const box=$("wineResults");box.innerHTML="";const q=wineQ.trim();if(!q)return;
   const il=shop.country==="il";
   localWines(q).forEach(w=>box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine({name:w.display,note:w.note+" · "+w.name,rl:il?w.il[0]:null,rh:il?w.il[1]:null})},
-    bottleThumb(null,null,w.note+" "+w.display),el("span",{},w.display," ",el("small",{},w.name+" · "+w.note+(il&&w.il[0]?" · בחנות "+ltr("₪"+w.il[0]+"–"+w.il[1])+" ל-750 מ״ל":""))),el("span",{class:"plus"},"+ הוספה"))));
+    bottleThumb(null,null,w.note+" "+w.display,w.name),el("span",{},w.display," ",el("small",{},w.name+" · "+w.note+(il&&w.il[0]?" · בחנות "+ltr("₪"+w.il[0]+"–"+w.il[1])+" ל-750 מ״ל":""))),el("span",{class:"plus"},"+ הוספה"))));
   if(wineAI&&wineAI.q===q){
     if(wineAI.loading)box.append(el("p",{class:"status"},"Claude מחפש…"));
     else if(wineAI.err)box.append(el("p",{class:"status err"},wineAI.err));
@@ -1695,8 +1700,19 @@ const BOTTLE={ // [glass outline, top of the liquid] in a 24×48 box
 };
 const wineKind=n=>/מבעבע|שמפניה|קאווה|פרוסקו/.test(n||"")?"prosecco":/רוזה/.test(n||"")?"rose":/לבן/.test(n||"")?"white_wine":"red_wine";
 let thumbN=0;
+// Real bottle photos (Open Food Facts, CC BY-SA), keyed by lower-case catalog name. Loaded after the page
+// opens; any search box that already has results is redrawn with them. Without the file, drawings stay.
+let PHOTOS=null;
+fetch("photos.json").then(r=>r.ok?r.json():null).then(d=>{
+  if(!d)return;
+  PHOTOS={};for(const k in d)PHOTOS[k.toLowerCase()]=d[k];
+  document.querySelectorAll(".photo-credit").forEach(p=>p.hidden=false);
+  ["bottleSearch","obSearch","wineSearch"].forEach(id=>{const i=$(id);if(i&&i.value.trim())i.dispatchEvent(new Event("input"))});
+}).catch(()=>{});
 // type: catalog id (or null for a wine known only by its Hebrew note); style picks aged vs. clear tequila.
-function bottleThumb(type,style,note){
+function bottleThumb(type,style,note,name){
+  const photo=PHOTOS&&name?PHOTOS[name.toLowerCase()]:null;
+  if(photo){const s=el("span",{class:"thumb photo","aria-hidden":"true"});s.append(el("img",{src:photo,alt:"",loading:"lazy",decoding:"async"}));return s}
   const t=type&&type!=="red_wine"&&type!=="white_wine"?type:(note?wineKind(note):type);
   const shape=["red_wine","white_wine","rose","prosecco"].includes(t)?"wine"
     :["bourbon","rye","scotch","irish","japanese","world_whisky","brandy","dark_rum"].includes(t)?"square"
@@ -1773,7 +1789,7 @@ function finder(box,q,onPick,opts={}){
   hits.forEach(e=>{
     const owned=e.kind==="type"?H.has(e.id):state.bottles.some(b=>b.name===e.name);
     box.append(el("button",{type:"button",class:"ob-res",onclick:()=>{if(e.kind==="product"){rememberLearned(e);onPick({id:e.type,name:e.name,style:e.style})}else onPick({id:e.id})}},
-      e.kind==="type"?bottleThumb(e.id):bottleThumb(e.type,e.style,e.wineNote?e.wineNote+" "+e.name:null),
+      e.kind==="type"?bottleThumb(e.id):bottleThumb(e.type,e.style,e.wineNote?e.wineNote+" "+e.name:null,e.name),
       el("span",{},e.kind==="type"?NAME[e.id]:e.name," ",el("small",{},e.kind==="type"?(owned?"כבר בבר":"סוג משקה · "+CATS.find(c=>c.id===CAT_OF[e.id]).name):productSub(e)+(owned?" · כבר בבר":""))),
       el("span",{class:"plus"},"+ הוספה")));
   });
@@ -1782,7 +1798,7 @@ function finder(box,q,onPick,opts={}){
     if(ai.loading)box.append(el("p",{class:"status"},"Claude מזהה את הבקבוק…"));
     else if(ai.err)box.append(el("p",{class:"status err"},ai.err));
     else ai.items.forEach(e=>box.append(el("button",{type:"button",class:"ob-res",onclick:()=>{rememberLearned(e);onPick({id:e.type,name:e.name,style:e.style})}},
-      bottleThumb(e.type,e.style),el("span",{},e.name," ",el("small",{},productSub(e))),el("span",{class:"plus"},"+ הוספה"))));
+      bottleThumb(e.type,e.style,null,e.name),el("span",{},e.name," ",el("small",{},productSub(e))),el("span",{class:"plus"},"+ הוספה"))));
   }
   if(sampleApi&&!(ai&&ai.q===q&&!ai.err))box.append(el("button",{type:"button",class:"ob-res",onclick:async()=>{
       finder.ai={q,loading:true,items:[]};finder(box,q,onPick,opts);

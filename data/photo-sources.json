@@ -1,0 +1,42 @@
+{
+ "Tanqueray": {
+  "code": "5000281015248",
+  "product": "Tanqueray Gin",
+  "url": "https://world.openfoodfacts.org/product/5000281015248"
+ },
+ "Tanqueray Rangpur": {
+  "code": "5000291021628",
+  "product": "Gin Rangpur",
+  "url": "https://world.openfoodfacts.org/product/5000291021628"
+ },
+ "Tanqueray Flor de Sevilla": {
+  "code": "5000291023462",
+  "product": "Gin Flor de Sevilla",
+  "url": "https://world.openfoodfacts.org/product/5000291023462"
+ },
+ "Beefeater": {
+  "code": "5000329002193",
+  "product": "London Dry Gin",
+  "url": "https://world.openfoodfacts.org/product/5000329002193"
+ },
+ "Beefeater Pink Strawberry": {
+  "code": "5000299605950",
+  "product": "Pink Strawberry",
+  "url": "https://world.openfoodfacts.org/product/5000299605950"
+ },
+ "Gordon's": {
+  "code": "5000289925433",
+  "product": "Gin Gordon's",
+  "url": "https://world.openfoodfacts.org/product/5000289925433"
+ },
+ "Gordon's Pink": {
+  "code": "5000289929981",
+  "product": "Premium PINK Distilled Gin",
+  "url": "https://world.openfoodfacts.org/product/5000289929981"
+ },
+ "Bombay Sapphire": {
+  "code": "5010677714006",
+  "product": "Gin Bombay",
+  "url": "https://world.openfoodfacts.org/product/5010677714006"
+ }
+}

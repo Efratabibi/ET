@@ -1,7 +1,7 @@
 // Builds both targets from src/:
 //   dist/artifact.html  — the claude.ai version (published as the Artifact)
 //   public/             — the web app for Vercel (index.html + static files)
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from "node:fs";
 
 const read = (p) => readFileSync(new URL("../" + p, import.meta.url), "utf8");
 const out = (p) => new URL("../" + p, import.meta.url);
@@ -41,6 +41,8 @@ mkdirSync(out("public"), { recursive: true });
 writeFileSync(out("public/index.html"), head + app + tail);
 for (const f of ["platform-web.js", "manifest.webmanifest", "sw.js", "icon.svg", "icon-192.png", "icon-512.png"])
   copyFileSync(out("web/" + f), out("public/" + f));
+// Bottle photos (scripts/photos/build.py); the app shows drawn bottles without them.
+if (existsSync(out("web/photos.json"))) copyFileSync(out("web/photos.json"), out("public/photos.json"));
 copyFileSync(out("node_modules/@supabase/supabase-js/dist/umd/supabase.js"), out("public/supabase.js"));
 
 console.log("built dist/artifact.html and public/");

@@ -179,7 +179,7 @@ def main():
         url = re.sub(r"\.(\d+|full)\.jpg$", ".400.jpg", url)
         try:
             img = fetch(url)
-            if sum(img.convert("L").resize((16, 16)).getdata()) / 256 < 45:
+            if sum(img.convert("L").resize((16, 16)).tobytes()) / 256 < 45:
                 continue  # too dark to recognise anything at thumbnail size
             data, small = thumb(img)
         except Exception as e:

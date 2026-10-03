@@ -243,5 +243,520 @@
   "code": "0811538013062",
   "product": "The Kraken Black Spiced Rum",
   "url": "https://world.openfoodfacts.org/product/0811538013062"
+ },
+ "Sailor Jerry Spiced": {
+  "code": "5010327405766",
+  "product": "The Original Sailor Jerry Spiced",
+  "url": "https://world.openfoodfacts.org/product/5010327405766"
+ },
+ "Mount Gay Eclipse": {
+  "code": "9501007100300",
+  "product": "Eclipse Heritage Blend  Crisp & aromatic",
+  "url": "https://world.openfoodfacts.org/product/9501007100300"
+ },
+ "Don Papa": {
+  "code": "4809015157015",
+  "product": "Don Papa",
+  "url": "https://world.openfoodfacts.org/product/4809015157015"
+ },
+ "Olmeca Altos Plata": {
+  "code": "0080432106037",
+  "product": "Altos plata tequila 38%",
+  "url": "https://world.openfoodfacts.org/product/0080432106037"
+ },
+ "Don Julio Blanco": {
+  "code": "7506064300160",
+  "product": "Tequila 38% blanco",
+  "url": "https://world.openfoodfacts.org/product/7506064300160"
+ },
+ "Don Julio 70": {
+  "code": "5000281056265",
+  "product": "Don Julio 70 cristalino",
+  "url": "https://world.openfoodfacts.org/product/5000281056265"
+ },
+ "Patrón Silver": {
+  "code": "0721733000739",
+  "product": "Tequila Silver",
+  "url": "https://world.openfoodfacts.org/product/0721733000739"
+ },
+ "Casamigos Blanco": {
+  "code": "0856724006114",
+  "product": "Blanco Tequila",
+  "url": "https://world.openfoodfacts.org/product/0856724006114"
+ },
+ "Casamigos Reposado": {
+  "code": "0856724006220",
+  "product": "Tequila Reposado",
+  "url": "https://world.openfoodfacts.org/product/0856724006220"
+ },
+ "Espolòn Blanco": {
+  "code": "0664804000934",
+  "product": "Tequila Blanco",
+  "url": "https://world.openfoodfacts.org/product/0664804000934"
+ },
+ "Herradura Reposado": {
+  "code": "7501145233382",
+  "product": "tequila Herradura reposado",
+  "url": "https://world.openfoodfacts.org/product/7501145233382"
+ },
+ "El Jimador Blanco": {
+  "code": "7501145268100",
+  "product": "Tequila Blanco",
+  "url": "https://world.openfoodfacts.org/product/7501145268100"
+ },
+ "1800 Silver": {
+  "code": "0811538010139",
+  "product": "1800 Silver Tequila",
+  "url": "https://world.openfoodfacts.org/product/0811538010139"
+ },
+ "Jim Beam Double Oak": {
+  "code": "5060045585912",
+  "product": "Jim Beam Double Oak",
+  "url": "https://world.openfoodfacts.org/product/5060045585912"
+ },
+ "Jim Beam Honey": {
+  "code": "0080686006077",
+  "product": "Jim Beam Honey",
+  "url": "https://world.openfoodfacts.org/product/0080686006077"
+ },
+ "Jack Daniel's Old No. 7": {
+  "code": "3099873045369",
+  "product": "Jack Daniel's No.7",
+  "url": "https://world.openfoodfacts.org/product/3099873045369"
+ },
+ "Jack Daniel's Gentleman Jack": {
+  "code": "0082184038758",
+  "product": "Gentleman jack",
+  "url": "https://world.openfoodfacts.org/product/0082184038758"
+ },
+ "Jack Daniel's Honey": {
+  "code": "5099873046968",
+  "product": "Tennessee Honey",
+  "url": "https://world.openfoodfacts.org/product/5099873046968"
+ },
+ "Jack Daniel's Fire": {
+  "code": "5099873006504",
+  "product": "Tennessee Fire - Cinnamon Liqueur",
+  "url": "https://world.openfoodfacts.org/product/5099873006504"
+ },
+ "Jack Daniel's Rye": {
+  "code": "5099873011720",
+  "product": "Jack daniel's rye 70cl - 45",
+  "url": "https://world.openfoodfacts.org/product/5099873011720"
+ },
+ "Buffalo Trace": {
+  "code": "0080244009984",
+  "product": "Whisky buffalo",
+  "url": "https://world.openfoodfacts.org/product/0080244009984"
+ },
+ "Maker's Mark 46": {
+  "code": "5060045586209",
+  "product": "Steve Profile No. 46 Kentucky Straight Bourbon Whisky",
+  "url": "https://world.openfoodfacts.org/product/5060045586209"
+ },
+ "Four Roses Bourbon": {
+  "code": "5000299101100",
+  "product": "Whiskey 40%",
+  "url": "https://world.openfoodfacts.org/product/5000299101100"
+ },
+ "Bulleit Bourbon": {
+  "code": "0082000778516",
+  "product": "Bulleit Bourbon Frontier Whiskey Barrel Strength",
+  "url": "https://world.openfoodfacts.org/product/0082000778516"
+ },
+ "Johnnie Walker Red Label": {
+  "code": "5000267014005",
+  "product": "Red Label",
+  "url": "https://world.openfoodfacts.org/product/5000267014005"
+ },
+ "Johnnie Walker Black Label": {
+  "code": "5000267024202",
+  "product": "Black label",
+  "url": "https://world.openfoodfacts.org/product/5000267024202"
+ },
+ "Johnnie Walker Double Black": {
+  "code": "5000267116419",
+  "product": "Double Black",
+  "url": "https://world.openfoodfacts.org/product/5000267116419"
+ },
+ "Johnnie Walker Gold Label Reserve": {
+  "code": "5000267135687",
+  "product": "Gold Label Reserve",
+  "url": "https://world.openfoodfacts.org/product/5000267135687"
+ },
+ "Chivas Regal 12": {
+  "code": "0080432400432",
+  "product": "Chivas Regal 12",
+  "url": "https://world.openfoodfacts.org/product/0080432400432"
+ },
+ "Chivas Regal Extra 13": {
+  "code": "5000299611104",
+  "product": "Chivas Regal Extra Aged 13 years",
+  "url": "https://world.openfoodfacts.org/product/5000299611104"
+ },
+ "Ballantine's Finest": {
+  "code": "5010106111956",
+  "product": "Ballantine's Finest",
+  "url": "https://world.openfoodfacts.org/product/5010106111956"
+ },
+ "The Famous Grouse": {
+  "code": "5010314700003",
+  "product": "Blended Scotch Whisky",
+  "url": "https://world.openfoodfacts.org/product/5010314700003"
+ },
+ "J&B Rare": {
+  "code": "5010103804073",
+  "product": "&quot;1.5L Whisky J &B Rare 40 °&quot;",
+  "url": "https://world.openfoodfacts.org/product/5010103804073"
+ },
+ "Grant's Triple Wood": {
+  "code": "5010327250007",
+  "product": "Grant's Triple Wood Blended Scotch Whisky",
+  "url": "https://world.openfoodfacts.org/product/5010327250007"
+ },
+ "Monkey Shoulder": {
+  "code": "5010327105215",
+  "product": "Monkey Shoulder",
+  "url": "https://world.openfoodfacts.org/product/5010327105215"
+ },
+ "Cutty Sark": {
+  "code": "5010493000765",
+  "product": "Blended Scotch whisky",
+  "url": "https://world.openfoodfacts.org/product/5010493000765"
+ },
+ "Glenfiddich 12": {
+  "code": "5010327000176",
+  "product": "Glenfiddich 12 yr old Single Malt Scotch Whisky",
+  "url": "https://world.openfoodfacts.org/product/5010327000176"
+ },
+ "Glenmorangie Lasanta": {
+  "code": "5010494917840",
+  "product": "The Lasanta 12 Years Aged in Bourbon & Sherry Casks",
+  "url": "https://world.openfoodfacts.org/product/5010494917840"
+ },
+ "Aberlour 12": {
+  "code": "3047100243774",
+  "product": "Aberlour 12 ans",
+  "url": "https://world.openfoodfacts.org/product/3047100243774"
+ },
+ "Cardhu 12": {
+  "code": "5000267102566",
+  "product": "Malt 12 Years Whisky 40º",
+  "url": "https://world.openfoodfacts.org/product/5000267102566"
+ },
+ "Jura 10": {
+  "code": "5013967012486",
+  "product": "Jura 10 Year Old",
+  "url": "https://world.openfoodfacts.org/product/5013967012486"
+ },
+ "Laphroaig 10": {
+  "code": "5010019640260",
+  "product": "Laphroaig 10 Years",
+  "url": "https://world.openfoodfacts.org/product/5010019640260"
+ },
+ "Laphroaig Select": {
+  "code": "5010019637604",
+  "product": "Laphroaig Select",
+  "url": "https://world.openfoodfacts.org/product/5010019637604"
+ },
+ "Laphroaig Quarter Cask": {
+  "code": "5010019640161",
+  "product": "Laphroaig Quarter Cask",
+  "url": "https://world.openfoodfacts.org/product/5010019640161"
+ },
+ "Ardbeg 10": {
+  "code": "5010494195286",
+  "product": "10 y. o. whisky 46%",
+  "url": "https://world.openfoodfacts.org/product/5010494195286"
+ },
+ "Ardbeg Uigeadail": {
+  "code": "5010494220278",
+  "product": "Ardbeg Uigeadail",
+  "url": "https://world.openfoodfacts.org/product/5010494220278"
+ },
+ "Lagavulin 8": {
+  "code": "5000281050546",
+  "product": "Lagavulin 8 ans",
+  "url": "https://world.openfoodfacts.org/product/5000281050546"
+ },
+ "Lagavulin 16": {
+  "code": "5000281003627",
+  "product": "Lagavulin 16 Year Old",
+  "url": "https://world.openfoodfacts.org/product/5000281003627"
+ },
+ "Talisker Skye": {
+  "code": "5000281038094",
+  "product": "Talisker Skye",
+  "url": "https://world.openfoodfacts.org/product/5000281038094"
+ },
+ "Talisker Storm": {
+  "code": "5000281032733",
+  "product": "Single Malt Scotch Whisky Talisker Storm",
+  "url": "https://world.openfoodfacts.org/product/5000281032733"
+ },
+ "Bruichladdich Octomore": {
+  "code": "5055807400473",
+  "product": "Octomore Edition 06.1 5 Year Old",
+  "url": "https://world.openfoodfacts.org/product/5055807400473"
+ },
+ "Caol Ila 12": {
+  "code": "5000281016283",
+  "product": "Caol Ila 12 Year Old",
+  "url": "https://world.openfoodfacts.org/product/5000281016283"
+ },
+ "Bunnahabhain 12": {
+  "code": "5029704217366",
+  "product": "Bunnahabhain 12 Year Old",
+  "url": "https://world.openfoodfacts.org/product/5029704217366"
+ },
+ "Kilchoman Machir Bay": {
+  "code": "5060210700522",
+  "product": "Kilchoman Machir Bay",
+  "url": "https://world.openfoodfacts.org/product/5060210700522"
+ },
+ "Jameson": {
+  "code": "0080432500170",
+  "product": "Whisky",
+  "url": "https://world.openfoodfacts.org/product/0080432500170"
+ },
+ "Jameson Black Barrel": {
+  "code": "5011007024000",
+  "product": "Black Barrel whisky 40%",
+  "url": "https://world.openfoodfacts.org/product/5011007024000"
+ },
+ "Jameson Crested": {
+  "code": "5011007003548",
+  "product": "Crested whisky 40%",
+  "url": "https://world.openfoodfacts.org/product/5011007003548"
+ },
+ "Bushmills Original": {
+  "code": "5055966801159",
+  "product": "Bushmills",
+  "url": "https://world.openfoodfacts.org/product/5055966801159"
+ },
+ "Bushmills 10 Single Malt": {
+  "code": "5010103917797",
+  "product": "Bushmills Malt Aged 10 Years",
+  "url": "https://world.openfoodfacts.org/product/5010103917797"
+ },
+ "Tullamore D.E.W.": {
+  "code": "5011026108033",
+  "product": "Tullamore D.E.W",
+  "url": "https://world.openfoodfacts.org/product/5011026108033"
+ },
+ "Teeling Small Batch": {
+  "code": "5391523270021",
+  "product": "Teeling Small Batch Irish Whiskey",
+  "url": "https://world.openfoodfacts.org/product/5391523270021"
+ },
+ "Kilbeggan": {
+  "code": "5099357003609",
+  "product": "Kilbeggan",
+  "url": "https://world.openfoodfacts.org/product/5099357003609"
+ },
+ "Suntory Toki": {
+  "code": "4901777303553",
+  "product": "Suntory Whisky Toki",
+  "url": "https://world.openfoodfacts.org/product/4901777303553"
+ },
+ "Nikka Taketsuru Pure Malt": {
+  "code": "4904230034971",
+  "product": "Taketsuru Pure Malt",
+  "url": "https://world.openfoodfacts.org/product/4904230034971"
+ },
+ "The Chita": {
+  "code": "4901777279421",
+  "product": "The chita",
+  "url": "https://world.openfoodfacts.org/product/4901777279421"
+ },
+ "Hennessy VS": {
+  "code": "3245990255307",
+  "product": "Hennessy VS COGNAC",
+  "url": "https://world.openfoodfacts.org/product/3245990255307"
+ },
+ "Hennessy VSOP": {
+  "code": "3245990987604",
+  "product": "Hennessy Vsop Cognac V.s.o.p.",
+  "url": "https://world.openfoodfacts.org/product/3245990987604"
+ },
+ "Rémy Martin VSOP": {
+  "code": "3024482270109",
+  "product": "Cognac Vsop - Fine Champagne 40°",
+  "url": "https://world.openfoodfacts.org/product/3024482270109"
+ },
+ "Rémy Martin 1738 Accord Royal": {
+  "code": "3024480001781",
+  "product": "1738 Accord Royal",
+  "url": "https://world.openfoodfacts.org/product/3024480001781"
+ },
+ "Courvoisier VS": {
+  "code": "3049197110076",
+  "product": "Cognac VS",
+  "url": "https://world.openfoodfacts.org/product/3049197110076"
+ },
+ "Courvoisier VSOP": {
+  "code": "3049197210776",
+  "product": "Courvoisier VSOP Cognac",
+  "url": "https://world.openfoodfacts.org/product/3049197210776"
+ },
+ "Martell VSOP": {
+  "code": "3219820005899",
+  "product": "Cognac VSOP",
+  "url": "https://world.openfoodfacts.org/product/3219820005899"
+ },
+ "Ouzo 12": {
+  "code": "5201003110702",
+  "product": "Ouzo 12",
+  "url": "https://world.openfoodfacts.org/product/5201003110702"
+ },
+ "Ricard Pastis": {
+  "code": "3047100097209",
+  "product": "Pastis",
+  "url": "https://world.openfoodfacts.org/product/3047100097209"
+ },
+ "Leblon": {
+  "code": "7898924668016",
+  "product": "Cachaça leblon",
+  "url": "https://world.openfoodfacts.org/product/7898924668016"
+ },
+ "Cointreau": {
+  "code": "3035542004206",
+  "product": "Cointreau",
+  "url": "https://world.openfoodfacts.org/product/3035542004206"
+ },
+ "Grand Marnier Cordon Rouge": {
+  "code": "3018300004540",
+  "product": "Grand Marnier Cordon Rouge",
+  "url": "https://world.openfoodfacts.org/product/3018300004540"
+ },
+ "Bols Triple Sec": {
+  "code": "8716000965066",
+  "product": "Bols Triple Sec",
+  "url": "https://world.openfoodfacts.org/product/8716000965066"
+ },
+ "Bols Blue Curaçao": {
+  "code": "8716000965219",
+  "product": "Blue curacao",
+  "url": "https://world.openfoodfacts.org/product/8716000965219"
+ },
+ "De Kuyper Triple Sec": {
+  "code": "8710625527258",
+  "product": "Triple Sec Liqueur",
+  "url": "https://world.openfoodfacts.org/product/8710625527258"
+ },
+ "Campari": {
+  "code": "8000040001106",
+  "product": "Campari",
+  "url": "https://world.openfoodfacts.org/product/8000040001106"
+ },
+ "Aperol": {
+  "code": "8002230350285",
+  "product": "Aperol",
+  "url": "https://world.openfoodfacts.org/product/8002230350285"
+ },
+ "Martini Rosso": {
+  "code": "7630040400015",
+  "product": "Martini Rosso",
+  "url": "https://world.openfoodfacts.org/product/7630040400015"
+ },
+ "Martini Extra Dry": {
+  "code": "5010677934008",
+  "product": "Extra Dry",
+  "url": "https://world.openfoodfacts.org/product/5010677934008"
+ },
+ "Martini Asti": {
+  "code": "8000570435402",
+  "product": "Asti",
+  "url": "https://world.openfoodfacts.org/product/8000570435402"
+ },
+ "Cinzano Rosso": {
+  "code": "8000020007142",
+  "product": "Rosso",
+  "url": "https://world.openfoodfacts.org/product/8000020007142"
+ },
+ "Noilly Prat Original Dry": {
+  "code": "3023010003585",
+  "product": "Noilly Prat Original Dry",
+  "url": "https://world.openfoodfacts.org/product/3023010003585"
+ },
+ "Kahlúa": {
+  "code": "7610594454399",
+  "product": "Kahlúa coffee liqueur",
+  "url": "https://world.openfoodfacts.org/product/7610594454399"
+ },
+ "Tia Maria": {
+  "code": "5012523231965",
+  "product": "Tia Maria Dark Liqueur",
+  "url": "https://world.openfoodfacts.org/product/5012523231965"
+ },
+ "Disaronno Originale": {
+  "code": "8001110028016",
+  "product": "Disaronno Originale",
+  "url": "https://world.openfoodfacts.org/product/8001110028016"
+ },
+ "Lazzaroni Amaretto": {
+  "code": "8002873012113",
+  "product": "Lazzaroni Amaretto Liqueur",
+  "url": "https://world.openfoodfacts.org/product/8002873012113"
+ },
+ "Baileys Original": {
+  "code": "5011013931996",
+  "product": "Baileys",
+  "url": "https://world.openfoodfacts.org/product/5011013931996"
+ },
+ "Villa Massa Limoncello": {
+  "code": "8033413430005",
+  "product": "Limoncello",
+  "url": "https://world.openfoodfacts.org/product/8033413430005"
+ },
+ "Pallini Limoncello": {
+  "code": "8005713352646",
+  "product": "Pallini Limoncello",
+  "url": "https://world.openfoodfacts.org/product/8005713352646"
+ },
+ "Luxardo Maraschino": {
+  "code": "8000353000025",
+  "product": "Maraschino",
+  "url": "https://world.openfoodfacts.org/product/8000353000025"
+ },
+ "Giffard Crème de Cassis": {
+  "code": "3180290028377",
+  "product": "Giffard crème de cassis d'Anjou 16°",
+  "url": "https://world.openfoodfacts.org/product/3180290028377"
+ },
+ "Fernet-Branca": {
+  "code": "8004400012504",
+  "product": "Fernet-Branca",
+  "url": "https://world.openfoodfacts.org/product/8004400012504"
+ },
+ "Jägermeister": {
+  "code": "4067700013859",
+  "product": "Jägermeister",
+  "url": "https://world.openfoodfacts.org/product/4067700013859"
+ },
+ "Averna Amaro": {
+  "code": "8000400203782",
+  "product": "Amaro Averna",
+  "url": "https://world.openfoodfacts.org/product/8000400203782"
+ },
+ "Cynar": {
+  "code": "8002240001009",
+  "product": "Cynar",
+  "url": "https://world.openfoodfacts.org/product/8002240001009"
+ },
+ "La Marca Prosecco": {
+  "code": "8009483006310",
+  "product": "La marca prosecco",
+  "url": "https://world.openfoodfacts.org/product/8009483006310"
+ },
+ "Moët & Chandon Brut Impérial": {
+  "code": "3185370001233",
+  "product": "Moët & Chandon Brut Impérial",
+  "url": "https://world.openfoodfacts.org/product/3185370001233"
+ },
+ "Veuve Clicquot Brut": {
+  "code": "3049610004104",
+  "product": "Veuve Clicquot Champagne Ponsardin Brut",
+  "url": "https://world.openfoodfacts.org/product/3049610004104"
  }
 }

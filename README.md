@@ -62,21 +62,25 @@ Steps marked **[you]** need your accounts.
    - Supabase's built-in email is rate-limited (a few emails an hour). Before inviting many people, turn on Google sign-in or set up custom SMTP under Authentication → Emails.
    - Authentication → URL Configuration: set Site URL to the address Vercel gives you.
    - Project Settings → API: copy `URL`, `anon` and `service_role`. These go straight into Vercel, never into a chat.
-2. **[you] Anthropic** (console.anthropic.com), optional: add a payment method, create an API key, and set a monthly spend limit under Limits. Without `ANTHROPIC_API_KEY` (and `SUPABASE_SERVICE_ROLE_KEY`) the site works and simply hides the photo and identify features; add them later and redeploy.
+2. **[you] Anthropic** (console.anthropic.com), optional: add a payment method, create an API key, and set a monthly spend limit under Limits. Without `ANTHROPIC_API_KEY` (and `SUPABASE_SERVICE_ROLE_KEY`) the site works and hides the photo and identify features; add them later and redeploy.
 3. **[you] Vercel** (vercel.com, free tier):
    - Add New → Project → choose this repository.
-   - Settings → Environment Variables: the names in `.env.example`, with the values from steps 1–2.
+   - Settings → Environment Variables: the names in `.env.example`, with the values from steps 1 and 2.
    - Deploy.
-4. **Move your bar:** on claude.ai, My bar → "Move your bar to another device or version" → "Copy bar". On the new site, after signing in, paste it and tap "Import".
+4. Move your bar: on claude.ai, My bar → "Move your bar to another device or version" → "Copy bar". On the new site, after signing in, paste it and tap "Import".
 
 ## Costs (estimate)
 
-- **Supabase and Vercel:** free on the free tiers, for friends-and-family numbers of users.
-- **Claude** (`claude-opus-5-5`, $4 per million input tokens and $20 per million output): a menu photo or a wine search costs a few cents. `AI_DAILY_LIMIT` (default 40 actions a day per user) and the spend limit in Anthropic Console keep it from running away.
+Supabase and Vercel cost nothing on their free tiers at friends-and-family numbers of users.
+
+Claude (`claude-opus-5-5`) costs $4 per million input tokens and $20 per million output tokens, so a menu photo or a wine search costs a few cents. Two limits keep the bill small: `AI_DAILY_LIMIT` (default 40 actions a day per user) and the monthly spend limit in Anthropic Console.
 
 ## Notes
 
-- **Shop prices in the catalog are estimates.** The `prices` table is ready for the next step: a job that updates prices from shops, with bottle size and date for each price.
-- **The server calls Claude with a response schema (JSON schema)**, so answers always parse. A model fallback also covers refused requests.
-- **The client sends only a task name and parameters.** The server builds the prompt itself, so it can't be used as an open proxy to Claude.
-- **The restaurant tab is hidden** behind `SHOW_MENU` in `src/app.html`; its code is kept for later.
+Shop prices in the catalog are estimates. The `prices` table is there for a later job that updates prices from shops, with the bottle size and date of each price.
+
+The server calls Claude with a JSON response schema, so every answer parses. If a model refuses, a fallback model gets the request.
+
+The client sends only a task name and parameters, and the server builds the prompt. Nobody can use the endpoint as an open proxy to Claude.
+
+The restaurant tab is hidden behind `SHOW_MENU` in `src/app.html`; its code stays for later.

@@ -758,5 +758,115 @@
   "code": "3049610004104",
   "product": "Veuve Clicquot Champagne Ponsardin Brut",
   "url": "https://world.openfoodfacts.org/product/3049610004104"
+ },
+ "Kim Crawford Sauvignon Blanc": {
+  "code": "9419227006275",
+  "product": "Sauvignon blanc",
+  "url": "https://world.openfoodfacts.org/product/9419227006275"
+ },
+ "Villa Maria Sauvignon Blanc": {
+  "code": "9414416305528",
+  "product": "Villa Maria Sauvignon Blanc 2019",
+  "url": "https://world.openfoodfacts.org/product/9414416305528"
+ },
+ "Oyster Bay Sauvignon Blanc": {
+  "code": "9415549802601",
+  "product": "Oyster Bay Sauvignon Blanc 75CL",
+  "url": "https://world.openfoodfacts.org/product/9415549802601"
+ },
+ "Santa Margherita Pinot Grigio": {
+  "code": "8003930111114",
+  "product": "Pinot grigio Valdadige",
+  "url": "https://world.openfoodfacts.org/product/8003930111114"
+ },
+ "Masi Campofiorin": {
+  "code": "8002062000068",
+  "product": "CAMPOFIORIN ROSSO VERONA",
+  "url": "https://world.openfoodfacts.org/product/8002062000068"
+ },
+ "Masi Costasera Amarone": {
+  "code": "8002062000051",
+  "product": "Costasera Amarone Della Valpolicella classico 2011",
+  "url": "https://world.openfoodfacts.org/product/8002062000051"
+ },
+ "Miraval Rosé": {
+  "code": "3296180004250",
+  "product": "Vin rosé",
+  "url": "https://world.openfoodfacts.org/product/3296180004250"
+ },
+ "Guigal Côtes du Rhône": {
+  "code": "3536650501002",
+  "product": "Côtes du Rhône",
+  "url": "https://world.openfoodfacts.org/product/3536650501002"
+ },
+ "Guigal Châteauneuf-du-Pape": {
+  "code": "3536650301008",
+  "product": "Châteauneuf-du-Pape",
+  "url": "https://world.openfoodfacts.org/product/3536650301008"
+ },
+ "Bollinger Special Cuvée": {
+  "code": "3052853075909",
+  "product": "Bollinger Special Cuvee Brut NV Champagne 750mL",
+  "url": "https://world.openfoodfacts.org/product/3052853075909"
+ },
+ "Dom Pérignon Brut": {
+  "code": "3185370665725",
+  "product": "Dom Pérignon Vintage brut 2008",
+  "url": "https://world.openfoodfacts.org/product/3185370665725"
+ },
+ "Marqués de Riscal Reserva": {
+  "code": "4002859315911",
+  "product": "Rioja Reserva 2016",
+  "url": "https://world.openfoodfacts.org/product/4002859315911"
+ },
+ "Martín Códax Albariño": {
+  "code": "8414825336633",
+  "product": "Albariño",
+  "url": "https://world.openfoodfacts.org/product/8414825336633"
+ },
+ "Mateus Rosé": {
+  "code": "5601012011500",
+  "product": "Mateus Rosé Original",
+  "url": "https://world.openfoodfacts.org/product/5601012011500"
+ },
+ "Casal Garcia Vinho Verde": {
+  "code": "5601096201309",
+  "product": "Vinho Verde",
+  "url": "https://world.openfoodfacts.org/product/5601096201309"
+ },
+ "Dr. Loosen Riesling": {
+  "code": "0810404020135",
+  "product": "DR. LOOSEN Riesling suché",
+  "url": "https://world.openfoodfacts.org/product/0810404020135"
+ },
+ "Casillero del Diablo Cabernet Sauvignon": {
+  "code": "7804320303178",
+  "product": "Cabernet Sauvignon",
+  "url": "https://world.openfoodfacts.org/product/7804320303178"
+ },
+ "Catena Malbec": {
+  "code": "7794450008053",
+  "product": "Malbec",
+  "url": "https://world.openfoodfacts.org/product/7794450008053"
+ },
+ "Alamos Malbec": {
+  "code": "7794450008084",
+  "product": "Malbec",
+  "url": "https://world.openfoodfacts.org/product/7794450008084"
+ },
+ "19 Crimes Red": {
+  "code": "9311220004343",
+  "product": "Red Wine",
+  "url": "https://world.openfoodfacts.org/product/9311220004343"
+ },
+ "Penfolds Koonunga Hill Shiraz Cabernet": {
+  "code": "9310297010905",
+  "product": "Penfold Koonunga Hill Shiraz Cabernet Wine",
+  "url": "https://world.openfoodfacts.org/product/9310297010905"
+ },
+ "Jacob's Creek Classic Shiraz": {
+  "code": "9300727014689",
+  "product": "Jacob's Creek Classic Shiraz 2012",
+  "url": "https://world.openfoodfacts.org/product/9300727014689"
  }
 }

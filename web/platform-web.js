@@ -65,48 +65,101 @@
     }
   };
 
-  /* ---- sign-in UI: the header's save indicator becomes the account button ---- */
+  /* ---- sign-in: the app opens behind a welcome screen until the person signs in ---- */
   if(!sb)return;
   const css=document.createElement("style");
-  css.textContent=".acct{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}"+
-    ".acct .card{max-width:380px;width:100%;display:grid;gap:12px}.acct h2{margin:0;font-family:var(--display);font-weight:400}"+
-    ".acct input{width:100%;font:16px var(--body);padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}"+
-    "#sync{cursor:pointer}#sync .who{font-weight:700;color:var(--accent)}";
+  css.textContent=
+    "html.hb-gate body>.app,html.hb-gate body>.ob{visibility:hidden}"+
+    ".gate{position:fixed;inset:0;z-index:70;background:var(--bg);overflow-y:auto;padding:env(safe-area-inset-top,0px) 16px env(safe-area-inset-bottom,0px)}"+
+    ".gate-in{max-width:420px;margin:0 auto;min-height:100%;display:grid;align-content:center;gap:18px;padding-block:32px}"+
+    ".gate-top{display:flex;justify-content:space-between;align-items:center}"+
+    ".gate h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,46px);line-height:1;margin:0}"+
+    ".gate h2{font-family:var(--display);font-weight:400;font-size:26px;margin:0}"+
+    ".gate .lead{margin:0;color:var(--muted);font-size:17px;text-wrap:balance}"+
+    ".gate form{display:grid;gap:10px}"+
+    ".gate input{width:100%;font:17px var(--body);padding:12px 14px;border:1px solid var(--field);border-radius:12px;background:var(--surface);color:var(--ink)}"+
+    ".gate input.code{font-size:24px;letter-spacing:.3em;text-align:center;direction:ltr}"+
+    ".gate .btn{padding:13px 16px;font-size:16px}.gate .btn:disabled{opacity:.6}"+
+    ".gate .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}"+
+    ".gate .link{border:0;background:none;color:var(--accent);font:600 14px var(--body);cursor:pointer;padding:8px;min-height:40px}"+
+    ".gate .or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}.gate .or::before,.gate .or::after{content:'';flex:1;border-top:1px solid var(--line)}"+
+    ".gate .err{color:var(--warn);font-size:14px;margin:0;min-height:1.2em}"+
+    "#sync{cursor:pointer}";
   document.head.appendChild(css);
+  document.documentElement.classList.add("hb-gate"); // hide the app until we know who this is
 
-  function dialog(){
-    const wrap=document.createElement("div");wrap.className="acct";
-    wrap.innerHTML='<form class="card"><h2></h2><p class="note" style="margin:0" data-lead></p>'+
-      '<button class="btn" type="button" data-google></button>'+
-      '<label class="lbl" for="acct-email"></label><input id="acct-email" type="email" required placeholder="name@example.com" autocomplete="email">'+
-      '<button class="btn ghost" type="submit"></button><p class="status" data-msg></p>'+
-      '<button class="ob-skip" type="button" data-close></button></form>';
-    const set=(sel,key)=>{wrap.querySelector(sel).textContent=tr(key)};
-    set("h2","acct.title");set("[data-lead]","acct.lead");set("[data-google]","acct.google");set("label","acct.emailLabel");
-    set("[type=submit]","acct.send");set("[data-close]","common.close");
-    const msg=wrap.querySelector("[data-msg]");
-    wrap.querySelector("[data-close]").onclick=()=>wrap.remove();
-    wrap.addEventListener("click",e=>{if(e.target===wrap)wrap.remove()});
-    wrap.querySelector("[data-google]").onclick=()=>sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin}});
-    wrap.querySelector("form").onsubmit=async e=>{
-      e.preventDefault();
-      const email=wrap.querySelector("#acct-email").value.trim();
-      const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin}});
-      msg.textContent=error?tr("acct.sendFailed"):tr("acct.sent",email);
-    };
-    document.body.appendChild(wrap);wrap.querySelector("input").focus();
+  let step={name:"email",email:""};
+  function gate(){
+    let g=document.getElementById("gate");
+    if(!g){g=document.createElement("div");g.id="gate";g.className="gate";g.setAttribute("role","dialog");g.setAttribute("aria-modal","true");document.body.appendChild(g)}
+    const lb=document.getElementById("langBtn");
+    g.innerHTML='<div class="gate-in"><div class="gate-top"><span></span><button type="button" class="lang-btn" data-lang></button></div><div data-body style="display:grid;gap:18px"></div></div>';
+    g.querySelector("[data-lang]").textContent=lb?lb.textContent:"";
+    g.querySelector("[data-lang]").onclick=()=>{if(lb)lb.click()}; // the app switches language and fires hb-lang
+    const body=g.querySelector("[data-body]");
+    const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e};
+    if(step.name==="email"){
+      const h=el("h1");h.append(tr("app.h1a"));const a=el("span","accent",tr("app.h1b"));a.style.color="var(--accent)";h.append(a);
+      body.append(h,el("p","lead",tr("gate.lead")));
+      if(cfg.google){
+        const gb=el("button","btn ghost",tr("acct.google"));gb.type="button";
+        gb.onclick=()=>sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin}});
+        body.append(gb,el("div","or",tr("gate.or")));
+      }
+      const f=el("form");const lab=el("label","lbl",tr("gate.emailLabel"));lab.htmlFor="gate-email";
+      const inp=el("input");inp.id="gate-email";inp.type="email";inp.required=true;inp.autocomplete="email";inp.inputMode="email";inp.placeholder="name@example.com";inp.value=step.email;
+      const btn=el("button","btn",tr("gate.send"));btn.type="submit";const msg=el("p","err");
+      f.append(lab,inp,btn,msg);
+      f.onsubmit=async e=>{e.preventDefault();btn.disabled=true;btn.textContent=tr("gate.sending");
+        const email=inp.value.trim();const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin}});
+        btn.disabled=false;btn.textContent=tr("gate.send");
+        if(error){msg.textContent=error.status===429?tr("gate.tooMany"):tr("acct.sendFailed");return}
+        step={name:"code",email};gate();};
+      body.append(f,el("p","note",tr("gate.note")));
+      setTimeout(()=>inp.focus(),0);
+    }else{
+      body.append(el("h2",null,tr("gate.checkTitle")),el("p","lead",tr("gate.checkLead",step.email)));
+      const f=el("form");const lab=el("label","lbl",tr("gate.codeLabel"));lab.htmlFor="gate-code";
+      const inp=el("input","code");inp.id="gate-code";inp.inputMode="numeric";inp.autocomplete="one-time-code";inp.maxLength=10;inp.required=true;
+      const btn=el("button","btn",tr("gate.verify"));btn.type="submit";const msg=el("p","err");
+      f.append(lab,inp,btn,msg);
+      f.onsubmit=async e=>{e.preventDefault();btn.disabled=true;
+        const {error}=await sb.auth.verifyOtp({email:step.email,token:inp.value.replace(/\D/g,""),type:"email"});
+        btn.disabled=false;if(error){msg.textContent=tr("gate.badCode");return} // success reloads through onAuthStateChange
+      };
+      const row=el("div","row");
+      const again=el("button","link",tr("gate.resend"));again.type="button";
+      again.onclick=async()=>{const {error}=await sb.auth.signInWithOtp({email:step.email,options:{emailRedirectTo:location.origin}});msg.textContent=error?(error.status===429?tr("gate.tooMany"):tr("acct.sendFailed")):"✓"};
+      const other=el("button","link",tr("gate.otherEmail"));other.type="button";other.onclick=()=>{step={name:"email",email:""};gate()};
+      row.append(again,other);
+      body.append(f,row);
+      setTimeout(()=>inp.focus(),0);
+    }
   }
 
+  // Signed in: the save indicator signs out, with a second tap to confirm.
   async function paintAccount(){
-    const s=await session(),el=document.getElementById("sync");if(!el)return;
-    el.title=s?tr("acct.signOut"):tr("acct.signIn");
-    if(!s){const t=document.getElementById("syncText");if(t)t.textContent=tr("sync.local")+" · "+tr("acct.signIn")}
+    const s=await session(),el=document.getElementById("sync");
+    if(!s){gate();return}
+    document.documentElement.classList.remove("hb-gate");
+    sessionStorage.removeItem("hb-reloaded");
+    const old=document.getElementById("gate");if(old)old.remove();
+    if(!el)return;
+    el.title=tr("acct.signOut")+" · "+(s.user.email||"");
+    let armed=null;
     el.onclick=async()=>{
-      if(!s)return dialog();
-      await sb.auth.signOut();location.reload();
+      const t=document.getElementById("syncText");
+      if(!armed){const before=t?t.textContent:"";if(t)t.textContent=tr("acct.signOutConfirm");armed=setTimeout(()=>{armed=null;if(t)t.textContent=before},4000);return}
+      clearTimeout(armed);await sb.auth.signOut();location.reload();
     };
   }
-  sb.auth.onAuthStateChange((event)=>{if(event==="SIGNED_IN"&&!sessionStorage.getItem("hb-signed")){sessionStorage.setItem("hb-signed","1");location.reload()}});
+  // Just signed in (code, email link or Google): reload once so the app starts with the account's bar.
+  // The flag stops a second reload if the event repeats while the page is loading.
+  sb.auth.onAuthStateChange((event)=>{
+    if(event==="SIGNED_IN"&&document.documentElement.classList.contains("hb-gate")&&!sessionStorage.getItem("hb-reloaded")){
+      sessionStorage.setItem("hb-reloaded","1");location.reload();
+    }
+  });
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",paintAccount);else paintAccount();
-  window.addEventListener("hb-lang",paintAccount); // the app switched language
+  window.addEventListener("hb-lang",()=>{if(document.getElementById("gate"))gate();else paintAccount()}); // the app switched language
 })();

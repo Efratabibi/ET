@@ -57,7 +57,9 @@ Steps marked **[you]** need your accounts.
 1. **[you] Supabase** (supabase.com, free tier):
    - New project. Region: Frankfurt, the closest to Israel.
    - SQL Editor → paste `supabase/schema.sql` → Run.
-   - Authentication → Providers: Email is on by default (sign-in link by email). Google needs an OAuth client from Google Cloud Console; the provider page explains how.
+   - Authentication → Providers: Email is on by default. Google needs an OAuth client from Google Cloud Console; the provider page explains how. Once it works, set `AUTH_GOOGLE=on` in Vercel to show the "Continue with Google" button.
+   - Authentication → Email Templates → Magic Link: add `{{ .Token }}` to the message, so the email carries a 6-digit code as well as the link. The site opens on a sign-in screen that takes the code, which matters on phones where an installed app and the mail link open in different browsers.
+   - Supabase's built-in email is rate-limited (a few emails an hour). Before inviting many people, turn on Google sign-in or set up custom SMTP under Authentication → Emails.
    - Authentication → URL Configuration: set Site URL to the address Vercel gives you.
    - Project Settings → API: copy `URL`, `anon` and `service_role`. These go straight into Vercel, never into a chat.
 2. **[you] Anthropic** (console.anthropic.com), optional: add a payment method, create an API key, and set a monthly spend limit under Limits. Without `ANTHROPIC_API_KEY` (and `SUPABASE_SERVICE_ROLE_KEY`) the site works and simply hides the photo and identify features; add them later and redeploy.

@@ -70,20 +70,26 @@
   const css=document.createElement("style");
   css.textContent=
     "html.hb-gate body>.app,html.hb-gate body>.ob{visibility:hidden}"+
-    ".gate{position:fixed;inset:0;z-index:70;background:var(--bg);overflow-y:auto;padding:env(safe-area-inset-top,0px) 16px env(safe-area-inset-bottom,0px)}"+
-    ".gate-in{max-width:420px;margin:0 auto;min-height:100%;display:grid;align-content:center;gap:18px;padding-block:32px}"+
-    ".gate-top{display:flex;justify-content:space-between;align-items:center}"+
-    ".gate h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,46px);line-height:1;margin:0}"+
-    ".gate h2{font-family:var(--display);font-weight:400;font-size:26px;margin:0}"+
-    ".gate .lead{margin:0;color:var(--muted);font-size:17px;text-wrap:balance}"+
-    ".gate form{display:grid;gap:10px}"+
-    ".gate input{width:100%;font:17px var(--body);padding:12px 14px;border:1px solid var(--field);border-radius:12px;background:var(--surface);color:var(--ink)}"+
+    ".gate{position:fixed;inset:0;z-index:70;background:var(--bg);color:var(--ink);overflow-y:auto;padding:env(safe-area-inset-top,0px) 26px env(safe-area-inset-bottom,0px)}"+
+    ".gate-in{max-width:440px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;gap:14px;padding-block:18px 40px}"+
+    ".gate-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:auto;padding-bottom:40px}"+
+    ".gate-top svg{width:40px;height:40px;border-radius:10px}"+
+    ".gate h1{font:600 clamp(72px,24vw,92px)/.86 var(--display);text-transform:uppercase;letter-spacing:-.01em;margin:0;white-space:normal;font-synthesis:none}"+
+    ".gate h2{font:600 44px/.92 var(--display);text-transform:uppercase;margin:0;font-synthesis:none}"+
+    ".gate .motto{font:italic 400 22px/1.3 var(--serif);color:var(--ink2);margin:0}"+
+    "html[lang=he] .gate .motto{font-style:normal}"+
+    ".gate .lead{margin:4px 0 0;color:var(--muted);font-size:17px;line-height:1.45;text-wrap:pretty}"+
+    ".gate form{display:grid;gap:12px;margin-top:18px}"+
+    ".gate label{font:500 11px var(--display);letter-spacing:var(--track);text-transform:uppercase;color:var(--muted)}"+
+    ".gate input{width:100%;font:17px var(--body);padding:14px 16px;border:1px solid var(--line2);border-radius:12px;background:var(--surface);color:var(--ink)}"+
     ".gate input.code{font-size:24px;letter-spacing:.3em;text-align:center;direction:ltr}"+
-    ".gate .btn{padding:13px 16px;font-size:16px}.gate .btn:disabled{opacity:.6}"+
+    ".gate .btn{min-height:52px;font-size:16px;width:100%}.gate .btn:disabled{opacity:.6}"+
+    ".gate .btn.ghost{border-color:var(--ink)}"+
     ".gate .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}"+
-    ".gate .link{border:0;background:none;color:var(--accent);font:600 14px var(--body);cursor:pointer;padding:8px;min-height:40px}"+
-    ".gate .or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}.gate .or::before,.gate .or::after{content:'';flex:1;border-top:1px solid var(--line)}"+
+    ".gate .link{border:0;background:none;color:var(--gold);font:600 14px var(--body);cursor:pointer;padding:8px;min-height:40px}"+
+    ".gate .or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px}.gate .or::before,.gate .or::after{content:'';flex:1;border-top:1px solid var(--line)}"+
     ".gate .err{color:var(--warn);font-size:14px;margin:0;min-height:1.2em}"+
+    ".gate .note{font-size:13px;color:var(--muted);text-align:center;margin:0}"+
     "#sync{cursor:pointer}";
   document.head.appendChild(css);
   document.documentElement.classList.add("hb-gate"); // hide the app until we know who this is
@@ -93,20 +99,22 @@
     let g=document.getElementById("gate");
     if(!g){g=document.createElement("div");g.id="gate";g.className="gate";g.setAttribute("role","dialog");g.setAttribute("aria-modal","true");document.body.appendChild(g)}
     const lb=document.getElementById("langBtn");
-    g.innerHTML='<div class="gate-in"><div class="gate-top"><span></span><button type="button" class="lang-btn" data-lang></button></div><div data-body style="display:grid;gap:18px"></div></div>';
+    const logo=document.querySelector(".brand svg");
+    g.innerHTML='<div class="gate-in"><div class="gate-top"><span data-logo></span><button type="button" class="lang-btn" data-lang></button></div><div data-body style="display:grid;gap:14px"></div></div>';
+    if(logo)g.querySelector("[data-logo]").append(logo.cloneNode(true));
     g.querySelector("[data-lang]").textContent=lb?lb.textContent:"";
     g.querySelector("[data-lang]").onclick=()=>{if(lb)lb.click()}; // the app switches language and fires hb-lang
     const body=g.querySelector("[data-body]");
     const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e};
     if(step.name==="email"){
-      const h=el("h1");h.append(tr("app.h1a"));const a=el("span","accent",tr("app.h1b"));a.style.color="var(--accent)";h.append(a);
-      body.append(h,el("p","lead",tr("gate.lead")));
+      const h=el("h1");h.append(tr("app.h1a").trim(),document.createElement("br"),tr("app.h1b"));
+      body.append(el("div","eyebrow gold",tr("gate.eyebrow")),h,el("p","motto",tr("app.motto")),el("p","lead",tr("gate.lead")));
       if(cfg.google){
         const gb=el("button","btn ghost",tr("acct.google"));gb.type="button";
         gb.onclick=()=>sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin}});
         body.append(gb,el("div","or",tr("gate.or")));
       }
-      const f=el("form");const lab=el("label","lbl",tr("gate.emailLabel"));lab.htmlFor="gate-email";
+      const f=el("form");const lab=el("label",null,tr("gate.emailLabel"));lab.htmlFor="gate-email";
       const inp=el("input");inp.id="gate-email";inp.type="email";inp.required=true;inp.autocomplete="email";inp.inputMode="email";inp.placeholder="name@example.com";inp.value=step.email;
       const btn=el("button","btn",tr("gate.send"));btn.type="submit";const msg=el("p","err");
       f.append(lab,inp,btn,msg);
@@ -119,7 +127,7 @@
       setTimeout(()=>inp.focus(),0);
     }else{
       body.append(el("h2",null,tr("gate.checkTitle")),el("p","lead",tr("gate.checkLead",step.email)));
-      const f=el("form");const lab=el("label","lbl",tr("gate.codeLabel"));lab.htmlFor="gate-code";
+      const f=el("form");const lab=el("label",null,tr("gate.codeLabel"));lab.htmlFor="gate-code";
       const inp=el("input","code");inp.id="gate-code";inp.inputMode="numeric";inp.autocomplete="one-time-code";inp.maxLength=10;inp.required=true;
       const btn=el("button","btn",tr("gate.verify"));btn.type="submit";const msg=el("p","err");
       f.append(lab,inp,btn,msg);

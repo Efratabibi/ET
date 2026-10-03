@@ -425,6 +425,23 @@ details summary::-webkit-details-marker{display:none}
 .photo-cta small{color:var(--muted);font-size:13px}
 .photo-cta:disabled{opacity:.6;cursor:progress}
 .ob-find{width:100%}
+.ob-sheet{position:fixed;inset:0;z-index:55;background:var(--bg);overflow-y:auto;padding-top:env(safe-area-inset-top,0px)}
+.ob-sheet[hidden]{display:none}
+.ob-sheet .ob-foot{z-index:56}
+.sheet-body{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.sheet-search{font-size:17px;padding-block:15px}
+.sheet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.scard{position:relative;display:grid;justify-items:center;align-content:start;gap:6px;padding:16px 10px 14px;border:1.5px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);font:15px var(--body);text-align:center;cursor:pointer}
+.scard .thumb{display:flex;align-items:center;justify-content:center;width:84px;height:116px;margin-bottom:4px}
+.scard .thumb svg{width:42px;height:84px}
+.scard .thumb.photo{background:var(--photo-bg);border-radius:10px;overflow:hidden}
+.scard .thumb img{width:100%;height:100%;object-fit:contain}
+.scard b{font-weight:700;line-height:1.25;direction:ltr;overflow-wrap:anywhere}
+.scard small{font-size:13px;color:var(--muted)}
+.scard[aria-pressed="true"]{border-color:var(--gold);background:var(--tint)}
+.scard[aria-pressed="true"]::after{content:"✓";position:absolute;top:10px;inset-inline-start:12px;width:24px;height:24px;border-radius:50%;background:var(--gold);color:var(--cream-ink);font:700 14px/24px var(--body)}
+@media (hover:hover){.scard:hover{border-color:var(--line2)}}
+.tc-pick{justify-self:start}
 .ob-foot{position:fixed;bottom:0;inset-inline:0;background:var(--bg);border-top:1px solid var(--line);padding:14px 22px calc(14px + env(safe-area-inset-bottom,0px));z-index:51}
 .ob-foot-in{max-width:600px;margin:0 auto;display:flex;gap:8px;justify-content:space-between;align-items:center}
 .ob-foot .btn{min-height:54px;font-size:16px;padding:0 20px}
@@ -621,6 +638,10 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     <div id="obBody"></div>
   </div>
   <div class="ob-foot"><div class="ob-foot-in" id="obFoot"></div></div>
+  <div class="ob-sheet" id="obSheet" hidden role="dialog" aria-modal="true" aria-labelledby="obSheetTitle">
+    <div class="ob-in"><div class="ob-head"><span></span><button class="ob-skip" type="button" id="sheetClose" data-t="common.close"></button></div><div id="sheetBody" class="sheet-body"></div></div>
+    <div class="ob-foot"><div class="ob-foot-in" id="sheetFoot"></div></div>
+  </div>
 </div>
 
 <div class="recipe" id="recipe" hidden role="dialog" aria-modal="true" aria-labelledby="rcName">
@@ -873,6 +894,14 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "ob.wineTitle":"Wine and beer",
     "ob.wineLead":"An opened bottle in the fridge counts too.",
     "ob.winePh":"Search a wine or winery: Yarden, prosecco…",
+    "ob.sheetEyebrow":"Optional",
+    "ob.sheetTitle":x=>"Which "+x+" do you have?",
+    "ob.sheetLead":x=>"Pick your bottle and the suggestions will fit its taste. Not sure? Skip it, any "+x+" works.",
+    "ob.sheetSkip":x=>"Continue without a specific bottle",
+    "ob.sheetDone":n=>n===1?"Done · 1 bottle":"Done · "+n+" bottles",
+    "ob.anyBottle":x=>"No specific bottle, and that's fine.",
+    "ob.pickBottle":"Pick a specific bottle (optional)",
+    "ob.changeBottle":"Change bottles",
     "ob.other":"Another bottle",
     "ob.otherPh":x=>"Search "+x+" by name",
     "ob.photoBtn":"Photo of your bottles",
@@ -1547,6 +1576,14 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "ob.wineTitle":"יין ובירה",
     "ob.wineLead":"גם בקבוק פתוח במקרר נחשב.",
     "ob.winePh":"חיפוש יין או יקב: ירדן, פרוסקו…",
+    "ob.sheetEyebrow":"לא חובה",
+    "ob.sheetTitle":x=>"איזה בקבוק "+x+" יש לך?",
+    "ob.sheetLead":x=>"אם תבחרו את הבקבוק, ההמלצות יתאימו לטעם שלו. לא בטוחים? אפשר פשוט לדלג.",
+    "ob.sheetSkip":x=>"להמשיך בלי בקבוק מסוים",
+    "ob.sheetDone":n=>n===1?"סיום · בקבוק אחד":"סיום · "+n+" בקבוקים",
+    "ob.anyBottle":x=>"בלי בקבוק מסוים, וזה בסדר גמור.",
+    "ob.pickBottle":"בחירת בקבוק מסוים (לא חובה)",
+    "ob.changeBottle":"שינוי בקבוקים",
     "ob.other":"בקבוק אחר",
     "ob.otherPh":x=>"חיפוש "+x+" לפי שם",
     "ob.photoBtn":"צילום הבקבוקים",
@@ -3789,9 +3826,9 @@ function photoCta(){
   return [btn,file];
 }
 function meterEl(s){return el("div",{class:"meter","aria-label":t("drink.strengthAria",STRENGTH[s][1])},[1,2,3].map(k=>el("b",{class:k<=s?"f":""})))}
-function tile(id,withBottle,reach){
+function tile(id,withBottle,reach,onAdd){
   const on=have().has(id),u=on?0:(reach?reachGain(id):unlockCount(id));
-  return el("button",{type:"button",class:"tile","aria-pressed":String(on),onclick:()=>{on?obRemoveItem(id):obAdd([{id}])}},
+  return el("button",{type:"button",class:"tile","aria-pressed":String(on),onclick:()=>{on?obRemoveItem(id):onAdd?onAdd(id):obAdd([{id}])}},
     withBottle?bottleThumb(id):null,el("span",{class:"nm"},NAME[id]),u?el("span",{class:"plus"},t("ob.plus",u)):null);
 }
 // A tappable bottle card. Updates itself in place so the row keeps its scroll position.
@@ -3808,27 +3845,60 @@ function bottleCard(type,name,style){
   return card;
 }
 // A type the user has: a wide card in the grid with that type's well-known bottles (optional), the user's own first.
+// A type the user has: a wide card in the grid showing the chosen bottles, if any, and a way to pick them.
 function typeCard(type){
   const own=state.bottles.filter(b=>b.type===type);
-  const listed=(PRESETS[type]||[]).filter(p=>!own.some(b=>b.name===p[0]));
-  // Bottles with a photo first: they are the easiest to recognise.
-  listed.sort((a,b)=>(PHOTOS&&PHOTOS[b[0].toLowerCase()]?1:0)-(PHOTOS&&PHOTOS[a[0].toLowerCase()]?1:0));
   const head=el("button",{type:"button",class:"tc-head","aria-pressed":"true","aria-label":t("ob.removeType",NAME[type]),onclick:()=>obRemoveItem(type)},
     bottleThumb(type),el("span",{class:"nm"},NAME[type]),el("span",{class:"x","aria-hidden":"true"},"×"));
-  const row=el("div",{class:"brow-scroll"},own.map(b=>bottleCard(type,b.name,b.style)),listed.slice(0,12).map(p=>bottleCard(type,p[0],p[1])),
-    el("button",{type:"button",class:"bcard other","aria-expanded":String(ob.qType===type),onclick:()=>{ob.qType=ob.qType===type?null:type;ob.q="";renderOb();const i=$("obSearch");if(i)i.focus()}},
-      el("span",{class:"plus-ic","aria-hidden":"true"},"+"),el("span",{class:"nm"},t("ob.other"))));
-  const sec=el("section",{class:"type-card"},head,el("p",{class:"tc-hint"},t("ob.whichHint")),row);
-  if(ob.qType===type){
-    const inp=el("input",{type:"search",id:"obSearch",placeholder:t("ob.otherPh",NAME[type]),autocomplete:"off",value:ob.q});
-    const res=el("div",{class:"ob-results"});
-    const draw=()=>finder(res,ob.q,e=>{if(e.custom){ob.manual=e.custom;renderOb()}else{ob.qType=null;obAdd([e])}},{productsOnly:true,types:new Set([type])});
-    inp.addEventListener("input",()=>{ob.q=inp.value;draw()});
-    inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();const f=res.querySelector(".ob-res");if(f)f.click()}});
-    draw();sec.append(inp,res);
-    if(ob.manual!=null)sec.append(manualForm(ob.manual,e=>{ob.manual=null;if(e){ob.qType=null;obAdd([e])}else renderOb()}));
-  }
-  return sec;
+  return el("section",{class:"type-card"},head,
+    el("p",{class:"tc-hint"},own.length?own.map(b=>b.name).join(" · "):t("ob.anyBottle",NAME[type])),
+    el("button",{type:"button",class:"btn-pill tc-pick",onclick:()=>openSheet(type)},own.length?t("ob.changeBottle"):t("ob.pickBottle")));
+}
+
+/* Bottle picker: a full screen per drink type, with search. Picking is optional. */
+function openSheet(type){ob.sheet=type;ob.sq="";ob.manual=null;finder.ai=null;$("obSheet").hidden=false;renderSheet();$("obSheet").scrollTop=0;setTimeout(()=>{const i=$("sheetSearch");if(i)i.focus({preventScroll:true})},50)}
+function closeSheet(){if(!ob.sheet)return;const ty=ob.sheet;ob.sheet=null;$("obSheet").hidden=true;renderOb();const c=document.querySelector('.type-card .tc-pick');if(c)c.focus()}
+function sheetCard(type,name,style,sub){
+  const mine=()=>state.bottles.find(b=>b.type===type&&b.name===name);
+  const card=el("button",{type:"button",class:"scard","aria-pressed":String(!!mine())},bottleThumb(type,style,null,name),el("b",{},name),sub?el("small",{},sub):null);
+  card.addEventListener("click",()=>{
+    const b=mine();
+    if(b){state.bottles=state.bottles.filter(x=>x!==b);mood.withs=mood.withs.filter(k=>k!=="b:"+b.id);commit()}
+    else obAdd([{id:type,name,style}],false);
+    card.setAttribute("aria-pressed",String(!!mine()));sheetFoot();
+  });
+  return card;
+}
+function sheetFoot(){
+  const type=ob.sheet,n=state.bottles.filter(b=>b.type===type).length,f=$("sheetFoot");f.innerHTML="";
+  f.append(el("button",{class:"btn"+(n?"":" light"),type:"button",onclick:closeSheet},n?t("ob.sheetDone",n):t("ob.sheetSkip",NAME[type])));
+}
+function renderSheet(){
+  const type=ob.sheet,body=$("sheetBody");body.innerHTML="";
+  const own=state.bottles.filter(b=>b.type===type);
+  const listed=(PRESETS[type]||[]).filter(p=>!own.some(b=>b.name===p[0]));
+  listed.sort((a,b)=>(PHOTOS&&PHOTOS[b[0].toLowerCase()]?1:0)-(PHOTOS&&PHOTOS[a[0].toLowerCase()]?1:0));
+  const styleName=st=>STYLES[type]&&STYLES[type][st]?STYLES[type][st].n:"";
+  const inp=el("input",{type:"search",id:"sheetSearch",class:"sheet-search",placeholder:t("ob.otherPh",NAME[type]),"aria-label":t("ob.otherPh",NAME[type]),autocomplete:"off",value:ob.sq});
+  const grid=el("div",{class:"sheet-grid"}),more=el("div",{class:"ob-results"});
+  const draw=()=>{
+    const q=normText(ob.sq.trim());grid.innerHTML="";more.innerHTML="";
+    const mineCards=own.filter(b=>!q||normText(b.name).includes(q)).map(b=>sheetCard(type,b.name,b.style,styleName(b.style)));
+    // Typed text goes through the shared search, so Hebrew names and typos match too.
+    const hits=(q?searchIndex(itemIndex(),ob.sq,40).filter(e=>e.kind==="product"&&e.type===type&&!own.some(b=>b.name===e.name)).map(e=>[e.name,e.style]):listed)
+      .map(p=>sheetCard(type,p[0],p[1],styleName(p[1])));
+    grid.append(...mineCards,...hits);
+    // Not on the list: the shared finder (other products of this type, Claude, or by hand).
+    if(q&&!grid.children.length)finder(more,ob.sq,e=>{if(e.custom){ob.manual=e.custom;renderSheet()}else{obAdd([e],false);ob.sq="";renderSheet()}},{productsOnly:true,types:new Set([type])});
+  };
+  inp.addEventListener("input",()=>{ob.sq=inp.value;draw()});
+  body.append(
+    el("p",{class:"eyebrow gold"},t("ob.sheetEyebrow")),
+    el("h2",{id:"obSheetTitle"},t("ob.sheetTitle",NAME[type])),
+    el("p",{class:"lead"},t("ob.sheetLead",NAME[type])),
+    inp,grid,more);
+  if(ob.manual!=null)body.append(manualForm(ob.manual,e=>{ob.manual=null;if(e)obAdd([e],false);renderSheet()}));
+  draw();sheetFoot();
 }
 // Steps 1–2: search, photo, then the types; a chosen type opens in place to pick bottles.
 function pickStep(body,S){
@@ -3844,9 +3914,10 @@ function pickStep(body,S){
   if(S.photo&&ob.photoOK)body.append(...photoCta());
   if(ob.notice)body.append(el("p",{class:"status err"},ob.notice));
   const H=have();
-  body.append(el("div",{class:"tiles"},list.map(id=>H.has(id)&&PRESETS[id]?typeCard(id):tile(id,true,true))));
+  const addAndPick=id=>{obAdd([{id}],false);openSheet(id)};
+  body.append(el("div",{class:"tiles"},list.map(id=>H.has(id)&&PRESETS[id]?typeCard(id):tile(id,true,true,PRESETS[id]?addAndPick:null))));
 }
-function obGo(step){ob.step=step;ob.last=null;ob.q="";ob.qType=null;ob.manual=null;ob.notice="";renderOb();$("ob").scrollTop=0}
+function obGo(step){if(ob.sheet){ob.sheet=null;$("obSheet").hidden=true}ob.step=step;ob.last=null;ob.q="";ob.qType=null;ob.manual=null;ob.notice="";renderOb();$("ob").scrollTop=0}
 function renderOb(bump){
   const y=$("ob").scrollTop;
   stepsEl();
@@ -3898,11 +3969,12 @@ async function obIdentify(file){
 }
 function obSetPhoto(ok){ob.photoOK=!!ok;if(!$("ob").hidden)renderOb()}
 function openOb(){ob={...ob,step:barEmpty()?0:1,q:"",qType:null,last:null,notice:""};$("ob").hidden=false;document.body.style.overflow="hidden";renderOb()}
-function closeOb(){$("ob").hidden=true;document.body.style.overflow="";try{localStorage.setItem(OB_KEY,"1")}catch(e){}}
+function closeOb(){ob.sheet=null;$("obSheet").hidden=true;$("ob").hidden=true;document.body.style.overflow="";try{localStorage.setItem(OB_KEY,"1")}catch(e){}}
 function finishOb(){closeOb();setTab(barEmpty()?"bar":"mix");window.scrollTo({top:0})}
 function finishBar(){closeOb();setTab("bar");window.scrollTo({top:0})}
 $("obClose").addEventListener("click",closeOb);
-document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("recipe").hidden)closeRecipe();else if(!$("ob").hidden)closeOb()});
+$("sheetClose").addEventListener("click",closeSheet);
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("recipe").hidden)closeRecipe();else if(ob.sheet)closeSheet();else if(!$("ob").hidden)closeOb()});
 $("openOb").addEventListener("click",openOb);
 let obSeen=null;try{obSeen=localStorage.getItem(OB_KEY)}catch(e){}
 
@@ -3932,6 +4004,7 @@ function setLang(next){
   applyLocale();setSync($("sync").classList.contains("on"),syncKey);render();
   const v=document.querySelector(".app").dataset.view;if(v==="shop")renderShop();if(v==="menu")renderMenu();
   if(!$("ob").hidden)renderOb();
+  if(ob.sheet)renderSheet();
   if(rcOpen)openRecipe(rcOpen);
   ["bottleSearch","obSearch","wineSearch"].forEach(id=>{const i=$(id);if(i&&i.value.trim())i.dispatchEvent(new Event("input"))});
   window.dispatchEvent(new Event("hb-lang")); // lets the web build repaint its account button

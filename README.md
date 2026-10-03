@@ -60,7 +60,7 @@ Steps marked **[you]** need your accounts.
    - Authentication → Providers: Email is on by default (sign-in link by email). Google needs an OAuth client from Google Cloud Console; the provider page explains how.
    - Authentication → URL Configuration: set Site URL to the address Vercel gives you.
    - Project Settings → API: copy `URL`, `anon` and `service_role`. These go straight into Vercel, never into a chat.
-2. **[you] Anthropic** (console.anthropic.com): add a payment method, create an API key, and set a monthly spend limit under Limits.
+2. **[you] Anthropic** (console.anthropic.com), optional: add a payment method, create an API key, and set a monthly spend limit under Limits. Without `ANTHROPIC_API_KEY` (and `SUPABASE_SERVICE_ROLE_KEY`) the site works and simply hides the photo and identify features; add them later and redeploy.
 3. **[you] Vercel** (vercel.com, free tier):
    - Add New → Project → choose this repository.
    - Settings → Environment Variables: the names in `.env.example`, with the values from steps 1–2.

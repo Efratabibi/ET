@@ -17,6 +17,8 @@ writeFileSync(out("dist/artifact.html"), app);
 const config = {
   supabaseUrl: process.env.SUPABASE_URL || "",
   supabaseAnonKey: process.env.SUPABASE_ANON_KEY || "",
+  // Claude features show only when the server has what it needs; without them the app hides photo and identify.
+  ai: Boolean(process.env.ANTHROPIC_API_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY),
 };
 const head = `<!doctype html>
 <html lang="he" dir="rtl">

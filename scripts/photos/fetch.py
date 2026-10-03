@@ -3,7 +3,7 @@
     python3 scripts/photos/fetch.py            # resumes; already-cached brands are skipped
 
 Reads the catalog straight from src/app.html (B(...) and W(...) rows). Open Food Facts allows about
-10 searches a minute, so a full run takes ~35 minutes. Results land in .photo-cache/search/.
+10 searches a minute, so a full run takes about an hour. Results land in .photo-cache/search/.
 """
 import json, os, re, sys, time, urllib.parse, urllib.request
 
@@ -40,7 +40,9 @@ def search(term):
             "page_size": 100, "sort_by": "unique_scans_n", "fields": FIELDS}
     # Alcoholic drinks only: "Mars" is also a chocolate bar, "Yarden" also a hummus. The filtered search is
     # the better one but the server often sheds it with a quick 503, so fall back to filtering here.
-    attempts = [dict(base, tagtype_0="categories", tag_contains_0="contains", tag_0="alcoholic-beverages")] * 3 + [base] * 3
+    # The server sheds load with a fast 503 most of the time, so retry often for a short while, alternating both.
+    filtered = dict(base, tagtype_0="categories", tag_contains_0="contains", tag_0="alcoholic-beverages")
+    attempts = [filtered, base] * 6
     for n, params in enumerate(attempts):
         try:
             products = get(params)
@@ -48,8 +50,7 @@ def search(term):
                 products = [p for p in products if any(c.split(":")[-1] in ALCOHOL for c in p.get("categories_tags", []))]
             return products
         except Exception as e:
-            print("  retry", term, e, file=sys.stderr)
-            time.sleep(8 + 4 * n)
+            time.sleep(5)
     return None  # still failing: skip it, a later run picks it up
 
 

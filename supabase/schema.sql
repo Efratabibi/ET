@@ -1,4 +1,4 @@
--- Home Bar database. Run once in Supabase: SQL Editor → New query → paste → Run.
+-- All Cohol database. Run once in Supabase: SQL Editor → New query → paste → Run.
 
 -- Each person's bar (the same JSON the claude.ai version stores).
 create table if not exists public.bars (

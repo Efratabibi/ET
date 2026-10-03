@@ -18,6 +18,12 @@
   --body:"Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
   --track:.2em;--track-h:.03em;
 }
+/* Colour themes (My bar → Colours). Whiskey is the default above. A swatch carrying data-theme
+   previews its theme's colours; a chosen button colour is set inline on <html> as --accent. */
+[data-theme="whiskey"]{--accent:#A8234A;--accent-deep:#7E1A38;--gold:#C8A56B;--bg:#110F0E;--surface:#1B1816;--line:#2E2A27;--line2:#3A3430;--field:#3A3430;--tint:#2A2018;--accent-soft:#2A2018}
+[data-theme="absinthe"]{--accent:#2F6B3C;--accent-deep:#24532E;--gold:#B9C27A;--bg:#0D110E;--surface:#161C17;--line:#253027;--line2:#33402F;--field:#33402F;--tint:#1E2618;--accent-soft:#1E2618}
+[data-theme="midnight"]{--accent:#2C5BA8;--accent-deep:#1F4380;--gold:#D4B483;--bg:#0C0F14;--surface:#151A22;--line:#232A35;--line2:#323B49;--field:#323B49;--tint:#1C2230;--accent-soft:#1C2230}
+[data-theme="agave"]{--accent:#B83D0B;--accent-deep:#8F2F08;--gold:#E2B86B;--bg:#12100D;--surface:#1C1915;--line:#2F2A23;--line2:#3E372E;--field:#3E372E;--tint:#2B2316;--accent-soft:#2B2316}
 /* Hebrew has no capitals and does not take letter-spacing well. */
 html[lang="he"]{--track:.04em;--track-h:0}
 *{box-sizing:border-box}
@@ -220,6 +226,19 @@ select option{background:var(--surface);color:var(--ink)}
 .chip .n{font-size:11px;opacity:.85;font-variant-numeric:tabular-nums}
 .with-hint{font-size:12px;color:var(--muted);margin:8px 0 0}
 .fit{font-size:13px;border-radius:8px;padding:5px 8px;border:1px solid var(--line)}
+.themes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.theme-btn{display:grid;justify-items:center;gap:8px;padding:10px 6px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);font:600 13px var(--body);cursor:pointer;transition:border-color .15s,transform .1s}
+.theme-btn:hover{border-color:var(--line2)}
+.theme-btn:active{transform:scale(.97)}
+.theme-btn[aria-pressed="true"]{border-color:var(--gold);background:var(--tint)}
+.theme-btn .sw{position:relative;width:100%;max-width:64px;height:40px;border-radius:9px;background:var(--bg);border:1px solid var(--line2);overflow:hidden}
+.theme-btn .sw b{position:absolute;inset-inline:8px;top:9px;height:4px;border-radius:2px;background:var(--gold)}
+.theme-btn .sw i{position:absolute;inset-inline-start:8px;bottom:8px;width:26px;height:10px;border-radius:3px;background:var(--accent)}
+.accents{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.acc{width:38px;height:38px;border-radius:50%;border:2px solid var(--bg);box-shadow:0 0 0 1px var(--line2);cursor:pointer;padding:0}
+.acc[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+.accents .chip[aria-pressed="true"]{background:var(--cream);border-color:var(--cream);color:var(--bg)}
+.accents .chip[aria-pressed="true"]::before{content:none}
 .app:not([data-view="shop"]) #pane-shop{display:none}
 @media (min-width:861px){.tab-m{display:none}.app[data-view="shop"] .grid{display:none}}
 
@@ -267,7 +286,7 @@ select option{background:var(--surface);color:var(--ink)}
 .jump{display:none}
 @media (max-width:860px){
   .app{padding-bottom:calc(104px + env(safe-area-inset-bottom,0px))}
-  .tabs{position:fixed;top:auto;bottom:0;inset-inline:0;max-width:none;margin:0;gap:6px;border-radius:0;border-width:1px 0 0;background:rgba(17,15,14,.96);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding:8px 16px calc(10px + env(safe-area-inset-bottom,0px));z-index:20}
+  .tabs{position:fixed;top:auto;bottom:0;inset-inline:0;max-width:none;margin:0;gap:6px;border-radius:0;border-width:1px 0 0;background:color-mix(in srgb,var(--bg) 96%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding:8px 16px calc(10px + env(safe-area-inset-bottom,0px));z-index:20}
   .tabs button{display:grid;justify-items:center;align-content:center;gap:4px;min-height:56px;padding:4px 2px;font-size:11px;background:transparent!important}
   html[lang="he"] .tabs button{font-size:13px}
   .tabs svg{display:block}
@@ -422,6 +441,9 @@ details summary::-webkit-details-marker{display:none}
 .chip[aria-pressed="true"] .plus{color:inherit}
 @media (prefers-reduced-motion:reduce){.counter .big.bump,.unlock{animation:none}}
 </style>
+<script>/* The saved colour theme, applied before the first paint (choices are made in My bar → Colours). */
+try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac=localStorage.getItem("homebar.accent");
+  if(/^(whiskey|absinthe|midnight|agave)$/.test(th))r.dataset.theme=th;if(/^#[0-9A-F]{6}$/i.test(ac||""))r.style.setProperty("--accent",ac)}catch(e){}</script>
 
 <!-- Text comes from src/i18n/*.js: data-t sets the text, data-t-ph the placeholder, data-t-html trusted markup. -->
 <div class="app">
@@ -467,6 +489,15 @@ details summary::-webkit-details-marker{display:none}
           <button class="btn ghost" type="submit" data-t="common.add"></button>
         </form>
         <p class="note" data-t="bar.customNote"></p>
+      </div>
+      <div class="cat" style="border-top:1px solid var(--line);padding-top:14px">
+        <div class="eyebrow gold" data-t="look.title"></div>
+        <div class="themes" id="themeSeg" role="group"></div>
+        <div>
+          <div class="lbl" data-t="look.accent"></div>
+          <div class="accents" id="accentSeg" role="group"></div>
+        </div>
+        <p class="note" data-t="look.note"></p>
       </div>
       <div class="linkrow">
         <details class="paste" id="moveBox" style="flex:1 1 100%">
@@ -661,6 +692,19 @@ details summary::-webkit-details-marker{display:none}
     "move.copyFailed":"Couldn't copy automatically. Select the text in the box and copy it yourself.",
     "move.bad":"That doesn't look like a bar copied from the app. Check that you pasted all of it.",
     "move.done":(i,b)=>"Imported "+i+(i===1?" item and ":" items and ")+b+(b===1?" bottle.":" bottles."),
+    "look.title":"Colours",
+    "look.theme":"Colour theme",
+    "look.whiskey":"Whiskey",
+    "look.absinthe":"Absinthe",
+    "look.midnight":"Midnight",
+    "look.agave":"Agave",
+    "look.accent":"Button colour",
+    "look.accentDefault":"Theme's own",
+    "look.burgundy":"Burgundy",
+    "look.green":"Green",
+    "look.blue":"Blue",
+    "look.orange":"Orange",
+    "look.note":"Saved on this device.",
     "clear.btn":"Clear bar",
     "clear.confirm":"Sure? Tap again to delete everything",
     "mix.title":"What are you in the mood for?",
@@ -1293,6 +1337,19 @@ details summary::-webkit-details-marker{display:none}
     "move.copyFailed":"לא הצלחנו להעתיק אוטומטית. סמנו את הטקסט בתיבה והעתיקו ידנית.",
     "move.bad":"זה לא נראה כמו בר שהועתק מהאפליקציה. בדקו שהדבקתם את כל הטקסט.",
     "move.done":(i,b)=>"יובאו "+(i===1?"פריט אחד":i+" פריטים")+" ו"+(b===1?"בקבוק אחד":"-"+b+" בקבוקים")+".",
+    "look.title":"צבעים",
+    "look.theme":"ערכת צבעים",
+    "look.whiskey":"וויסקי",
+    "look.absinthe":"אבסינת",
+    "look.midnight":"חצות",
+    "look.agave":"אגבה",
+    "look.accent":"צבע הכפתורים",
+    "look.accentDefault":"של הערכה",
+    "look.burgundy":"בורדו",
+    "look.green":"ירוק",
+    "look.blue":"כחול",
+    "look.orange":"כתום",
+    "look.note":"נשמר במכשיר הזה.",
     "clear.btn":"ניקוי הבר",
     "clear.confirm":"בטוח? לחיצה נוספת מוחקת הכל",
     "mix.title":"מה בא לך היום?",
@@ -3053,6 +3110,38 @@ if(!SHOW_MENU)document.querySelector('.tabs [data-tab="menu"]').hidden=true;
 let startTab="mix";try{startTab=localStorage.getItem("homebar.tab")||"mix"}catch(e){}
 if(!["bar","mix","shop"].concat(SHOW_MENU?["menu"]:[]).includes(startTab))startTab="mix";
 
+/* ---------- colours: four themes and an optional button colour, kept on this device ---------- */
+const THEMES=["whiskey","absinthe","midnight","agave"];
+const ACCENTS=[["burgundy","#A8234A"],["green","#2F6B3C"],["blue","#2C5BA8"],["orange","#B83D0B"]];
+let look={theme:pref("homebar.theme","whiskey"),accent:pref("homebar.accent","")};
+if(!THEMES.includes(look.theme))look.theme="whiskey";
+if(!ACCENTS.some(a=>a[1]===look.accent))look.accent="";
+function applyLook(){
+  const r=document.documentElement;
+  r.dataset.theme=look.theme;
+  if(look.accent)r.style.setProperty("--accent",look.accent);else r.style.removeProperty("--accent");
+  const m=document.querySelector('meta[name="theme-color"]');
+  if(m)m.content=getComputedStyle(r).getPropertyValue("--accent").trim();
+}
+function setLook(k,v){look[k]=v;setPref("homebar."+k,v);applyLook();renderLook()}
+function renderLook(){
+  const btn=(cls,on,label,pick)=>{const b=document.createElement("button");b.type="button";b.className=cls;
+    b.setAttribute("aria-pressed",String(on));b.setAttribute("aria-label",label);b.title=label;b.addEventListener("click",pick);return b};
+  $("themeSeg").setAttribute("aria-label",t("look.theme"));
+  $("themeSeg").replaceChildren(...THEMES.map(k=>{
+    const b=btn("theme-btn",look.theme===k,t("look."+k),()=>setLook("theme",k));
+    const sw=document.createElement("span");sw.className="sw";sw.dataset.theme=k;sw.setAttribute("aria-hidden","true");
+    sw.append(document.createElement("b"),document.createElement("i"));
+    const nm=document.createElement("span");nm.textContent=t("look."+k);
+    b.append(sw,nm);return b;
+  }));
+  $("accentSeg").setAttribute("aria-label",t("look.accent"));
+  const def=btn("chip",!look.accent,t("look.accentDefault"),()=>setLook("accent",""));def.textContent=t("look.accentDefault");
+  $("accentSeg").replaceChildren(def,...ACCENTS.map(([k,c])=>{
+    const b=btn("acc",look.accent===c,t("look."+k),()=>setLook("accent",c));b.style.background=c;return b;
+  }));
+}
+
 let syncKey="sync.local";
 function setSync(on,key){syncKey=key;$("sync").classList.toggle("on",on);$("syncText").textContent=t(key)}
 
@@ -3778,6 +3867,7 @@ function applyLocale(){
   const lb=$("langBtn");lb.textContent=t("lang.switch");lb.setAttribute("aria-label",t("lang.switchAria"));
   $("rcBack").setAttribute("aria-label",t("rec.back"));
   ["country","menuCountry","woltArea"].forEach(id=>$(id).innerHTML=""); // rebuilt with the new names
+  renderLook();
 }
 function setLang(next){
   lang=next;L=LOCALES[lang];try{localStorage.setItem("homebar.lang",lang)}catch(e){}
@@ -3790,6 +3880,7 @@ function setLang(next){
 }
 $("langBtn").addEventListener("click",()=>setLang(lang==="he"?"en":"he"));
 
+applyLook();
 applyLocale();
 render();
 setTab(startTab);

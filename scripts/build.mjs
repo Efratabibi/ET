@@ -19,6 +19,8 @@ const config = {
   supabaseAnonKey: process.env.SUPABASE_ANON_KEY || "",
   // Claude features show only when the server has what it needs; without them the app hides photo and identify.
   ai: Boolean(process.env.ANTHROPIC_API_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY),
+  // "Continue with Google" shows once Google sign-in is enabled in Supabase and AUTH_GOOGLE=on is set.
+  google: process.env.AUTH_GOOGLE === "on",
 };
 const head = `<!doctype html>
 <html lang="he" dir="rtl">

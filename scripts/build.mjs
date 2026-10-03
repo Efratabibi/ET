@@ -6,7 +6,9 @@ import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from
 const read = (p) => readFileSync(new URL("../" + p, import.meta.url), "utf8");
 const out = (p) => new URL("../" + p, import.meta.url);
 
-const app = read("src/app.html").replace("/*@@PROMPTS@@*/", () => read("src/prompts.cjs"));
+const app = read("src/app.html")
+  .replace("/*@@PROMPTS@@*/", () => read("src/prompts.cjs"))
+  .replace("/*@@I18N@@*/", () => read("src/i18n/en.js") + read("src/i18n/he.js"));
 
 mkdirSync(out("dist"), { recursive: true });
 writeFileSync(out("dist/artifact.html"), app);

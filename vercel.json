@@ -1,5 +1,12 @@
 {
   "buildCommand": "node scripts/build.mjs",
   "outputDirectory": "public",
-  "functions": { "api/claude.js": { "maxDuration": 60 } }
+  "regions": [
+    "fra1"
+  ],
+  "functions": {
+    "api/claude.js": {
+      "maxDuration": 60
+    }
+  }
 }

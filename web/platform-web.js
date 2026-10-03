@@ -23,6 +23,7 @@
   window.HB_PLATFORM={
     name:"web",
     async ai(){
+      if(!cfg.ai)return null; // no Claude key on the server yet: the app hides Claude features
       return {json:async(task,params,opts={})=>{
         const s=await session();
         if(!s)throw {code:"login_required"};

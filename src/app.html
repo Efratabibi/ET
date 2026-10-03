@@ -2056,6 +2056,7 @@ function setLang(next){
   const v=document.querySelector(".app").dataset.view;if(v==="shop")renderShop();if(v==="menu")renderMenu();
   if(!$("ob").hidden)renderOb();
   ["bottleSearch","obSearch","wineSearch"].forEach(id=>{const i=$(id);if(i&&i.value.trim())i.dispatchEvent(new Event("input"))});
+  window.dispatchEvent(new Event("hb-lang")); // lets the web build repaint its account button
 }
 $("langBtn").addEventListener("click",()=>setLang(lang==="he"?"en":"he"));
 

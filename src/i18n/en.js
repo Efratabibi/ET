@@ -256,7 +256,16 @@
     "ob.doneLeadNone":"A little more is needed. Go back and mark more, or see in \"Shop\" what's best to add.",
     "ob.doneBest":(x,n)=>["Best to add next: ",x,n===1?" unlocks 1 more cocktail.":" unlocks "+n+" more cocktails."],
     "ob.go":"Let's make something",
-    "ob.toBar":"To my bar"
+    "ob.toBar":"To my bar",
+    "acct.title":"Sign in",
+    "acct.lead":"Your bar is saved to your account and syncs between devices.",
+    "acct.google":"Continue with Google",
+    "acct.emailLabel":"Or get a sign-in link by email",
+    "acct.send":"Send link",
+    "acct.sendFailed":"Couldn't send it. Check the address and try again.",
+    "acct.sent":e=>"We sent a link to "+e+". Open it on this device.",
+    "acct.signIn":"Sign in",
+    "acct.signOut":"Sign out"
    },
   cat:{
     "spirit":"Spirits",

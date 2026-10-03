@@ -268,6 +268,7 @@
     "rec.method":"Method",
     "rec.tip":"From the bartender",
     "rec.whereBuy":x=>"Where to buy "+x+"?",
+    "rec.photo":"Photo: ",
     "rec.back":"Back",
     "shop.suggestTitle":"What to buy next",
     "shop.suggestSub":"Ranked by how many new cocktails each bottle adds.",

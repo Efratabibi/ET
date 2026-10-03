@@ -268,6 +268,7 @@
     "rec.method":"הכנה",
     "rec.tip":"טיפ מהברמן",
     "rec.whereBuy":x=>"איפה קונים "+x+"?",
+    "rec.photo":"צילום: ",
     "rec.back":"חזרה",
     "shop.suggestTitle":"מה כדאי לקנות",
     "shop.suggestSub":"לפי כמה קוקטיילים חדשים כל בקבוק יוסיף.",

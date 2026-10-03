@@ -129,6 +129,7 @@ input::placeholder,textarea::placeholder{color:var(--faint)}
 .drink-main{display:grid;gap:8px;min-width:0}
 .art-box{display:block;width:52px;height:74px;color:var(--muted)}.art-box svg{display:block;width:100%;height:100%}
 .art-box.sm{width:36px;height:50px;flex:none}
+.art-box.photo{border-radius:10px;overflow:hidden;background:var(--deep)}.art-box.photo img{display:block;width:100%;height:100%;object-fit:cover}
 .drink-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .drink h4{margin:0;font:600 22px/1.05 var(--display);text-transform:uppercase;letter-spacing:.01em;font-synthesis:none}
 .drink .alt{color:var(--muted);font-size:13px}
@@ -151,7 +152,10 @@ html[lang="he"] .empty{font-style:normal;font-family:var(--body)}
 .recipe{position:fixed;inset:0;z-index:60;background:var(--cream);color:var(--cream-ink);overflow-y:auto;overscroll-behavior:contain}
 .recipe[hidden]{display:none}
 .rc-top{position:relative;height:calc(230px + env(safe-area-inset-top,0px));background:repeating-linear-gradient(135deg,#E2DACD 0 10px,#DAD1C3 10px 20px);display:grid;place-items:end center;padding-bottom:18px}
-.rc-art{color:#5E554C;display:grid;place-items:end center}.rc-art svg{display:block;height:190px;width:auto;filter:drop-shadow(0 6px 10px rgba(60,40,20,.15))}
+.rc-art{color:#5E554C;display:grid;place-items:end center}
+.rc-top.photo{background:#151210;padding:0}.rc-top.photo .rc-art{position:absolute;inset:0;display:block}
+.rc-photo{display:block;width:100%;height:100%;object-fit:cover}
+.rc-credit{font-size:12px;color:var(--cream-muted);margin:0}.rc-credit a{color:inherit}.rc-art svg{display:block;height:190px;width:auto;filter:drop-shadow(0 6px 10px rgba(60,40,20,.15))}
 .rc-back{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));inset-inline-start:16px;width:44px;height:44px;border-radius:50%;border:0;background:var(--cream);display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.12);cursor:pointer}
 .rc-back svg{width:20px;height:20px;fill:none;stroke:var(--cream-ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 [dir="rtl"] .rc-back svg{transform:scaleX(-1)}
@@ -1452,7 +1456,7 @@ function whereBuyType(missing){return missing.length?ids(missing[0]).find(x=>PRE
 
 function drinkCard(d,H,missing){
   const fi=fitInfo(d,bottlePicks(d));
-  const pic=el("span",{class:"art-box"});pic.innerHTML=cocktailArt(d,H);
+  const pic=drinkPic(d,H);
   const card=el("article",{class:"drink"+(missing.length?" near":""),tabindex:"0",role:"button","aria-haspopup":"dialog",
       onclick:()=>openRecipe(d),onkeydown:e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openRecipe(d)}}},pic,el("div",{class:"drink-main"},
     el("div",{class:"drink-top"},el("h4",{},d.name),meterEl(d.s)),
@@ -1558,11 +1562,26 @@ function cocktailArt(d,H){
   return s+'</svg>';
 }
 
+// Real photos (web/cocktails.json, from Wikimedia Commons) where we have them, the drawing otherwise.
+let SHOTS=null;
+fetch("cocktails.json").then(r=>r.ok?r.json():null).then(d=>{if(!d)return;SHOTS=d;render();if(rcOpen)openRecipe(rcOpen)}).catch(()=>{});
+function drinkPic(d,H,cls){
+  const box=el("span",{class:"art-box"+(cls?" "+cls:"")});
+  if(SHOTS&&SHOTS[d.id]){
+    box.classList.add("photo");
+    box.append(el("img",{src:"cocktails/"+d.id+".webp",alt:"",loading:"lazy",decoding:"async",onerror:()=>{box.classList.remove("photo");box.innerHTML=cocktailArt(d,H)}}));
+  }else box.innerHTML=cocktailArt(d,H);
+  return box;
+}
+
 /* ---------- recipe sheet ---------- */
 let rcOpen=null;
 function openRecipe(d){
   const H=have(),missing=analyze(d,H),picks=bottlePicks(d),fi=fitInfo(d,picks);
-  const body=$("rcBody");body.innerHTML="";$("rcArt").innerHTML=cocktailArt(d,H);
+  const body=$("rcBody");body.innerHTML="";
+  const shot=SHOTS&&SHOTS[d.id],art=$("rcArt");art.innerHTML="";art.parentElement.classList.toggle("photo",!!shot);
+  if(shot)art.append(el("img",{class:"rc-photo",src:"cocktails/"+d.id+".webp",alt:"",onerror:()=>{art.parentElement.classList.remove("photo");art.innerHTML=cocktailArt(d,H)}}));
+  else art.innerHTML=cocktailArt(d,H);
   const ings=el("ul",{class:"ings"},d.i.map(([spec,amt,opt],idx)=>{
     const ok=hasAny(spec,H);
     return el("li",{class:ok?"have":opt?"opt":"no"},
@@ -1585,7 +1604,8 @@ function openRecipe(d){
     el("div",{style:"display:grid;gap:8px"},el("h3",{class:"rc-h"},t("rec.method")),el("p",{class:"method"},d.m)),
     fi&&fi.others.length?el("p",{class:"rc-fit"},t("drink.also",fi.others.join(", "))):null,
     fi&&fi.tip?el("div",{class:"rc-tip"},el("span",{class:"k"},t("rec.tip")),el("span",{class:"v"},fi.tip)):null,
-    ty?el("button",{class:"btn rc-buy",type:"button",onclick:()=>{closeRecipe();openShop(ty)}},t("rec.whereBuy",NAME[ty])):null].filter(Boolean));
+    ty?el("button",{class:"btn rc-buy",type:"button",onclick:()=>{closeRecipe();openShop(ty)}},t("rec.whereBuy",NAME[ty])):null,
+    shot?el("p",{class:"rc-credit"},t("rec.photo"),el("a",{href:shot.src,target:"_blank",rel:"noopener"},[shot.by,shot.lic,"Wikimedia Commons"].filter(Boolean).join(" · "))):null].filter(Boolean));
   const r=$("recipe");
   if(r.hidden){r.hidden=false;document.body.style.overflow="hidden";try{history.pushState({recipe:1},"")}catch(e){}}
   rcOpen=d;r.scrollTop=0;$("rcBack").focus();
@@ -2350,7 +2370,7 @@ function renderOb(bump){
       :el("h2",{id:"obTitle"},t("ob.doneTitle",0)),
     el("p",{class:"lead"},can.length?t("ob.doneLead"):t("ob.doneLeadNone")),
     can.length?el("div",{class:"done-list"},can.slice(0,6).map(d=>el("div",{class:"done-row"},
-      (()=>{const p=el("span",{class:"art-box sm"});p.innerHTML=cocktailArt(d,H);return p})(),
+      drinkPic(d,H,"sm"),
       el("span",{style:"flex:1;min-width:0"},el("b",{},d.name),el("small",{},d.i.filter(x=>!x[2]).map(([spec])=>NAME[ids(spec).find(id=>H.has(id))||ids(spec)[0]]).join(" · "))),
       meterEl(d.s)))):null,
     nx?el("div",{class:"unlock"},el("div",{},...(()=>{const [a,x,b]=t("ob.doneBest",NAME[nx.id],nx.n);return [el("b",{},a),x,b]})())):null].filter(Boolean));

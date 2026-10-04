@@ -191,6 +191,14 @@ html[lang="he"] .rc-h{letter-spacing:0}
 .ings li .amt{font:600 15px var(--display);color:var(--cream-text);white-space:nowrap;font-variant-numeric:tabular-nums}
 .ings .optl,.ings .bn{color:var(--cream-muted);font-size:13px}
 .method{font-size:17px;line-height:1.55;margin:0;text-wrap:pretty}
+.rc-short{display:block;font:500 10px var(--display);letter-spacing:var(--track);text-transform:uppercase;color:var(--cream-muted);margin-bottom:2px}
+.rc-more summary{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:1.5px solid var(--cream-ink);border-radius:999px;font:700 15px var(--body);color:var(--cream-ink);cursor:pointer;list-style:none}
+.rc-more summary::-webkit-details-marker{display:none}
+.rc-more summary::after{content:"▾";transition:transform .15s}
+.rc-more[open] summary::after{transform:rotate(180deg)}
+.rc-steps{margin:14px 0 0;padding:0;list-style:none;counter-reset:st;display:grid;gap:12px}
+.rc-steps li{counter-increment:st;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;font-size:16px;line-height:1.5}
+.rc-steps li::before{content:counter(st);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--cream-ink);color:var(--cream);font:600 14px var(--display)}
 .rc-tip{display:grid;gap:6px;background:var(--cream-ink);color:var(--cream);border-radius:14px;padding:16px 18px}
 .rc-tip .k{font:500 11px var(--display);letter-spacing:var(--track);text-transform:uppercase;color:var(--gold)}
 .rc-tip .v{font:italic 400 16px/1.5 var(--serif)}
@@ -943,6 +951,59 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "rec.method":"Method",
     "rec.tip":"From the bartender",
     "rec.whereBuy":x=>"Where to buy "+x+"?",
+    "rec.short":"In short",
+    "rec.steps":"Step by step",
+    "step.item":(n,a)=>n+" ("+a+")",
+    "step.juice.lime":"Fresh lime juice",
+    "step.juice.lemon":"Fresh lemon juice",
+    "step.side":x=>"Serve "+x+" in a shot glass on the side.",
+    "step.chill":"Chill the glass: fill it with ice and water while you mix, and empty it just before pouring.",
+    "step.saltRim":"Run a lime wedge around half the rim and dip it in salt.",
+    "step.sugarRim":"Run a lemon wedge around the rim and dip it in sugar.",
+    "step.rinse":x=>"Pour a few drops of "+x+" into the glass, swirl to coat the inside and pour out the rest",
+    "step.ifYouHave":" (if you have it).",
+    "step.passion":"Halve the passion fruit and scoop the pulp into the shaker.",
+    "step.honey":"Stir the honey with a teaspoon of hot water until it runs.",
+    "step.sugarBitters":(s,b)=>"In the glass, stir "+s+" with "+b+" and a splash of water until the sugar dissolves.",
+    "step.muddle":(x,v)=>"In the "+v+", gently press "+x+" with a muddler or the back of a spoon, to release the flavour without shredding it.",
+    "step.vShaker":"shaker",
+    "step.vMixing":"mixing glass",
+    "step.vBlender":"blender",
+    "step.vGlass":"glass",
+    "step.add":(x,v)=>"Pour into the "+v+": "+x+".",
+    "step.buildIce":(x,crushed)=>"Fill the glass with "+(crushed?"crushed ice":"ice")+", then pour in: "+x+".",
+    "step.buildNoIce":x=>"Pour into the glass: "+x+".",
+    "step.iceOnly":crushed=>"Fill the glass with "+(crushed?"crushed ice":"ice")+".",
+    "step.stirGently":"Stir gently to mix.",
+    "step.dryShake":"Close the shaker and shake hard without ice for 10 seconds, to whip the egg white.",
+    "step.dryShakeOpt":"If you are using egg white, first shake hard without ice for 10 seconds.",
+    "step.shake":"Fill the shaker with ice and shake hard for 12 to 15 seconds, until the outside is frosty.",
+    "step.stir":"Fill the mixing glass with ice (any tall glass works) and stir for about 30 seconds, until very cold.",
+    "step.blend":"Add a cup of ice and blend until smooth.",
+    "step.roll":"Add ice and pour back and forth between the shaker and a glass a few times. Shaking would make the tomato juice foamy.",
+    "step.strainUp":"Strain into the chilled glass.",
+    "step.doubleStrain":"Strain through a fine sieve into the chilled glass, to catch the bits.",
+    "step.strainIce":(crushed,big)=>"Strain into the glass over "+(big?"one large ice cube":crushed?"crushed ice":"fresh ice")+".",
+    "step.pourBlend":"Pour into the glass.",
+    "step.top":x=>"Top with "+x+" and stir once, gently, to keep the bubbles.",
+    "step.sink":x=>"Pour the "+x+" slowly down the inside of the glass so it sinks to the bottom. Don't stir.",
+    "step.float":x=>"Pour "+x+" slowly over the back of a spoon so it floats on top.",
+    "step.drizzle":x=>"Drizzle the "+x+" over the top so it bleeds down through the ice.",
+    "step.bittersTop":"Shake a few dashes of bitters over the top.",
+    "step.season":"Season with salt, pepper and a few drops of hot sauce, to taste.",
+    "step.garnish":x=>"Garnish: "+x+".",
+    "garnish.orange_peel":"squeeze a strip of orange peel over the drink to spray its oils, then drop it in",
+    "garnish.lemon_peel":"squeeze a strip of lemon peel over the drink, then drop it in",
+    "garnish.lemon_wedge":"a lemon wedge on the rim",
+    "garnish.orange_slice":"an orange slice",
+    "garnish.lime_wedge":"a lime wedge on the rim",
+    "garnish.lime_shell":"drop the squeezed lime shell into the glass",
+    "garnish.cherry":"a cocktail cherry",
+    "garnish.olive":"an olive on a pick",
+    "garnish.mint_sprig":"a sprig of mint, clapped once between your palms to wake it up",
+    "garnish.cucumber":"a few cucumber slices",
+    "garnish.nutmeg":"a little freshly grated nutmeg",
+    "garnish.coffee_beans":"three coffee beans on the foam",
     "rec.photo":"Photo: ",
     "rec.back":"Back",
     "shop.suggestTitle":"What to buy next",
@@ -1171,6 +1232,16 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "tsp_2":"2 tsp",
     "lime_cubed":"1 lime, cubed",
     "dash_5ml":"2 dashes (5 ml)"
+   },
+  steps:{ // hand-written steps for drinks the generated ones don't fit
+    "rossini":["Purée the strawberries (4) with the sugar, if you use it, with a fork or a blender.", "Spoon the purée into a champagne flute.", "Top slowly with cold prosecco (120 ml), letting the foam settle as you pour.", "Stir once, gently, and serve right away."],
+    "b_52":["Use a shot glass and a small spoon.", "Pour the coffee liqueur (20 ml) into the glass.", "Hold the spoon upside down just above the liquid, touching the inside of the glass, and pour the cream liqueur (20 ml) very slowly over its back so it settles on top.", "Do the same with the triple sec (20 ml) for the third layer.", "Serve right away, without stirring."],
+    "irish_coffee":["Warm a heatproof glass with hot water, then empty it.", "Pour in hot, strong coffee (120 ml) and stir in the sugar until it dissolves.", "Add the whiskey (40 ml) and stir.", "Whip the cream lightly, just until it thickens but still pours.", "Pour the cream slowly over the back of a spoon so it floats on top. Don't stir: you drink the hot coffee through the cold cream."],
+    "hot_toddy":["Warm a mug with hot water, then empty it.", "Put in the honey (15 ml) and the lemon juice (15 ml).", "Add 120 ml of hot (not boiling) water and stir until the honey dissolves.", "Add the whiskey (45 ml) and stir.", "Garnish: a lemon wheel, and a cinnamon stick or a few cloves if you have them."],
+    "boilermaker":["Pour a cold beer (330 ml) into a beer glass.", "Pour the whiskey (45 ml) into a shot glass.", "Sip the whiskey, then the beer. Some drop the shot into the beer, but sipping keeps both tasting like themselves."],
+    "spaghett":["Use a cold bottle of light beer (330 ml).", "Drink, or pour out, the first few sips to make room.", "Pour the Aperol (30 ml) and the lemon juice (15 ml) into the bottle.", "Tip it gently once to mix, and drink from the bottle."],
+    "michelada":["Run a lime wedge around the rim of a beer glass and dip it in salt (chili salt if you have it).", "Fill the glass with ice.", "Add the lime juice (25 ml), the tomato juice (60 ml) and a few drops of hot sauce.", "Top slowly with a cold light beer, stirring gently as you pour."],
+    "sangria":["Chop an orange and an apple (or any fruit you have) into a pitcher.", "Add the red wine (150 ml per person), the orange juice (60 ml), the brandy or triple sec (20 ml) and the sugar, and stir until it dissolves.", "Leave it in the fridge for at least an hour, so the fruit and wine meet.", "Serve over ice, with some of the fruit in each glass."]
    },
   drink:{
     "bramble":{"n": "Bramble", "m": "Shake gin, lemon and syrup with ice, pour over crushed ice and drizzle the cassis over the top.", "g": "Rocks glass"},
@@ -1626,6 +1697,59 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "rec.method":"הכנה",
     "rec.tip":"טיפ מהברמן",
     "rec.whereBuy":x=>"איפה קונים "+x+"?",
+    "rec.short":"בקצרה",
+    "rec.steps":"שלב אחר שלב",
+    "step.item":(n,a)=>n+" ("+a+")",
+    "step.juice.lime":"מיץ ליים טרי",
+    "step.juice.lemon":"מיץ לימון טרי",
+    "step.side":x=>"מגישים לצד המשקה "+x+" בכוס שוט.",
+    "step.chill":"מצננים את הכוס: ממלאים אותה בקרח ומים בזמן שמכינים, ומרוקנים רגע לפני המזיגה.",
+    "step.saltRim":"מעבירים פלח ליים על חצי משפת הכוס וטובלים אותה במלח.",
+    "step.sugarRim":"מעבירים פלח לימון על שפת הכוס וטובלים אותה בסוכר.",
+    "step.rinse":x=>"שמים בכוס כמה טיפות "+x+", מסובבים כדי לצפות את הדפנות ושופכים את השאר",
+    "step.ifYouHave":" (אם יש).",
+    "step.passion":"חוצים את הפסיפלורה ומוציאים את התוכן לשייקר.",
+    "step.honey":"מערבבים את הדבש עם כפית מים חמים עד שהוא נוזלי.",
+    "step.sugarBitters":(s,b)=>"בכוס מערבבים "+s+" עם "+b+" ומעט מים, עד שהסוכר נמס.",
+    "step.muddle":(x,v)=>"ב"+v+" מועכים בעדינות "+x+" עם מועך או גב של כף, כדי להוציא את הטעם בלי לקרוע.",
+    "step.vShaker":"שייקר",
+    "step.vMixing":"כוס ערבוב",
+    "step.vBlender":"בלנדר",
+    "step.vGlass":"כוס",
+    "step.add":(x,v)=>"מוזגים ל"+v+": "+x+".",
+    "step.buildIce":(x,crushed)=>"ממלאים את הכוס ב"+(crushed?"קרח כתוש":"קרח")+", ומוזגים: "+x+".",
+    "step.buildNoIce":x=>"מוזגים לכוס: "+x+".",
+    "step.iceOnly":crushed=>"ממלאים את הכוס ב"+(crushed?"קרח כתוש":"קרח")+".",
+    "step.stirGently":"מערבבים בעדינות.",
+    "step.dryShake":"סוגרים את השייקר ומנערים חזק בלי קרח כ-10 שניות, כדי להקציף את החלבון.",
+    "step.dryShakeOpt":"אם משתמשים בחלבון, קודם מנערים חזק בלי קרח כ-10 שניות.",
+    "step.shake":"ממלאים את השייקר בקרח ומנערים חזק 12 עד 15 שניות, עד שהוא קפוא מבחוץ.",
+    "step.stir":"ממלאים את כוס הערבוב בקרח (כל כוס גבוהה תעבוד) ומערבבים כ-30 שניות, עד שקר מאוד.",
+    "step.blend":"מוסיפים כוס קרח וטוחנים עד שחלק.",
+    "step.roll":"מוסיפים קרח ומעבירים כמה פעמים הלוך ושוב בין השייקר לכוס. ניעור היה מקציף את מיץ העגבניות.",
+    "step.strainUp":"מסננים לכוס המצוננת.",
+    "step.doubleStrain":"מסננים דרך מסננת דקה לכוס המצוננת, כדי לתפוס שאריות.",
+    "step.strainIce":(crushed,big)=>"מסננים לכוס על "+(big?"קוביית קרח גדולה":crushed?"קרח כתוש":"קרח טרי")+".",
+    "step.pourBlend":"מוזגים לכוס.",
+    "step.top":x=>"משלימים ב"+x+" ומערבבים פעם אחת בעדינות, כדי לשמור על הבועות.",
+    "step.sink":x=>"מוזגים לאט את ה"+x+" לאורך דופן הכוס, כך שישקע לתחתית. לא מערבבים.",
+    "step.float":x=>"מוזגים לאט "+x+" על גב של כף, כך שיצוף מלמעלה.",
+    "step.drizzle":x=>"מטפטפים מלמעלה "+x+", כך שיחלחל דרך הקרח.",
+    "step.bittersTop":"מטפטפים מלמעלה כמה טיפות ביטרס.",
+    "step.season":"מתבלים במלח, פלפל וכמה טיפות רוטב חריף, לפי הטעם.",
+    "step.garnish":x=>"קישוט: "+x+".",
+    "garnish.orange_peel":"סוחטים רצועת קליפת תפוז מעל המשקה כדי לרסס את השמנים, ומכניסים אותה",
+    "garnish.lemon_peel":"סוחטים רצועת קליפת לימון מעל המשקה, ומכניסים אותה",
+    "garnish.lemon_wedge":"פלח לימון על שפת הכוס",
+    "garnish.orange_slice":"פרוסת תפוז",
+    "garnish.lime_wedge":"פלח ליים על שפת הכוס",
+    "garnish.lime_shell":"זורקים לכוס את קליפת הליים הסחוטה",
+    "garnish.cherry":"דובדבן קוקטייל",
+    "garnish.olive":"זית על קיסם",
+    "garnish.mint_sprig":"ענף נענע, אחרי מחיאה קלה בין כפות הידיים כדי להעיר את הריח",
+    "garnish.cucumber":"כמה פרוסות מלפפון",
+    "garnish.nutmeg":"מעט אגוז מוסקט מגורד",
+    "garnish.coffee_beans":"שלושה פולי קפה על הקצף",
     "rec.photo":"צילום: ",
     "rec.back":"חזרה",
     "shop.suggestTitle":"מה כדאי לקנות",
@@ -1854,6 +1978,16 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "tsp_2":"2 כפיות",
     "lime_cubed":"ליים שלם בקוביות",
     "dash_5ml":"2 טיפות (5 מ״ל)"
+   },
+  steps:{ // hand-written steps for drinks the generated ones don't fit
+    "rossini":["מרסקים את התותים (4) עם הסוכר, אם משתמשים, במזלג או בבלנדר.", "שמים את המחית בכוס שמפניה.", "משלימים לאט בפרוסקו קר (120 מ״ל), ומחכים שהקצף ישקע תוך כדי מזיגה.", "מערבבים פעם אחת בעדינות ומגישים מיד."],
+    "b_52":["משתמשים בכוס שוט ובכפית קטנה.", "מוזגים לכוס את ליקר הקפה (20 מ״ל).", "מחזיקים את הכפית הפוכה ממש מעל הנוזל, צמודה לדופן, ומוזגים לאט מאוד על גבה את ליקר השמנת (20 מ״ל) כך שישב מעל.", "עושים אותו דבר עם הטריפל סק (20 מ״ל) לשכבה השלישית.", "מגישים מיד, בלי לערבב."],
+    "irish_coffee":["מחממים כוס זכוכית חמה במים חמים ומרוקנים.", "מוזגים קפה חזק וחם (120 מ״ל) ומערבבים פנימה את הסוכר עד שנמס.", "מוסיפים את הוויסקי (40 מ״ל) ומערבבים.", "מקציפים את השמנת קלות, רק עד שהיא מסמיכה אבל עדיין נמזגת.", "מוזגים את השמנת לאט על גב של כף כך שתצוף מלמעלה. לא מערבבים: שותים את הקפה החם דרך השמנת הקרה."],
+    "hot_toddy":["מחממים ספל במים חמים ומרוקנים.", "שמים את הדבש (15 מ״ל) ואת מיץ הלימון (15 מ״ל).", "מוסיפים 120 מ״ל מים חמים (לא רותחים) ומערבבים עד שהדבש נמס.", "מוסיפים את הוויסקי (45 מ״ל) ומערבבים.", "קישוט: פרוסת לימון, ומקל קינמון או כמה ציפורנים אם יש."],
+    "boilermaker":["מוזגים בירה קרה (330 מ״ל) לכוס בירה.", "מוזגים את הוויסקי (45 מ״ל) לכוס שוט.", "לוגמים מהוויסקי ואז מהבירה. יש מי שמפילים את השוט לתוך הבירה, אבל בלגימות כל אחד שומר על הטעם שלו."],
+    "spaghett":["לוקחים בקבוק קר של בירה בהירה (330 מ״ל).", "שותים, או שופכים, כמה לגימות ראשונות כדי לפנות מקום.", "מוזגים לבקבוק את האפרול (30 מ״ל) ואת מיץ הלימון (15 מ״ל).", "מטים בעדינות פעם אחת כדי לערבב, ושותים מהבקבוק."],
+    "michelada":["מעבירים פלח ליים על שפת כוס הבירה וטובלים במלח (מלח צ׳ילי אם יש).", "ממלאים את הכוס בקרח.", "מוסיפים את מיץ הליים (25 מ״ל), את מיץ העגבניות (60 מ״ל) וכמה טיפות רוטב חריף.", "משלימים לאט בבירה בהירה קרה, ומערבבים בעדינות תוך כדי מזיגה."],
+    "sangria":["חותכים לקנקן תפוז ותפוח (או כל פרי שיש).", "מוסיפים את היין האדום (150 מ״ל לכל אחד), את מיץ התפוזים (60 מ״ל), את הברנדי או הטריפל סק (20 מ״ל) ואת הסוכר, ומערבבים עד שנמס.", "משאירים במקרר לפחות שעה, כדי שהפירות והיין יתערבבו.", "מגישים על קרח, עם קצת פירות בכל כוס."]
    },
   drink:{
     "bramble":{"n": "ברמבל", "m": "שייקר לג׳ין, לימון וסירופ עם קרח, מוזגים על קרח כתוש ומטפטפים את הקסיס מלמעלה.", "g": "כוס לואו-בול"},
@@ -3103,6 +3237,103 @@ function drinkPic(d,H,cls){
   return box;
 }
 
+/* ---------- step by step: a detailed method built from the recipe and its short method ---------- */
+// The short English method is the reference for the technique (shake, stir, blend, build, float…), so both
+// languages get the same steps. Unusual drinks have hand-written steps in the locale (L.steps).
+const MUDDLE_WORDS={mint:["mint"],lime:["lime"],lemon:["lemon"],simple_syrup:["syrup","sugar"],sugar:["sugar","syrup"],basil:["basil"],
+  ginger:["ginger"],berries:["berr","strawberr"],cucumber:["cucumber"],honey:["honey"]};
+// The ingredient you have: an exact match, then an equivalent (any whisky), then the recipe's first choice.
+function pickHave(spec,H){return ids(spec).find(x=>H.has(x))||ids(spec).flatMap(x=>EQUIV[x]||[]).find(x=>H.has(x))||ids(spec)[0]}
+const strainedTall=key=>["highball","hurricane","mug","rocks"].includes(key);
+const BUBBLES=new Set(["soda","tonic","cola","ginger_beer","sprite","prosecco","beer"]);
+function recipeSteps(d,H){
+  if(L.steps&&L.steps[d.id])return L.steps[d.id];
+  const m=(LOCALES.en.drink[d.id].m||"").toLowerCase(),key=glassOf(d);
+  const ing=d.i.map(([spec,amt,opt])=>({spec,amt,opt,id:pickHave(spec,H)}));
+  const has=id=>ing.some(x=>ids(x.spec).includes(id));
+  const nm=x=>(x.id==="lime"||x.id==="lemon")&&typeof x.amt==="number"?t("step.juice."+x.id):NAME[x.id];
+  const fmt=x=>t("step.item",nm(x),fmtAmt(x.amt))+(x.opt?t("drink.optional"):"");
+  const join=xs=>{try{return new Intl.ListFormat(L.locale,{type:"conjunction"}).format(xs)}catch(e){return xs.join(", ")}};
+  const list=xs=>join(xs.map(fmt)),listTop=xs=>join(xs.map(x=>x.amt==="top"?NAME[x.id]:fmt(x)));
+  const used=new Set(),take=pred=>{const xs=ing.filter(x=>!used.has(x)&&pred(x));xs.forEach(x=>used.add(x));return xs};
+  const steps=[];
+  const blend=/blend/.test(m),roll=/roll between/.test(m),shake=!blend&&!roll&&/shake/.test(m);
+  const stir=!shake&&!blend&&/stir with ice|stir \(or shake|stir until very cold/.test(m);
+  const build=!shake&&!stir&&!blend&&!roll;
+  const strained=shake||stir||roll;
+  const crushed=/crushed ice/.test(m),big=/large (ice )?cube|one large cube/.test(m);
+  const noIce=/no ice|without ice/.test(m)&&!/shake without ice/.test(m);
+  // Tall and short glasses get ice unless the method says otherwise.
+  const overIce=/over (fresh |crushed )?ice|over one large cube|over a large ice cube|on ice|over ice/.test(m)||strainedTall(key)&&!noIce;
+  const iceGlass=["highball","rocks","mug","hurricane","pitcher","balloon"].includes(key)||/ice/.test(m)&&key==="wine";
+  // Glass first.
+  if(strained&&!overIce)steps.push(t("step.chill"));
+  if(/salt the rim/.test(m)&&!/salty dog/.test(m)||/salted rim/.test((LOCALES.en.drink[d.id].g||"").toLowerCase()))steps.push(t("step.saltRim"));
+  if(/sugared rim/.test(m))steps.push(t("step.sugarRim"));
+  const rinse=take(x=>x.amt==="rinse");
+  if(rinse.length)steps.push(t("step.rinse",NAME[rinse[0].id])+(rinse[0].opt?t("step.ifYouHave"):""));
+  // Things kept for later: a layer that sinks or floats, bitters on top, a top-up.
+  const sink=/so it sinks/.test(m)?take(x=>x.id==="grenadine"):[];
+  const float=/float/.test(m)?take(x=>["cream","red_wine"].includes(x.id)):[];
+  const drizzle=/drizzle the cassis/.test(m)?take(x=>x.id==="cassis"):[];
+  const bittersTop=/bitters on top/.test(m)?take(x=>x.id==="bitters"):[];
+  const wedge=take(x=>x.amt==="wedge");
+  const side=build?[]:take(x=>x.opt&&BUBBLES.has(x.id));
+  const sparkling=["flute","wine"].includes(key)?take(x=>x.id==="prosecco"&&typeof x.amt==="number"):[];
+  let tops=take(x=>x.amt==="top").concat(sparkling);
+  // Built drinks: anything fizzy goes in last, unless it is the whole drink.
+  if(build){const fizz=ing.filter(x=>!used.has(x)&&BUBBLES.has(x.id));const still=ing.filter(x=>!used.has(x)&&!BUBBLES.has(x.id));
+    if(still.length||tops.length){fizz.forEach(x=>used.add(x));tops=tops.concat(fizz)}}
+  const vessel=shake||roll?t("step.vShaker"):stir?t("step.vMixing"):blend?t("step.vBlender"):t("step.vGlass");
+  // Prep inside the vessel.
+  if(has("passion_fruit")){take(x=>x.id==="passion_fruit");steps.push(t("step.passion"))}
+  if(/dissolve the honey/.test(m)){take(x=>x.id==="honey");steps.push(t("step.honey"))}
+  if(/dissolve the sugar with the bitters/.test(m)){
+    const s=take(x=>["sugar","simple_syrup"].includes(x.id)),b=take(x=>x.id==="bitters");
+    steps.push(t("step.sugarBitters",list(s),list(b)));
+  }
+  if(/muddle/.test(m)){
+    const sentence=m.split(/[.,]/).find(x=>/muddle/.test(x))||m;
+    const md=take(x=>(MUDDLE_WORDS[x.id]||[]).some(w=>sentence.includes(w)));
+    if(md.length)steps.push(t("step.muddle",list(md),vessel));
+  }
+  // Everything else goes in.
+  const rest=take(()=>true);
+  if(build){
+    const ice=iceGlass&&!noIce;
+    if(rest.length)steps.push(ice?t("step.buildIce",list(rest),crushed):t("step.buildNoIce",list(rest)));
+    else if(ice)steps.push(t("step.iceOnly",crushed));
+    if((rest.length>1||/\bstir/.test(m))&&!tops.length)steps.push(t("step.stirGently"));
+  }else{
+    if(rest.length)steps.push(t("step.add",list(rest),vessel));
+    if(blend)steps.push(t("step.blend"));
+    else if(roll)steps.push(t("step.roll"));
+    else if(stir)steps.push(t("step.stir"));
+    else{
+      const egg=ing.find(x=>x.id==="egg_white");
+      if(egg&&/without ice|dry/.test(m))steps.push(egg.opt||/if using egg white/.test(m)?t("step.dryShakeOpt"):t("step.dryShake"));
+      steps.push(t("step.shake"));
+    }
+    if(blend)steps.push(t("step.pourBlend"));
+    else if(overIce)steps.push(t("step.strainIce",crushed,big));
+    else steps.push(/double strain/.test(m)?t("step.doubleStrain"):t("step.strainUp"));
+  }
+  if(tops.length)steps.push(t("step.top",listTop(tops)));
+  if(sink.length)steps.push(t("step.sink",NAME[sink[0].id]));
+  if(float.length)steps.push(t("step.float",fmt(float[0])));
+  if(drizzle.length)steps.push(t("step.drizzle",NAME[drizzle[0].id]));
+  if(bittersTop.length)steps.push(t("step.bittersTop"));
+  if(side.length)steps.push(t("step.side",fmt({...side[0],opt:false})));
+  if(/hot sauce|tabasco|pepper/.test(m))steps.push(t("step.season"));
+  // Garnish.
+  const g=/olive/.test(m)?"olive":/cherry/.test(m)?"cherry":/orange peel/.test(m)?"orange_peel":/lemon peel/.test(m)?"lemon_peel":
+    /orange slice/.test(m)?"orange_slice":/coffee bean/.test(m)?"coffee_beans":/nutmeg/.test(m)?"nutmeg":/squeezed lime/.test(m)?"lime_shell":
+    /sprig of mint/.test(m)||has("mint")&&["highball","rocks","mug"].includes(key)?"mint_sprig":/cucumber slices/.test(m)?"cucumber":
+    /lime wedge|a lime wedge/.test(m)||wedge.some(x=>x.id==="lime")?"lime_wedge":wedge.some(x=>x.id==="lemon")?"lemon_wedge":null;
+  if(g)steps.push(t("step.garnish",t("garnish."+g)));
+  return steps;
+}
+
 /* ---------- recipe sheet ---------- */
 let rcOpen=null;
 function openRecipe(d){
@@ -3115,7 +3346,7 @@ function openRecipe(d){
     const ok=hasAny(spec,H);
     return el("li",{class:ok?"have":opt?"opt":"no"},
       el("span",{class:"nm"},el("b",{class:"mk","aria-hidden":"true"},ok?"✓":opt?"·":"✗"),
-        el("span",{},specName(spec),picks[idx]?el("span",{class:"bn"}," · "+picks[idx].b.name):null,opt?el("span",{class:"optl"},t("drink.optional")):null)),
+        el("span",{},ok?NAME[pickHave(spec,H)]:specName(spec),picks[idx]?el("span",{class:"bn"}," · "+picks[idx].b.name):null,opt?el("span",{class:"optl"},t("drink.optional")):null)),
       el("span",{class:"amt"},fmtAmt(amt)));
   }));
   const ty=whereBuyType(missing);
@@ -3130,7 +3361,9 @@ function openRecipe(d){
       el("div",{},el("span",{class:"k"},t("rec.flavour")),el("span",{class:"v"},d.t.map(x=>TASTE_NAME[x]).join(", "))),
       el("div",{},el("span",{class:"k"},t("rec.serve")),el("span",{class:"v"},d.g))),
     el("div",{},el("h3",{class:"rc-h"},t("rec.ings")),ings),
-    el("div",{style:"display:grid;gap:8px"},el("h3",{class:"rc-h"},t("rec.method")),el("p",{class:"method"},d.m)),
+    el("div",{style:"display:grid;gap:8px"},el("h3",{class:"rc-h"},t("rec.method")),
+      el("p",{class:"method"},el("span",{class:"rc-short"},t("rec.short")),d.m),
+      el("details",{class:"rc-more"},el("summary",{},t("rec.steps")),el("ol",{class:"rc-steps"},recipeSteps(d,H).map(x=>el("li",{},x))))),
     fi&&fi.others.length?el("p",{class:"rc-fit"},t("drink.also",fi.others.join(", "))):null,
     fi&&fi.tip?el("div",{class:"rc-tip"},el("span",{class:"k"},t("rec.tip")),el("span",{class:"v"},fi.tip)):null,
     ty?el("button",{class:"btn rc-buy",type:"button",onclick:()=>{closeRecipe();openShop(ty)}},t("rec.whereBuy",NAME[ty])):null,

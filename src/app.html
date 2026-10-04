@@ -191,6 +191,14 @@ html[lang="he"] .rc-h{letter-spacing:0}
 .ings li .amt{font:600 15px var(--display);color:var(--cream-text);white-space:nowrap;font-variant-numeric:tabular-nums}
 .ings .optl,.ings .bn{color:var(--cream-muted);font-size:13px}
 .method{font-size:17px;line-height:1.55;margin:0;text-wrap:pretty}
+.rc-short{display:block;font:500 10px var(--display);letter-spacing:var(--track);text-transform:uppercase;color:var(--cream-muted);margin-bottom:2px}
+.rc-more summary{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:1.5px solid var(--cream-ink);border-radius:999px;font:700 15px var(--body);color:var(--cream-ink);cursor:pointer;list-style:none}
+.rc-more summary::-webkit-details-marker{display:none}
+.rc-more summary::after{content:"▾";transition:transform .15s}
+.rc-more[open] summary::after{transform:rotate(180deg)}
+.rc-steps{margin:14px 0 0;padding:0;list-style:none;counter-reset:st;display:grid;gap:12px}
+.rc-steps li{counter-increment:st;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;font-size:16px;line-height:1.5}
+.rc-steps li::before{content:counter(st);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--cream-ink);color:var(--cream);font:600 14px var(--display)}
 .rc-tip{display:grid;gap:6px;background:var(--cream-ink);color:var(--cream);border-radius:14px;padding:16px 18px}
 .rc-tip .k{font:500 11px var(--display);letter-spacing:var(--track);text-transform:uppercase;color:var(--gold)}
 .rc-tip .v{font:italic 400 16px/1.5 var(--serif)}
@@ -1643,6 +1651,103 @@ function drinkPic(d,H,cls){
   return box;
 }
 
+/* ---------- step by step: a detailed method built from the recipe and its short method ---------- */
+// The short English method is the reference for the technique (shake, stir, blend, build, float…), so both
+// languages get the same steps. Unusual drinks have hand-written steps in the locale (L.steps).
+const MUDDLE_WORDS={mint:["mint"],lime:["lime"],lemon:["lemon"],simple_syrup:["syrup","sugar"],sugar:["sugar","syrup"],basil:["basil"],
+  ginger:["ginger"],berries:["berr","strawberr"],cucumber:["cucumber"],honey:["honey"]};
+// The ingredient you have: an exact match, then an equivalent (any whisky), then the recipe's first choice.
+function pickHave(spec,H){return ids(spec).find(x=>H.has(x))||ids(spec).flatMap(x=>EQUIV[x]||[]).find(x=>H.has(x))||ids(spec)[0]}
+const strainedTall=key=>["highball","hurricane","mug","rocks"].includes(key);
+const BUBBLES=new Set(["soda","tonic","cola","ginger_beer","sprite","prosecco","beer"]);
+function recipeSteps(d,H){
+  if(L.steps&&L.steps[d.id])return L.steps[d.id];
+  const m=(LOCALES.en.drink[d.id].m||"").toLowerCase(),key=glassOf(d);
+  const ing=d.i.map(([spec,amt,opt])=>({spec,amt,opt,id:pickHave(spec,H)}));
+  const has=id=>ing.some(x=>ids(x.spec).includes(id));
+  const nm=x=>(x.id==="lime"||x.id==="lemon")&&typeof x.amt==="number"?t("step.juice."+x.id):NAME[x.id];
+  const fmt=x=>t("step.item",nm(x),fmtAmt(x.amt))+(x.opt?t("drink.optional"):"");
+  const join=xs=>{try{return new Intl.ListFormat(L.locale,{type:"conjunction"}).format(xs)}catch(e){return xs.join(", ")}};
+  const list=xs=>join(xs.map(fmt)),listTop=xs=>join(xs.map(x=>x.amt==="top"?NAME[x.id]:fmt(x)));
+  const used=new Set(),take=pred=>{const xs=ing.filter(x=>!used.has(x)&&pred(x));xs.forEach(x=>used.add(x));return xs};
+  const steps=[];
+  const blend=/blend/.test(m),roll=/roll between/.test(m),shake=!blend&&!roll&&/shake/.test(m);
+  const stir=!shake&&!blend&&/stir with ice|stir \(or shake|stir until very cold/.test(m);
+  const build=!shake&&!stir&&!blend&&!roll;
+  const strained=shake||stir||roll;
+  const crushed=/crushed ice/.test(m),big=/large (ice )?cube|one large cube/.test(m);
+  const noIce=/no ice|without ice/.test(m)&&!/shake without ice/.test(m);
+  // Tall and short glasses get ice unless the method says otherwise.
+  const overIce=/over (fresh |crushed )?ice|over one large cube|over a large ice cube|on ice|over ice/.test(m)||strainedTall(key)&&!noIce;
+  const iceGlass=["highball","rocks","mug","hurricane","pitcher","balloon"].includes(key)||/ice/.test(m)&&key==="wine";
+  // Glass first.
+  if(strained&&!overIce)steps.push(t("step.chill"));
+  if(/salt the rim/.test(m)&&!/salty dog/.test(m)||/salted rim/.test((LOCALES.en.drink[d.id].g||"").toLowerCase()))steps.push(t("step.saltRim"));
+  if(/sugared rim/.test(m))steps.push(t("step.sugarRim"));
+  const rinse=take(x=>x.amt==="rinse");
+  if(rinse.length)steps.push(t("step.rinse",NAME[rinse[0].id])+(rinse[0].opt?t("step.ifYouHave"):""));
+  // Things kept for later: a layer that sinks or floats, bitters on top, a top-up.
+  const sink=/so it sinks/.test(m)?take(x=>x.id==="grenadine"):[];
+  const float=/float/.test(m)?take(x=>["cream","red_wine"].includes(x.id)):[];
+  const drizzle=/drizzle the cassis/.test(m)?take(x=>x.id==="cassis"):[];
+  const bittersTop=/bitters on top/.test(m)?take(x=>x.id==="bitters"):[];
+  const wedge=take(x=>x.amt==="wedge");
+  const side=build?[]:take(x=>x.opt&&BUBBLES.has(x.id));
+  const sparkling=["flute","wine"].includes(key)?take(x=>x.id==="prosecco"&&typeof x.amt==="number"):[];
+  let tops=take(x=>x.amt==="top").concat(sparkling);
+  // Built drinks: anything fizzy goes in last, unless it is the whole drink.
+  if(build){const fizz=ing.filter(x=>!used.has(x)&&BUBBLES.has(x.id));const still=ing.filter(x=>!used.has(x)&&!BUBBLES.has(x.id));
+    if(still.length||tops.length){fizz.forEach(x=>used.add(x));tops=tops.concat(fizz)}}
+  const vessel=shake||roll?t("step.vShaker"):stir?t("step.vMixing"):blend?t("step.vBlender"):t("step.vGlass");
+  // Prep inside the vessel.
+  if(has("passion_fruit")){take(x=>x.id==="passion_fruit");steps.push(t("step.passion"))}
+  if(/dissolve the honey/.test(m)){take(x=>x.id==="honey");steps.push(t("step.honey"))}
+  if(/dissolve the sugar with the bitters/.test(m)){
+    const s=take(x=>["sugar","simple_syrup"].includes(x.id)),b=take(x=>x.id==="bitters");
+    steps.push(t("step.sugarBitters",list(s),list(b)));
+  }
+  if(/muddle/.test(m)){
+    const sentence=m.split(/[.,]/).find(x=>/muddle/.test(x))||m;
+    const md=take(x=>(MUDDLE_WORDS[x.id]||[]).some(w=>sentence.includes(w)));
+    if(md.length)steps.push(t("step.muddle",list(md),vessel));
+  }
+  // Everything else goes in.
+  const rest=take(()=>true);
+  if(build){
+    const ice=iceGlass&&!noIce;
+    if(rest.length)steps.push(ice?t("step.buildIce",list(rest),crushed):t("step.buildNoIce",list(rest)));
+    else if(ice)steps.push(t("step.iceOnly",crushed));
+    if((rest.length>1||/\bstir/.test(m))&&!tops.length)steps.push(t("step.stirGently"));
+  }else{
+    if(rest.length)steps.push(t("step.add",list(rest),vessel));
+    if(blend)steps.push(t("step.blend"));
+    else if(roll)steps.push(t("step.roll"));
+    else if(stir)steps.push(t("step.stir"));
+    else{
+      const egg=ing.find(x=>x.id==="egg_white");
+      if(egg&&/without ice|dry/.test(m))steps.push(egg.opt||/if using egg white/.test(m)?t("step.dryShakeOpt"):t("step.dryShake"));
+      steps.push(t("step.shake"));
+    }
+    if(blend)steps.push(t("step.pourBlend"));
+    else if(overIce)steps.push(t("step.strainIce",crushed,big));
+    else steps.push(/double strain/.test(m)?t("step.doubleStrain"):t("step.strainUp"));
+  }
+  if(tops.length)steps.push(t("step.top",listTop(tops)));
+  if(sink.length)steps.push(t("step.sink",NAME[sink[0].id]));
+  if(float.length)steps.push(t("step.float",fmt(float[0])));
+  if(drizzle.length)steps.push(t("step.drizzle",NAME[drizzle[0].id]));
+  if(bittersTop.length)steps.push(t("step.bittersTop"));
+  if(side.length)steps.push(t("step.side",fmt({...side[0],opt:false})));
+  if(/hot sauce|tabasco|pepper/.test(m))steps.push(t("step.season"));
+  // Garnish.
+  const g=/olive/.test(m)?"olive":/cherry/.test(m)?"cherry":/orange peel/.test(m)?"orange_peel":/lemon peel/.test(m)?"lemon_peel":
+    /orange slice/.test(m)?"orange_slice":/coffee bean/.test(m)?"coffee_beans":/nutmeg/.test(m)?"nutmeg":/squeezed lime/.test(m)?"lime_shell":
+    /sprig of mint/.test(m)||has("mint")&&["highball","rocks","mug"].includes(key)?"mint_sprig":/cucumber slices/.test(m)?"cucumber":
+    /lime wedge|a lime wedge/.test(m)||wedge.some(x=>x.id==="lime")?"lime_wedge":wedge.some(x=>x.id==="lemon")?"lemon_wedge":null;
+  if(g)steps.push(t("step.garnish",t("garnish."+g)));
+  return steps;
+}
+
 /* ---------- recipe sheet ---------- */
 let rcOpen=null;
 function openRecipe(d){
@@ -1655,7 +1760,7 @@ function openRecipe(d){
     const ok=hasAny(spec,H);
     return el("li",{class:ok?"have":opt?"opt":"no"},
       el("span",{class:"nm"},el("b",{class:"mk","aria-hidden":"true"},ok?"✓":opt?"·":"✗"),
-        el("span",{},specName(spec),picks[idx]?el("span",{class:"bn"}," · "+picks[idx].b.name):null,opt?el("span",{class:"optl"},t("drink.optional")):null)),
+        el("span",{},ok?NAME[pickHave(spec,H)]:specName(spec),picks[idx]?el("span",{class:"bn"}," · "+picks[idx].b.name):null,opt?el("span",{class:"optl"},t("drink.optional")):null)),
       el("span",{class:"amt"},fmtAmt(amt)));
   }));
   const ty=whereBuyType(missing);
@@ -1670,7 +1775,9 @@ function openRecipe(d){
       el("div",{},el("span",{class:"k"},t("rec.flavour")),el("span",{class:"v"},d.t.map(x=>TASTE_NAME[x]).join(", "))),
       el("div",{},el("span",{class:"k"},t("rec.serve")),el("span",{class:"v"},d.g))),
     el("div",{},el("h3",{class:"rc-h"},t("rec.ings")),ings),
-    el("div",{style:"display:grid;gap:8px"},el("h3",{class:"rc-h"},t("rec.method")),el("p",{class:"method"},d.m)),
+    el("div",{style:"display:grid;gap:8px"},el("h3",{class:"rc-h"},t("rec.method")),
+      el("p",{class:"method"},el("span",{class:"rc-short"},t("rec.short")),d.m),
+      el("details",{class:"rc-more"},el("summary",{},t("rec.steps")),el("ol",{class:"rc-steps"},recipeSteps(d,H).map(x=>el("li",{},x))))),
     fi&&fi.others.length?el("p",{class:"rc-fit"},t("drink.also",fi.others.join(", "))):null,
     fi&&fi.tip?el("div",{class:"rc-tip"},el("span",{class:"k"},t("rec.tip")),el("span",{class:"v"},fi.tip)):null,
     ty?el("button",{class:"btn rc-buy",type:"button",onclick:()=>{closeRecipe();openShop(ty)}},t("rec.whereBuy",NAME[ty])):null,

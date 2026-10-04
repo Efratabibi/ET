@@ -4,3 +4,4 @@ public/
 !.env.example
 .vercel/
 .photo-cache/
+__pycache__/

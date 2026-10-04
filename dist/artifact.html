@@ -162,7 +162,7 @@ html[lang="he"] .empty{font-style:normal;font-family:var(--body)}
 .rc-top.photo{background:#151210;padding:0}.rc-top.photo .rc-art{position:absolute;inset:0;display:block}
 .rc-photo{display:block;width:100%;height:100%;object-fit:cover}
 .rc-credit{font-size:12px;color:var(--cream-muted);margin:0}.rc-credit a{color:inherit}.rc-art svg{display:block;height:190px;width:auto;filter:drop-shadow(0 6px 10px rgba(60,40,20,.15))}
-.rc-back{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));inset-inline-start:16px;width:44px;height:44px;border-radius:50%;border:0;background:var(--cream);display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.12);cursor:pointer}
+.rc-back{z-index:2;position:absolute;top:calc(14px + env(safe-area-inset-top,0px));inset-inline-start:16px;width:44px;height:44px;border-radius:50%;border:0;background:var(--cream);display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.12);cursor:pointer}
 .rc-back svg{width:20px;height:20px;fill:none;stroke:var(--cream-ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 [dir="rtl"] .rc-back svg{transform:scaleX(-1)}
 .rc-body{max-width:640px;margin:0 auto;padding:24px 24px calc(48px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
@@ -191,6 +191,14 @@ html[lang="he"] .rc-h{letter-spacing:0}
 .ings li .amt{font:600 15px var(--display);color:var(--cream-text);white-space:nowrap;font-variant-numeric:tabular-nums}
 .ings .optl,.ings .bn{color:var(--cream-muted);font-size:13px}
 .method{font-size:17px;line-height:1.55;margin:0;text-wrap:pretty}
+.rc-short{display:block;font:500 10px var(--display);letter-spacing:var(--track);text-transform:uppercase;color:var(--cream-muted);margin-bottom:2px}
+.rc-more summary{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:1.5px solid var(--cream-ink);border-radius:999px;font:700 15px var(--body);color:var(--cream-ink);cursor:pointer;list-style:none}
+.rc-more summary::-webkit-details-marker{display:none}
+.rc-more summary::after{content:"▾";transition:transform .15s}
+.rc-more[open] summary::after{transform:rotate(180deg)}
+.rc-steps{margin:14px 0 0;padding:0;list-style:none;counter-reset:st;display:grid;gap:12px}
+.rc-steps li{counter-increment:st;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;font-size:16px;line-height:1.5}
+.rc-steps li::before{content:counter(st);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--cream-ink);color:var(--cream);font:600 14px var(--display)}
 .rc-tip{display:grid;gap:6px;background:var(--cream-ink);color:var(--cream);border-radius:14px;padding:16px 18px}
 .rc-tip .k{font:500 11px var(--display);letter-spacing:var(--track);text-transform:uppercase;color:var(--gold)}
 .rc-tip .v{font:italic 400 16px/1.5 var(--serif)}
@@ -425,6 +433,23 @@ details summary::-webkit-details-marker{display:none}
 .photo-cta small{color:var(--muted);font-size:13px}
 .photo-cta:disabled{opacity:.6;cursor:progress}
 .ob-find{width:100%}
+.ob-sheet{position:fixed;inset:0;z-index:55;background:var(--bg);overflow-y:auto;padding-top:env(safe-area-inset-top,0px)}
+.ob-sheet[hidden]{display:none}
+.ob-sheet .ob-foot{z-index:56}
+.sheet-body{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.sheet-search{font-size:17px;padding-block:15px}
+.sheet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.scard{position:relative;display:grid;justify-items:center;align-content:start;gap:6px;padding:16px 10px 14px;border:1.5px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);font:15px var(--body);text-align:center;cursor:pointer}
+.scard .thumb{display:flex;align-items:center;justify-content:center;width:84px;height:116px;margin-bottom:4px}
+.scard .thumb svg{width:42px;height:84px}
+.scard .thumb.photo{background:var(--photo-bg);border-radius:10px;overflow:hidden}
+.scard .thumb img{width:100%;height:100%;object-fit:contain}
+.scard b{font-weight:700;line-height:1.25;direction:ltr;overflow-wrap:anywhere}
+.scard small{font-size:13px;color:var(--muted)}
+.scard[aria-pressed="true"]{border-color:var(--gold);background:var(--tint)}
+.scard[aria-pressed="true"]::after{content:"✓";position:absolute;top:10px;inset-inline-start:12px;width:24px;height:24px;border-radius:50%;background:var(--gold);color:var(--cream-ink);font:700 14px/24px var(--body)}
+@media (hover:hover){.scard:hover{border-color:var(--line2)}}
+.tc-pick{justify-self:start}
 .ob-foot{position:fixed;bottom:0;inset-inline:0;background:var(--bg);border-top:1px solid var(--line);padding:14px 22px calc(14px + env(safe-area-inset-bottom,0px));z-index:51}
 .ob-foot-in{max-width:600px;margin:0 auto;display:flex;gap:8px;justify-content:space-between;align-items:center}
 .ob-foot .btn{min-height:54px;font-size:16px;padding:0 20px}
@@ -621,6 +646,10 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     <div id="obBody"></div>
   </div>
   <div class="ob-foot"><div class="ob-foot-in" id="obFoot"></div></div>
+  <div class="ob-sheet" id="obSheet" hidden role="dialog" aria-modal="true" aria-labelledby="obSheetTitle">
+    <div class="ob-in"><div class="ob-head"><span></span><button class="ob-skip" type="button" id="sheetClose" data-t="common.close"></button></div><div id="sheetBody" class="sheet-body"></div></div>
+    <div class="ob-foot"><div class="ob-foot-in" id="sheetFoot"></div></div>
+  </div>
 </div>
 
 <div class="recipe" id="recipe" hidden role="dialog" aria-modal="true" aria-labelledby="rcName">
@@ -873,6 +902,14 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "ob.wineTitle":"Wine and beer",
     "ob.wineLead":"An opened bottle in the fridge counts too.",
     "ob.winePh":"Search a wine or winery: Yarden, prosecco…",
+    "ob.sheetEyebrow":"Optional",
+    "ob.sheetTitle":x=>"Which "+x+" do you have?",
+    "ob.sheetLead":x=>"Pick your bottle and the suggestions will fit its taste. Not sure? Skip it, any "+x+" works.",
+    "ob.sheetSkip":x=>"Continue without a specific bottle",
+    "ob.sheetDone":n=>n===1?"Done · 1 bottle":"Done · "+n+" bottles",
+    "ob.anyBottle":x=>"No specific bottle, and that's fine.",
+    "ob.pickBottle":"Pick a specific bottle (optional)",
+    "ob.changeBottle":"Change bottles",
     "ob.other":"Another bottle",
     "ob.otherPh":x=>"Search "+x+" by name",
     "ob.photoBtn":"Photo of your bottles",
@@ -914,6 +951,59 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "rec.method":"Method",
     "rec.tip":"From the bartender",
     "rec.whereBuy":x=>"Where to buy "+x+"?",
+    "rec.short":"In short",
+    "rec.steps":"Step by step",
+    "step.item":(n,a)=>n+" ("+a+")",
+    "step.juice.lime":"Fresh lime juice",
+    "step.juice.lemon":"Fresh lemon juice",
+    "step.side":x=>"Serve "+x+" in a shot glass on the side.",
+    "step.chill":"Chill the glass: fill it with ice and water while you mix, and empty it just before pouring.",
+    "step.saltRim":"Run a lime wedge around half the rim and dip it in salt.",
+    "step.sugarRim":"Run a lemon wedge around the rim and dip it in sugar.",
+    "step.rinse":x=>"Pour a few drops of "+x+" into the glass, swirl to coat the inside and pour out the rest",
+    "step.ifYouHave":" (if you have it).",
+    "step.passion":"Halve the passion fruit and scoop the pulp into the shaker.",
+    "step.honey":"Stir the honey with a teaspoon of hot water until it runs.",
+    "step.sugarBitters":(s,b)=>"In the glass, stir "+s+" with "+b+" and a splash of water until the sugar dissolves.",
+    "step.muddle":(x,v)=>"In the "+v+", gently press "+x+" with a muddler or the back of a spoon, to release the flavour without shredding it.",
+    "step.vShaker":"shaker",
+    "step.vMixing":"mixing glass",
+    "step.vBlender":"blender",
+    "step.vGlass":"glass",
+    "step.add":(x,v)=>"Pour into the "+v+": "+x+".",
+    "step.buildIce":(x,crushed)=>"Fill the glass with "+(crushed?"crushed ice":"ice")+", then pour in: "+x+".",
+    "step.buildNoIce":x=>"Pour into the glass: "+x+".",
+    "step.iceOnly":crushed=>"Fill the glass with "+(crushed?"crushed ice":"ice")+".",
+    "step.stirGently":"Stir gently to mix.",
+    "step.dryShake":"Close the shaker and shake hard without ice for 10 seconds, to whip the egg white.",
+    "step.dryShakeOpt":"If you are using egg white, first shake hard without ice for 10 seconds.",
+    "step.shake":"Fill the shaker with ice and shake hard for 12 to 15 seconds, until the outside is frosty.",
+    "step.stir":"Fill the mixing glass with ice (any tall glass works) and stir for about 30 seconds, until very cold.",
+    "step.blend":"Add a cup of ice and blend until smooth.",
+    "step.roll":"Add ice and pour back and forth between the shaker and a glass a few times. Shaking would make the tomato juice foamy.",
+    "step.strainUp":"Strain into the chilled glass.",
+    "step.doubleStrain":"Strain through a fine sieve into the chilled glass, to catch the bits.",
+    "step.strainIce":(crushed,big)=>"Strain into the glass over "+(big?"one large ice cube":crushed?"crushed ice":"fresh ice")+".",
+    "step.pourBlend":"Pour into the glass.",
+    "step.top":x=>"Top with "+x+" and stir once, gently, to keep the bubbles.",
+    "step.sink":x=>"Pour the "+x+" slowly down the inside of the glass so it sinks to the bottom. Don't stir.",
+    "step.float":x=>"Pour "+x+" slowly over the back of a spoon so it floats on top.",
+    "step.drizzle":x=>"Drizzle the "+x+" over the top so it bleeds down through the ice.",
+    "step.bittersTop":"Shake a few dashes of bitters over the top.",
+    "step.season":"Season with salt, pepper and a few drops of hot sauce, to taste.",
+    "step.garnish":x=>"Garnish: "+x+".",
+    "garnish.orange_peel":"squeeze a strip of orange peel over the drink to spray its oils, then drop it in",
+    "garnish.lemon_peel":"squeeze a strip of lemon peel over the drink, then drop it in",
+    "garnish.lemon_wedge":"a lemon wedge on the rim",
+    "garnish.orange_slice":"an orange slice",
+    "garnish.lime_wedge":"a lime wedge on the rim",
+    "garnish.lime_shell":"drop the squeezed lime shell into the glass",
+    "garnish.cherry":"a cocktail cherry",
+    "garnish.olive":"an olive on a pick",
+    "garnish.mint_sprig":"a sprig of mint, clapped once between your palms to wake it up",
+    "garnish.cucumber":"a few cucumber slices",
+    "garnish.nutmeg":"a little freshly grated nutmeg",
+    "garnish.coffee_beans":"three coffee beans on the foam",
     "rec.photo":"Photo: ",
     "rec.back":"Back",
     "shop.suggestTitle":"What to buy next",
@@ -999,6 +1089,7 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "dark_rum":"Dark / spiced rum",
     "tequila":"Tequila",
     "mezcal":"Mezcal",
+    "whisky":"Whisky",
     "bourbon":"Bourbon / Tennessee",
     "rye":"Rye whiskey",
     "scotch":"Scotch whisky",
@@ -1141,6 +1232,16 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "tsp_2":"2 tsp",
     "lime_cubed":"1 lime, cubed",
     "dash_5ml":"2 dashes (5 ml)"
+   },
+  steps:{ // hand-written steps for drinks the generated ones don't fit
+    "rossini":["Purée the strawberries (4) with the sugar, if you use it, with a fork or a blender.", "Spoon the purée into a champagne flute.", "Top slowly with cold prosecco (120 ml), letting the foam settle as you pour.", "Stir once, gently, and serve right away."],
+    "b_52":["Use a shot glass and a small spoon.", "Pour the coffee liqueur (20 ml) into the glass.", "Hold the spoon upside down just above the liquid, touching the inside of the glass, and pour the cream liqueur (20 ml) very slowly over its back so it settles on top.", "Do the same with the triple sec (20 ml) for the third layer.", "Serve right away, without stirring."],
+    "irish_coffee":["Warm a heatproof glass with hot water, then empty it.", "Pour in hot, strong coffee (120 ml) and stir in the sugar until it dissolves.", "Add the whiskey (40 ml) and stir.", "Whip the cream lightly, just until it thickens but still pours.", "Pour the cream slowly over the back of a spoon so it floats on top. Don't stir: you drink the hot coffee through the cold cream."],
+    "hot_toddy":["Warm a mug with hot water, then empty it.", "Put in the honey (15 ml) and the lemon juice (15 ml).", "Add 120 ml of hot (not boiling) water and stir until the honey dissolves.", "Add the whiskey (45 ml) and stir.", "Garnish: a lemon wheel, and a cinnamon stick or a few cloves if you have them."],
+    "boilermaker":["Pour a cold beer (330 ml) into a beer glass.", "Pour the whiskey (45 ml) into a shot glass.", "Sip the whiskey, then the beer. Some drop the shot into the beer, but sipping keeps both tasting like themselves."],
+    "spaghett":["Use a cold bottle of light beer (330 ml).", "Drink, or pour out, the first few sips to make room.", "Pour the Aperol (30 ml) and the lemon juice (15 ml) into the bottle.", "Tip it gently once to mix, and drink from the bottle."],
+    "michelada":["Run a lime wedge around the rim of a beer glass and dip it in salt (chili salt if you have it).", "Fill the glass with ice.", "Add the lime juice (25 ml), the tomato juice (60 ml) and a few drops of hot sauce.", "Top slowly with a cold light beer, stirring gently as you pour."],
+    "sangria":["Chop an orange and an apple (or any fruit you have) into a pitcher.", "Add the red wine (150 ml per person), the orange juice (60 ml), the brandy or triple sec (20 ml) and the sugar, and stir until it dissolves.", "Leave it in the fridge for at least an hour, so the fruit and wine meet.", "Serve over ice, with some of the fruit in each glass."]
    },
   drink:{
     "bramble":{"n": "Bramble", "m": "Shake gin, lemon and syrup with ice, pour over crushed ice and drizzle the cassis over the top.", "g": "Rocks glass"},
@@ -1547,6 +1648,14 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "ob.wineTitle":"יין ובירה",
     "ob.wineLead":"גם בקבוק פתוח במקרר נחשב.",
     "ob.winePh":"חיפוש יין או יקב: ירדן, פרוסקו…",
+    "ob.sheetEyebrow":"לא חובה",
+    "ob.sheetTitle":x=>"איזה בקבוק "+x+" יש לך?",
+    "ob.sheetLead":x=>"אם תבחרו את הבקבוק, ההמלצות יתאימו לטעם שלו. לא בטוחים? אפשר פשוט לדלג.",
+    "ob.sheetSkip":x=>"להמשיך בלי בקבוק מסוים",
+    "ob.sheetDone":n=>n===1?"סיום · בקבוק אחד":"סיום · "+n+" בקבוקים",
+    "ob.anyBottle":x=>"בלי בקבוק מסוים, וזה בסדר גמור.",
+    "ob.pickBottle":"בחירת בקבוק מסוים (לא חובה)",
+    "ob.changeBottle":"שינוי בקבוקים",
     "ob.other":"בקבוק אחר",
     "ob.otherPh":x=>"חיפוש "+x+" לפי שם",
     "ob.photoBtn":"צילום הבקבוקים",
@@ -1588,6 +1697,59 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "rec.method":"הכנה",
     "rec.tip":"טיפ מהברמן",
     "rec.whereBuy":x=>"איפה קונים "+x+"?",
+    "rec.short":"בקצרה",
+    "rec.steps":"שלב אחר שלב",
+    "step.item":(n,a)=>n+" ("+a+")",
+    "step.juice.lime":"מיץ ליים טרי",
+    "step.juice.lemon":"מיץ לימון טרי",
+    "step.side":x=>"מגישים לצד המשקה "+x+" בכוס שוט.",
+    "step.chill":"מצננים את הכוס: ממלאים אותה בקרח ומים בזמן שמכינים, ומרוקנים רגע לפני המזיגה.",
+    "step.saltRim":"מעבירים פלח ליים על חצי משפת הכוס וטובלים אותה במלח.",
+    "step.sugarRim":"מעבירים פלח לימון על שפת הכוס וטובלים אותה בסוכר.",
+    "step.rinse":x=>"שמים בכוס כמה טיפות "+x+", מסובבים כדי לצפות את הדפנות ושופכים את השאר",
+    "step.ifYouHave":" (אם יש).",
+    "step.passion":"חוצים את הפסיפלורה ומוציאים את התוכן לשייקר.",
+    "step.honey":"מערבבים את הדבש עם כפית מים חמים עד שהוא נוזלי.",
+    "step.sugarBitters":(s,b)=>"בכוס מערבבים "+s+" עם "+b+" ומעט מים, עד שהסוכר נמס.",
+    "step.muddle":(x,v)=>"ב"+v+" מועכים בעדינות "+x+" עם מועך או גב של כף, כדי להוציא את הטעם בלי לקרוע.",
+    "step.vShaker":"שייקר",
+    "step.vMixing":"כוס ערבוב",
+    "step.vBlender":"בלנדר",
+    "step.vGlass":"כוס",
+    "step.add":(x,v)=>"מוזגים ל"+v+": "+x+".",
+    "step.buildIce":(x,crushed)=>"ממלאים את הכוס ב"+(crushed?"קרח כתוש":"קרח")+", ומוזגים: "+x+".",
+    "step.buildNoIce":x=>"מוזגים לכוס: "+x+".",
+    "step.iceOnly":crushed=>"ממלאים את הכוס ב"+(crushed?"קרח כתוש":"קרח")+".",
+    "step.stirGently":"מערבבים בעדינות.",
+    "step.dryShake":"סוגרים את השייקר ומנערים חזק בלי קרח כ-10 שניות, כדי להקציף את החלבון.",
+    "step.dryShakeOpt":"אם משתמשים בחלבון, קודם מנערים חזק בלי קרח כ-10 שניות.",
+    "step.shake":"ממלאים את השייקר בקרח ומנערים חזק 12 עד 15 שניות, עד שהוא קפוא מבחוץ.",
+    "step.stir":"ממלאים את כוס הערבוב בקרח (כל כוס גבוהה תעבוד) ומערבבים כ-30 שניות, עד שקר מאוד.",
+    "step.blend":"מוסיפים כוס קרח וטוחנים עד שחלק.",
+    "step.roll":"מוסיפים קרח ומעבירים כמה פעמים הלוך ושוב בין השייקר לכוס. ניעור היה מקציף את מיץ העגבניות.",
+    "step.strainUp":"מסננים לכוס המצוננת.",
+    "step.doubleStrain":"מסננים דרך מסננת דקה לכוס המצוננת, כדי לתפוס שאריות.",
+    "step.strainIce":(crushed,big)=>"מסננים לכוס על "+(big?"קוביית קרח גדולה":crushed?"קרח כתוש":"קרח טרי")+".",
+    "step.pourBlend":"מוזגים לכוס.",
+    "step.top":x=>"משלימים ב"+x+" ומערבבים פעם אחת בעדינות, כדי לשמור על הבועות.",
+    "step.sink":x=>"מוזגים לאט את ה"+x+" לאורך דופן הכוס, כך שישקע לתחתית. לא מערבבים.",
+    "step.float":x=>"מוזגים לאט "+x+" על גב של כף, כך שיצוף מלמעלה.",
+    "step.drizzle":x=>"מטפטפים מלמעלה "+x+", כך שיחלחל דרך הקרח.",
+    "step.bittersTop":"מטפטפים מלמעלה כמה טיפות ביטרס.",
+    "step.season":"מתבלים במלח, פלפל וכמה טיפות רוטב חריף, לפי הטעם.",
+    "step.garnish":x=>"קישוט: "+x+".",
+    "garnish.orange_peel":"סוחטים רצועת קליפת תפוז מעל המשקה כדי לרסס את השמנים, ומכניסים אותה",
+    "garnish.lemon_peel":"סוחטים רצועת קליפת לימון מעל המשקה, ומכניסים אותה",
+    "garnish.lemon_wedge":"פלח לימון על שפת הכוס",
+    "garnish.orange_slice":"פרוסת תפוז",
+    "garnish.lime_wedge":"פלח ליים על שפת הכוס",
+    "garnish.lime_shell":"זורקים לכוס את קליפת הליים הסחוטה",
+    "garnish.cherry":"דובדבן קוקטייל",
+    "garnish.olive":"זית על קיסם",
+    "garnish.mint_sprig":"ענף נענע, אחרי מחיאה קלה בין כפות הידיים כדי להעיר את הריח",
+    "garnish.cucumber":"כמה פרוסות מלפפון",
+    "garnish.nutmeg":"מעט אגוז מוסקט מגורד",
+    "garnish.coffee_beans":"שלושה פולי קפה על הקצף",
     "rec.photo":"צילום: ",
     "rec.back":"חזרה",
     "shop.suggestTitle":"מה כדאי לקנות",
@@ -1673,6 +1835,7 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "dark_rum":"רום כהה / מתובל",
     "tequila":"טקילה",
     "mezcal":"מסקל",
+    "whisky":"ויסקי",
     "bourbon":"בורבון / טנסי",
     "rye":"ויסקי שיפון (ריי)",
     "scotch":"סקוץ׳ ויסקי",
@@ -1815,6 +1978,16 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "tsp_2":"2 כפיות",
     "lime_cubed":"ליים שלם בקוביות",
     "dash_5ml":"2 טיפות (5 מ״ל)"
+   },
+  steps:{ // hand-written steps for drinks the generated ones don't fit
+    "rossini":["מרסקים את התותים (4) עם הסוכר, אם משתמשים, במזלג או בבלנדר.", "שמים את המחית בכוס שמפניה.", "משלימים לאט בפרוסקו קר (120 מ״ל), ומחכים שהקצף ישקע תוך כדי מזיגה.", "מערבבים פעם אחת בעדינות ומגישים מיד."],
+    "b_52":["משתמשים בכוס שוט ובכפית קטנה.", "מוזגים לכוס את ליקר הקפה (20 מ״ל).", "מחזיקים את הכפית הפוכה ממש מעל הנוזל, צמודה לדופן, ומוזגים לאט מאוד על גבה את ליקר השמנת (20 מ״ל) כך שישב מעל.", "עושים אותו דבר עם הטריפל סק (20 מ״ל) לשכבה השלישית.", "מגישים מיד, בלי לערבב."],
+    "irish_coffee":["מחממים כוס זכוכית חמה במים חמים ומרוקנים.", "מוזגים קפה חזק וחם (120 מ״ל) ומערבבים פנימה את הסוכר עד שנמס.", "מוסיפים את הוויסקי (40 מ״ל) ומערבבים.", "מקציפים את השמנת קלות, רק עד שהיא מסמיכה אבל עדיין נמזגת.", "מוזגים את השמנת לאט על גב של כף כך שתצוף מלמעלה. לא מערבבים: שותים את הקפה החם דרך השמנת הקרה."],
+    "hot_toddy":["מחממים ספל במים חמים ומרוקנים.", "שמים את הדבש (15 מ״ל) ואת מיץ הלימון (15 מ״ל).", "מוסיפים 120 מ״ל מים חמים (לא רותחים) ומערבבים עד שהדבש נמס.", "מוסיפים את הוויסקי (45 מ״ל) ומערבבים.", "קישוט: פרוסת לימון, ומקל קינמון או כמה ציפורנים אם יש."],
+    "boilermaker":["מוזגים בירה קרה (330 מ״ל) לכוס בירה.", "מוזגים את הוויסקי (45 מ״ל) לכוס שוט.", "לוגמים מהוויסקי ואז מהבירה. יש מי שמפילים את השוט לתוך הבירה, אבל בלגימות כל אחד שומר על הטעם שלו."],
+    "spaghett":["לוקחים בקבוק קר של בירה בהירה (330 מ״ל).", "שותים, או שופכים, כמה לגימות ראשונות כדי לפנות מקום.", "מוזגים לבקבוק את האפרול (30 מ״ל) ואת מיץ הלימון (15 מ״ל).", "מטים בעדינות פעם אחת כדי לערבב, ושותים מהבקבוק."],
+    "michelada":["מעבירים פלח ליים על שפת כוס הבירה וטובלים במלח (מלח צ׳ילי אם יש).", "ממלאים את הכוס בקרח.", "מוסיפים את מיץ הליים (25 מ״ל), את מיץ העגבניות (60 מ״ל) וכמה טיפות רוטב חריף.", "משלימים לאט בבירה בהירה קרה, ומערבבים בעדינות תוך כדי מזיגה."],
+    "sangria":["חותכים לקנקן תפוז ותפוח (או כל פרי שיש).", "מוסיפים את היין האדום (150 מ״ל לכל אחד), את מיץ התפוזים (60 מ״ל), את הברנדי או הטריפל סק (20 מ״ל) ואת הסוכר, ומערבבים עד שנמס.", "משאירים במקרר לפחות שעה, כדי שהפירות והיין יתערבבו.", "מגישים על קרח, עם קצת פירות בכל כוס."]
    },
   drink:{
     "bramble":{"n": "ברמבל", "m": "שייקר לג׳ין, לימון וסירופ עם קרח, מוזגים על קרח כתוש ומטפטפים את הקסיס מלמעלה.", "g": "כוס לואו-בול"},
@@ -2109,15 +2282,21 @@ const PLATFORM=window.HB_PLATFORM||{
 
 /* ---------- catalog ---------- */
 const CATS=[ // names come from the locale
- {id:"spirit",items:["vodka","gin","white_rum","dark_rum","tequila","mezcal","bourbon","rye","scotch","irish","japanese","world_whisky","brandy","arak","cachaca","pisco"].map(id=>[id])},
+ {id:"spirit",items:["vodka","gin","white_rum","dark_rum","tequila","mezcal","whisky","bourbon","rye","scotch","irish","japanese","world_whisky","brandy","arak","cachaca","pisco"].map(id=>[id])},
  {id:"liqueur",items:["triple_sec","campari","aperol","sweet_vermouth","dry_vermouth","kahlua","amaretto","baileys","limoncello","elderflower","peach","blue_curacao","cassis","maraschino","chartreuse","amaro","absinthe"].map(id=>[id])},
  {id:"wine",items:["prosecco","white_wine","red_wine","beer"].map(id=>[id])},
  {id:"mixer",items:["orange","cranberry","pineapple","grapefruit","tomato","soda","tonic","cola","ginger_beer","sprite","coffee"].map(id=>[id])},
  {id:"pantry",items:["lime","lemon","mint","basil","ginger","sugar","simple_syrup","honey","grenadine","bitters","cream","coconut_cream","egg_white","orgeat","cucumber","berries","passion_fruit"].map(id=>[id])}
 ];
 const NAME={},CAT_OF={};CATS.forEach(c=>c.items.forEach(([id])=>{CAT_OF[id]=c.id}));
-// Sugar and simple syrup stand in for each other.
+// Sugar and simple syrup stand in for each other, and so do all whiskies.
+// The app shows one "Whisky"; the kinds stay in the data for bottles, styles and prices.
+const WHISKY=["bourbon","rye","scotch","irish","japanese","world_whisky"];
 const EQUIV={sugar:["simple_syrup"],simple_syrup:["sugar"]};
+["whisky",...WHISKY].forEach(w=>EQUIV[w]=["whisky",...WHISKY].filter(x=>x!==w));
+const listed=id=>!WHISKY.includes(id); // kinds of whisky are not listed on their own
+// Whether the bar has this item; "whisky" counts any kind of whisky.
+function owned(id,H=have()){return id==="whisky"?H.has("whisky")||WHISKY.some(w=>H.has(w)):H.has(id)}
 const GROUPS=[
  {key:"whiskey",ids:["bourbon","rye","scotch","irish","japanese","world_whisky"]},
  {key:"rum",ids:["white_rum","dark_rum"]}
@@ -2412,6 +2591,8 @@ BRANDS.forEach(b=>b.exprs.forEach(([x,style,il,us,type,note])=>{
   const t=type||b.type;
   addProduct({name:(b.brand+" "+x).trim(),brand:b.brand,he:b.he,type:t,style,il:rng(il),us:rng(us),note});
 }));
+PRESETS.whisky=WHISKY.flatMap(w=>(PRESETS[w]||[]).map(p=>Object.assign(p.slice(),{7:w})));
+const kindOf=(type,p)=>p[7]||type; // a preset's real type (whisky entries carry their kind)
 
 /* ---------- search engine: typo-tolerant, Hebrew/English mixed ---------- */
 const FINALS={"ך":"כ","ם":"מ","ן":"נ","ף":"פ","ץ":"צ"};
@@ -2789,7 +2970,8 @@ function bottleScore(d,b){
 function bottlePicks(d){
   const sel=selectedBottle(),picks={};
   d.i.forEach(([spec],idx)=>{
-    let cands=state.bottles.filter(b=>ids(spec).includes(b.type));
+    const want=new Set(ids(spec).flatMap(x=>[x,...(EQUIV[x]||[])]));
+    let cands=state.bottles.filter(b=>want.has(b.type));
     if(sel&&cands.includes(sel))cands=[sel];
     if(!cands.length)return;
     const scored=cands.map(b=>({b,score:idx===0?bottleScore(d,b):0})).sort((a,b)=>b.score-a.score);
@@ -2815,14 +2997,14 @@ function renderInventory(){
   const H=have(),box=$("inventory");box.innerHTML="";
   const q=filterText.trim();
   CATS.forEach(c=>{
-    const items=c.items.filter(([id,n])=>!q||n.toLowerCase().includes(q.toLowerCase())||id.includes(q.toLowerCase()));
+    const items=c.items.filter(([id,n])=>listed(id)&&(!q||n.toLowerCase().includes(q.toLowerCase())||id.includes(q.toLowerCase())));
     if(!items.length)return;
-    const n=c.items.filter(([id])=>H.has(id)).length;
+    const n=c.items.filter(([id])=>listed(id)&&owned(id,H)).length,total=c.items.filter(([id])=>listed(id)).length;
     box.append(el("div",{class:"cat"},
-      el("div",{class:"cat-h"},el("h3",{},c.name),el("small",{},n+" / "+c.items.length)),
+      el("div",{class:"cat-h"},el("h3",{},c.name),el("small",{},n+" / "+total)),
       el("div",{class:"chips"},items.map(([id,name])=>{
-        const bc=state.bottles.filter(b=>b.type===id).length;
-        return el("button",{type:"button",class:"chip","aria-pressed":String(H.has(id)),onclick:()=>toggle(id)},name,bc?el("span",{class:"n"},"· "+bc):null);
+        const bc=state.bottles.filter(b=>b.type===id||id==="whisky"&&WHISKY.includes(b.type)).length;
+        return el("button",{type:"button",class:"chip","aria-pressed":String(owned(id,H)),onclick:()=>toggle(id)},name,bc?el("span",{class:"n"},"· "+bc):null);
       }))
     ));
   });
@@ -2838,6 +3020,14 @@ function renderInventory(){
 }
 
 function toggle(id){
+  if(id==="whisky"){
+    // On: add plain whisky. Off: remove every kind of whisky and its bottles.
+    if(!owned("whisky")){state.items.push("whisky");commit();return}
+    const kinds=new Set(["whisky",...WHISKY]),gone=new Set(state.bottles.filter(b=>kinds.has(b.type)).map(b=>"b:"+b.id));
+    state.items=state.items.filter(x=>!kinds.has(x));state.bottles=state.bottles.filter(b=>!kinds.has(b.type));
+    mood.withs=mood.withs.filter(k=>!(k.startsWith("i:")&&kinds.has(k.slice(2)))&&!gone.has(k));
+    commit();return;
+  }
   const i=state.items.indexOf(id);
   if(i>=0){
     state.items.splice(i,1);
@@ -2925,7 +3115,7 @@ function fitInfo(d,picks){
   }
   return {b,cls,verdict,others,tip};
 }
-function whereBuyType(missing){return missing.length?ids(missing[0]).find(x=>PRESETS[x]):null}
+function whereBuyType(missing){if(!missing.length)return null;const ty=ids(missing[0]).find(x=>PRESETS[x]);return ty&&WHISKY.includes(ty)?"whisky":ty}
 
 function drinkCard(d,H,missing){
   const fi=fitInfo(d,bottlePicks(d));
@@ -3047,6 +3237,103 @@ function drinkPic(d,H,cls){
   return box;
 }
 
+/* ---------- step by step: a detailed method built from the recipe and its short method ---------- */
+// The short English method is the reference for the technique (shake, stir, blend, build, float…), so both
+// languages get the same steps. Unusual drinks have hand-written steps in the locale (L.steps).
+const MUDDLE_WORDS={mint:["mint"],lime:["lime"],lemon:["lemon"],simple_syrup:["syrup","sugar"],sugar:["sugar","syrup"],basil:["basil"],
+  ginger:["ginger"],berries:["berr","strawberr"],cucumber:["cucumber"],honey:["honey"]};
+// The ingredient you have: an exact match, then an equivalent (any whisky), then the recipe's first choice.
+function pickHave(spec,H){return ids(spec).find(x=>H.has(x))||ids(spec).flatMap(x=>EQUIV[x]||[]).find(x=>H.has(x))||ids(spec)[0]}
+const strainedTall=key=>["highball","hurricane","mug","rocks"].includes(key);
+const BUBBLES=new Set(["soda","tonic","cola","ginger_beer","sprite","prosecco","beer"]);
+function recipeSteps(d,H){
+  if(L.steps&&L.steps[d.id])return L.steps[d.id];
+  const m=(LOCALES.en.drink[d.id].m||"").toLowerCase(),key=glassOf(d);
+  const ing=d.i.map(([spec,amt,opt])=>({spec,amt,opt,id:pickHave(spec,H)}));
+  const has=id=>ing.some(x=>ids(x.spec).includes(id));
+  const nm=x=>(x.id==="lime"||x.id==="lemon")&&typeof x.amt==="number"?t("step.juice."+x.id):NAME[x.id];
+  const fmt=x=>t("step.item",nm(x),fmtAmt(x.amt))+(x.opt?t("drink.optional"):"");
+  const join=xs=>{try{return new Intl.ListFormat(L.locale,{type:"conjunction"}).format(xs)}catch(e){return xs.join(", ")}};
+  const list=xs=>join(xs.map(fmt)),listTop=xs=>join(xs.map(x=>x.amt==="top"?NAME[x.id]:fmt(x)));
+  const used=new Set(),take=pred=>{const xs=ing.filter(x=>!used.has(x)&&pred(x));xs.forEach(x=>used.add(x));return xs};
+  const steps=[];
+  const blend=/blend/.test(m),roll=/roll between/.test(m),shake=!blend&&!roll&&/shake/.test(m);
+  const stir=!shake&&!blend&&/stir with ice|stir \(or shake|stir until very cold/.test(m);
+  const build=!shake&&!stir&&!blend&&!roll;
+  const strained=shake||stir||roll;
+  const crushed=/crushed ice/.test(m),big=/large (ice )?cube|one large cube/.test(m);
+  const noIce=/no ice|without ice/.test(m)&&!/shake without ice/.test(m);
+  // Tall and short glasses get ice unless the method says otherwise.
+  const overIce=/over (fresh |crushed )?ice|over one large cube|over a large ice cube|on ice|over ice/.test(m)||strainedTall(key)&&!noIce;
+  const iceGlass=["highball","rocks","mug","hurricane","pitcher","balloon"].includes(key)||/ice/.test(m)&&key==="wine";
+  // Glass first.
+  if(strained&&!overIce)steps.push(t("step.chill"));
+  if(/salt the rim/.test(m)&&!/salty dog/.test(m)||/salted rim/.test((LOCALES.en.drink[d.id].g||"").toLowerCase()))steps.push(t("step.saltRim"));
+  if(/sugared rim/.test(m))steps.push(t("step.sugarRim"));
+  const rinse=take(x=>x.amt==="rinse");
+  if(rinse.length)steps.push(t("step.rinse",NAME[rinse[0].id])+(rinse[0].opt?t("step.ifYouHave"):""));
+  // Things kept for later: a layer that sinks or floats, bitters on top, a top-up.
+  const sink=/so it sinks/.test(m)?take(x=>x.id==="grenadine"):[];
+  const float=/float/.test(m)?take(x=>["cream","red_wine"].includes(x.id)):[];
+  const drizzle=/drizzle the cassis/.test(m)?take(x=>x.id==="cassis"):[];
+  const bittersTop=/bitters on top/.test(m)?take(x=>x.id==="bitters"):[];
+  const wedge=take(x=>x.amt==="wedge");
+  const side=build?[]:take(x=>x.opt&&BUBBLES.has(x.id));
+  const sparkling=["flute","wine"].includes(key)?take(x=>x.id==="prosecco"&&typeof x.amt==="number"):[];
+  let tops=take(x=>x.amt==="top").concat(sparkling);
+  // Built drinks: anything fizzy goes in last, unless it is the whole drink.
+  if(build){const fizz=ing.filter(x=>!used.has(x)&&BUBBLES.has(x.id));const still=ing.filter(x=>!used.has(x)&&!BUBBLES.has(x.id));
+    if(still.length||tops.length){fizz.forEach(x=>used.add(x));tops=tops.concat(fizz)}}
+  const vessel=shake||roll?t("step.vShaker"):stir?t("step.vMixing"):blend?t("step.vBlender"):t("step.vGlass");
+  // Prep inside the vessel.
+  if(has("passion_fruit")){take(x=>x.id==="passion_fruit");steps.push(t("step.passion"))}
+  if(/dissolve the honey/.test(m)){take(x=>x.id==="honey");steps.push(t("step.honey"))}
+  if(/dissolve the sugar with the bitters/.test(m)){
+    const s=take(x=>["sugar","simple_syrup"].includes(x.id)),b=take(x=>x.id==="bitters");
+    steps.push(t("step.sugarBitters",list(s),list(b)));
+  }
+  if(/muddle/.test(m)){
+    const sentence=m.split(/[.,]/).find(x=>/muddle/.test(x))||m;
+    const md=take(x=>(MUDDLE_WORDS[x.id]||[]).some(w=>sentence.includes(w)));
+    if(md.length)steps.push(t("step.muddle",list(md),vessel));
+  }
+  // Everything else goes in.
+  const rest=take(()=>true);
+  if(build){
+    const ice=iceGlass&&!noIce;
+    if(rest.length)steps.push(ice?t("step.buildIce",list(rest),crushed):t("step.buildNoIce",list(rest)));
+    else if(ice)steps.push(t("step.iceOnly",crushed));
+    if((rest.length>1||/\bstir/.test(m))&&!tops.length)steps.push(t("step.stirGently"));
+  }else{
+    if(rest.length)steps.push(t("step.add",list(rest),vessel));
+    if(blend)steps.push(t("step.blend"));
+    else if(roll)steps.push(t("step.roll"));
+    else if(stir)steps.push(t("step.stir"));
+    else{
+      const egg=ing.find(x=>x.id==="egg_white");
+      if(egg&&/without ice|dry/.test(m))steps.push(egg.opt||/if using egg white/.test(m)?t("step.dryShakeOpt"):t("step.dryShake"));
+      steps.push(t("step.shake"));
+    }
+    if(blend)steps.push(t("step.pourBlend"));
+    else if(overIce)steps.push(t("step.strainIce",crushed,big));
+    else steps.push(/double strain/.test(m)?t("step.doubleStrain"):t("step.strainUp"));
+  }
+  if(tops.length)steps.push(t("step.top",listTop(tops)));
+  if(sink.length)steps.push(t("step.sink",NAME[sink[0].id]));
+  if(float.length)steps.push(t("step.float",fmt(float[0])));
+  if(drizzle.length)steps.push(t("step.drizzle",NAME[drizzle[0].id]));
+  if(bittersTop.length)steps.push(t("step.bittersTop"));
+  if(side.length)steps.push(t("step.side",fmt({...side[0],opt:false})));
+  if(/hot sauce|tabasco|pepper/.test(m))steps.push(t("step.season"));
+  // Garnish.
+  const g=/olive/.test(m)?"olive":/cherry/.test(m)?"cherry":/orange peel/.test(m)?"orange_peel":/lemon peel/.test(m)?"lemon_peel":
+    /orange slice/.test(m)?"orange_slice":/coffee bean/.test(m)?"coffee_beans":/nutmeg/.test(m)?"nutmeg":/squeezed lime/.test(m)?"lime_shell":
+    /sprig of mint/.test(m)||has("mint")&&["highball","rocks","mug"].includes(key)?"mint_sprig":/cucumber slices/.test(m)?"cucumber":
+    /lime wedge|a lime wedge/.test(m)||wedge.some(x=>x.id==="lime")?"lime_wedge":wedge.some(x=>x.id==="lemon")?"lemon_wedge":null;
+  if(g)steps.push(t("step.garnish",t("garnish."+g)));
+  return steps;
+}
+
 /* ---------- recipe sheet ---------- */
 let rcOpen=null;
 function openRecipe(d){
@@ -3059,7 +3346,7 @@ function openRecipe(d){
     const ok=hasAny(spec,H);
     return el("li",{class:ok?"have":opt?"opt":"no"},
       el("span",{class:"nm"},el("b",{class:"mk","aria-hidden":"true"},ok?"✓":opt?"·":"✗"),
-        el("span",{},specName(spec),picks[idx]?el("span",{class:"bn"}," · "+picks[idx].b.name):null,opt?el("span",{class:"optl"},t("drink.optional")):null)),
+        el("span",{},ok?NAME[pickHave(spec,H)]:specName(spec),picks[idx]?el("span",{class:"bn"}," · "+picks[idx].b.name):null,opt?el("span",{class:"optl"},t("drink.optional")):null)),
       el("span",{class:"amt"},fmtAmt(amt)));
   }));
   const ty=whereBuyType(missing);
@@ -3074,7 +3361,9 @@ function openRecipe(d){
       el("div",{},el("span",{class:"k"},t("rec.flavour")),el("span",{class:"v"},d.t.map(x=>TASTE_NAME[x]).join(", "))),
       el("div",{},el("span",{class:"k"},t("rec.serve")),el("span",{class:"v"},d.g))),
     el("div",{},el("h3",{class:"rc-h"},t("rec.ings")),ings),
-    el("div",{style:"display:grid;gap:8px"},el("h3",{class:"rc-h"},t("rec.method")),el("p",{class:"method"},d.m)),
+    el("div",{style:"display:grid;gap:8px"},el("h3",{class:"rc-h"},t("rec.method")),
+      el("p",{class:"method"},el("span",{class:"rc-short"},t("rec.short")),d.m),
+      el("details",{class:"rc-more"},el("summary",{},t("rec.steps")),el("ol",{class:"rc-steps"},recipeSteps(d,H).map(x=>el("li",{},x))))),
     fi&&fi.others.length?el("p",{class:"rc-fit"},t("drink.also",fi.others.join(", "))):null,
     fi&&fi.tip?el("div",{class:"rc-tip"},el("span",{class:"k"},t("rec.tip")),el("span",{class:"v"},fi.tip)):null,
     ty?el("button",{class:"btn rc-buy",type:"button",onclick:()=>{closeRecipe();openShop(ty)}},t("rec.whereBuy",NAME[ty])):null,
@@ -3238,7 +3527,7 @@ function unlockCount(type){
   return DRINKS.filter(d=>analyze(d,H).length&&!analyze(d,H2).length).length;
 }
 function suggestions(){
-  return Object.keys(PRESETS).filter(t=>!state.items.includes(t)).map(t=>({t,n:unlockCount(t)})).filter(x=>x.n>0).sort((a,b)=>b.n-a.n).slice(0,6);
+  return Object.keys(PRESETS).filter(t=>listed(t)&&!owned(t)).map(t=>({t,n:unlockCount(t)})).filter(x=>x.n>0).sort((a,b)=>b.n-a.n).slice(0,6);
 }
 function goodFor(type,style){
   const b={type,style};
@@ -3270,10 +3559,11 @@ function renderShop(){
   sug.slice(0,4).forEach(({t:ty,n})=>sg.append(el("button",{type:"button",class:"sug-row","aria-pressed":String(shop.type===ty),onclick:()=>{shop.type=ty;shop.style="";renderShop()}},el("b",{},NAME[ty]),el("span",{},t("ob.plus",n)))));
 
   const ts=$("typeSeg");ts.innerHTML="";
-  Object.keys(PRESETS).filter(t=>CAT_OF[t]==="spirit"||CAT_OF[t]==="liqueur").forEach(t=>ts.append(el("button",{type:"button",class:"chip","aria-pressed":String(shop.type===t),onclick:()=>{shop.type=t;shop.style="";renderShop()}},NAME[t])));
-  const styles=STYLES[shop.type]||{},ss=$("styleSeg");ss.innerHTML="";
+  Object.keys(PRESETS).filter(t=>listed(t)&&(CAT_OF[t]==="spirit"||CAT_OF[t]==="liqueur")).forEach(t=>ts.append(el("button",{type:"button",class:"chip","aria-pressed":String(shop.type===t),onclick:()=>{shop.type=t;shop.style="";renderShop()}},NAME[t])));
+  // Whisky's "styles" are its kinds: Bourbon, Scotch, Irish…
+  const styles=shop.type==="whisky"?Object.fromEntries(WHISKY.filter(w=>PRESETS[w]).map(w=>[w,{n:NAME[w],t:[]}])):STYLES[shop.type]||{},ss=$("styleSeg");ss.innerHTML="";
   [["",t("shop.allStyles"),null]].concat(Object.entries(styles).filter(([,s])=>s.n).map(([k,s])=>[k,s.n,s.t])).forEach(([k,n,notes])=>ss.append(
-    el("button",{type:"button",class:"chip","aria-pressed":String(shop.style===k),title:notes?notes.map(x=>NOTE[x]).join(", "):null,onclick:()=>{shop.style=k;renderShop()}},n)));
+    el("button",{type:"button",class:"chip","aria-pressed":String(shop.style===k),title:notes&&notes.length?notes.map(x=>NOTE[x]).join(", "):null,onclick:()=>{shop.style=k;renderShop()}},n)));
   // On phones these rows scroll sideways; keep the selected chip visible after a re-render.
   [ts,ss].forEach(row=>{const a=row.querySelector('[aria-pressed="true"]');if(!a||row.scrollWidth<=row.clientWidth)return;
     const r=a.getBoundingClientRect(),p=row.getBoundingClientRect();row.scrollLeft+=(r.left+r.width/2)-(p.left+p.width/2)});
@@ -3281,7 +3571,7 @@ function renderShop(){
   const q=shop.q.trim().toLowerCase();
   let list=[];
   if(q)searchIndex(itemIndex(),shop.q,24).filter(e=>e.kind==="product").forEach(e=>list.push({t:e.type,p:[e.name,e.style,e.il[0],e.il[1],e.us[0],e.us[1],e.note||null]}));
-  else (PRESETS[shop.type]||[]).forEach(p=>{if(!shop.style||p[1]===shop.style)list.push({t:shop.type,p})});
+  else (PRESETS[shop.type]||[]).forEach(p=>{if(!shop.style||(shop.type==="whisky"?p[7]:p[1])===shop.style)list.push({t:kindOf(shop.type,p),p})});
   list.sort((a,b)=>{const ra=priceRange(a.p),rb=priceRange(b.p);return (ra?ra[0]:1e9)-(rb?rb[0]:1e9)});
 
   $("shopTitle").textContent=q?t("shop.results"):NAME[shop.type]+(shop.style?" · "+styles[shop.style].n:"");
@@ -3573,7 +3863,7 @@ $("menuCountry").addEventListener("change",e=>{shop.country=e.target.value;setPr
 /* ---------- bottle thumbnails: a drawn bottle in the drink's shape and colour ---------- */
 // "clear" drinks take the theme's line colour so they read as clear glass in both themes.
 const LIQUID={vodka:"clear",gin:"clear",white_rum:"clear",mezcal:"clear",arak:"clear",cachaca:"clear",pisco:"clear",maraschino:"clear",triple_sec:"clear",
- tequila:"clear",dark_rum:"#8A4B1C",bourbon:"#B5651D",rye:"#A85A1A",scotch:"#C07A2A",irish:"#C68A3A",japanese:"#B8732A",world_whisky:"#B06A24",brandy:"#93441A",
+ tequila:"clear",dark_rum:"#8A4B1C",whisky:"#B9702A",bourbon:"#B5651D",rye:"#A85A1A",scotch:"#C07A2A",irish:"#C68A3A",japanese:"#B8732A",world_whisky:"#B06A24",brandy:"#93441A",
  campari:"#C8102E",aperol:"#F26B21",sweet_vermouth:"#6B1A1A",dry_vermouth:"#E6DDB4",kahlua:"#2B1A12",amaretto:"#A0521D",baileys:"#D2B98F",limoncello:"#EFCF2F",
  elderflower:"#EFE6BE",peach:"#F2A774",blue_curacao:"#1E7FD0",cassis:"#4A0E2E",chartreuse:"#7DB33A",absinthe:"#9BC53D",amaro:"#3B2414",bitters:"#7A2E12",
  red_wine:"#6E0F24",white_wine:"#E6D57E",rose:"#EE9AA2",prosecco:"#EBDB8C",beer:"#D9A13A"};
@@ -3605,7 +3895,7 @@ function bottleThumb(type,style,note,name){
   if(photo){const s=el("span",{class:"thumb photo","aria-hidden":"true"});s.append(el("img",{src:photo,alt:"",loading:"lazy",decoding:"async"}));return s}
   const kind=type&&type!=="red_wine"&&type!=="white_wine"?type:(note?wineKind(note):type);
   const shape=["red_wine","white_wine","rose","prosecco"].includes(kind)?"wine"
-    :["bourbon","rye","scotch","irish","japanese","world_whisky","brandy","dark_rum"].includes(kind)?"square"
+    :["whisky","bourbon","rye","scotch","irish","japanese","world_whisky","brandy","dark_rum"].includes(kind)?"square"
     :CAT_OF[kind]==="liqueur"?"round":CAT_OF[kind]==="spirit"?"tall":"small";
   let liquid=LIQUID[kind]||"clear";
   const fizz=kind==="prosecco";
@@ -3702,7 +3992,7 @@ function finder(box,q,onPick,opts={}){
 }
 /* Manual add form: name + type + style */
 function manualForm(name,onDone){
-  const types=Object.keys(NAME).filter(id=>CAT_OF[id]==="spirit"||CAT_OF[id]==="liqueur"||CAT_OF[id]==="wine");
+  const types=Object.keys(NAME).filter(id=>id!=="whisky"&&(CAT_OF[id]==="spirit"||CAT_OF[id]==="liqueur"||CAT_OF[id]==="wine"));
   const nameIn=el("input",{type:"text",id:"man-name",value:name,"aria-label":t("find.bottleName")});
   const typeSel=el("select",{id:"man-type","aria-label":t("find.type")},el("option",{value:""},t("find.whichType")),types.map(id=>el("option",{value:id},NAME[id])));
   const styleSel=el("select",{id:"man-style","aria-label":t("find.style"),hidden:""});
@@ -3753,9 +4043,9 @@ function obAdd(entries,rerender=true){
   ob.q="";ob.notice="";finder.ai=null;
   if(rerender)renderOb(true);
 }
-function obRemoveItem(id){if(state.items.includes(id))toggle(id);ob.last=null;renderOb()}
+function obRemoveItem(id){if(owned(id))toggle(id);ob.last=null;renderOb()}
 
-const typesOf=(...cats)=>CATS.filter(c=>cats.includes(c.id)).flatMap(c=>c.items.map(([id])=>id));
+const typesOf=(...cats)=>CATS.filter(c=>cats.includes(c.id)).flatMap(c=>c.items.map(([id])=>id)).filter(listed);
 const OB_STEPS=[
  {key:"spirits",ids:()=>typesOf("spirit","liqueur"),pick:true,photo:true,next:"ob.next.wine"},
  {key:"wine",ids:()=>typesOf("wine"),pick:true,next:"ob.next.kitchen"},
@@ -3789,9 +4079,9 @@ function photoCta(){
   return [btn,file];
 }
 function meterEl(s){return el("div",{class:"meter","aria-label":t("drink.strengthAria",STRENGTH[s][1])},[1,2,3].map(k=>el("b",{class:k<=s?"f":""})))}
-function tile(id,withBottle,reach){
-  const on=have().has(id),u=on?0:(reach?reachGain(id):unlockCount(id));
-  return el("button",{type:"button",class:"tile","aria-pressed":String(on),onclick:()=>{on?obRemoveItem(id):obAdd([{id}])}},
+function tile(id,withBottle,reach,onAdd){
+  const on=owned(id),u=on?0:(reach?reachGain(id):unlockCount(id));
+  return el("button",{type:"button",class:"tile","aria-pressed":String(on),onclick:()=>{on?obRemoveItem(id):onAdd?onAdd(id):obAdd([{id}])}},
     withBottle?bottleThumb(id):null,el("span",{class:"nm"},NAME[id]),u?el("span",{class:"plus"},t("ob.plus",u)):null);
 }
 // A tappable bottle card. Updates itself in place so the row keeps its scroll position.
@@ -3808,27 +4098,62 @@ function bottleCard(type,name,style){
   return card;
 }
 // A type the user has: a wide card in the grid with that type's well-known bottles (optional), the user's own first.
+// A type the user has: a wide card in the grid showing the chosen bottles, if any, and a way to pick them.
+const kindsOf=type=>type==="whisky"?["whisky",...WHISKY]:[type];
 function typeCard(type){
-  const own=state.bottles.filter(b=>b.type===type);
-  const listed=(PRESETS[type]||[]).filter(p=>!own.some(b=>b.name===p[0]));
-  // Bottles with a photo first: they are the easiest to recognise.
-  listed.sort((a,b)=>(PHOTOS&&PHOTOS[b[0].toLowerCase()]?1:0)-(PHOTOS&&PHOTOS[a[0].toLowerCase()]?1:0));
+  const own=state.bottles.filter(b=>kindsOf(type).includes(b.type));
   const head=el("button",{type:"button",class:"tc-head","aria-pressed":"true","aria-label":t("ob.removeType",NAME[type]),onclick:()=>obRemoveItem(type)},
     bottleThumb(type),el("span",{class:"nm"},NAME[type]),el("span",{class:"x","aria-hidden":"true"},"×"));
-  const row=el("div",{class:"brow-scroll"},own.map(b=>bottleCard(type,b.name,b.style)),listed.slice(0,12).map(p=>bottleCard(type,p[0],p[1])),
-    el("button",{type:"button",class:"bcard other","aria-expanded":String(ob.qType===type),onclick:()=>{ob.qType=ob.qType===type?null:type;ob.q="";renderOb();const i=$("obSearch");if(i)i.focus()}},
-      el("span",{class:"plus-ic","aria-hidden":"true"},"+"),el("span",{class:"nm"},t("ob.other"))));
-  const sec=el("section",{class:"type-card"},head,el("p",{class:"tc-hint"},t("ob.whichHint")),row);
-  if(ob.qType===type){
-    const inp=el("input",{type:"search",id:"obSearch",placeholder:t("ob.otherPh",NAME[type]),autocomplete:"off",value:ob.q});
-    const res=el("div",{class:"ob-results"});
-    const draw=()=>finder(res,ob.q,e=>{if(e.custom){ob.manual=e.custom;renderOb()}else{ob.qType=null;obAdd([e])}},{productsOnly:true,types:new Set([type])});
-    inp.addEventListener("input",()=>{ob.q=inp.value;draw()});
-    inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();const f=res.querySelector(".ob-res");if(f)f.click()}});
-    draw();sec.append(inp,res);
-    if(ob.manual!=null)sec.append(manualForm(ob.manual,e=>{ob.manual=null;if(e){ob.qType=null;obAdd([e])}else renderOb()}));
-  }
-  return sec;
+  return el("section",{class:"type-card"},head,
+    el("p",{class:"tc-hint"},own.length?own.map(b=>b.name).join(" · "):t("ob.anyBottle",NAME[type])),
+    el("button",{type:"button",class:"btn-pill tc-pick",onclick:()=>openSheet(type)},own.length?t("ob.changeBottle"):t("ob.pickBottle")));
+}
+
+/* Bottle picker: a full screen per drink type, with search. Picking is optional. */
+function openSheet(type){ob.sheet=type;ob.sq="";ob.manual=null;finder.ai=null;$("obSheet").hidden=false;renderSheet();$("obSheet").scrollTop=0;setTimeout(()=>{const i=$("sheetSearch");if(i)i.focus({preventScroll:true})},50)}
+function closeSheet(){if(!ob.sheet)return;const ty=ob.sheet;ob.sheet=null;$("obSheet").hidden=true;renderOb();const c=document.querySelector('.type-card .tc-pick');if(c)c.focus()}
+function sheetCard(type,name,style,sub){
+  const mine=()=>state.bottles.find(b=>b.type===type&&b.name===name);
+  const card=el("button",{type:"button",class:"scard","aria-pressed":String(!!mine())},bottleThumb(type,style,null,name),el("b",{},name),sub?el("small",{},sub):null);
+  card.addEventListener("click",()=>{
+    const b=mine();
+    if(b){state.bottles=state.bottles.filter(x=>x!==b);mood.withs=mood.withs.filter(k=>k!=="b:"+b.id);commit()}
+    else obAdd([{id:type,name,style}],false);
+    card.setAttribute("aria-pressed",String(!!mine()));sheetFoot();
+  });
+  return card;
+}
+function sheetFoot(){
+  const type=ob.sheet,n=state.bottles.filter(b=>kindsOf(type).includes(b.type)).length,f=$("sheetFoot");f.innerHTML="";
+  f.append(el("button",{class:"btn"+(n?"":" light"),type:"button",onclick:closeSheet},n?t("ob.sheetDone",n):t("ob.sheetSkip",NAME[type])));
+}
+function renderSheet(){
+  const type=ob.sheet,body=$("sheetBody");body.innerHTML="";
+  const kinds=kindsOf(type),own=state.bottles.filter(b=>kinds.includes(b.type));
+  const shelf=(PRESETS[type]||[]).filter(p=>!own.some(b=>b.name===p[0]));
+  shelf.sort((a,b)=>(PHOTOS&&PHOTOS[b[0].toLowerCase()]?1:0)-(PHOTOS&&PHOTOS[a[0].toLowerCase()]?1:0));
+  // Under each bottle: its style, and for whisky also its kind (Scotch, Bourbon…).
+  const sub=(ty,st)=>[type==="whisky"?NAME[ty]:"",STYLES[ty]&&STYLES[ty][st]?STYLES[ty][st].n:""].filter(Boolean).join(" · ");
+  const inp=el("input",{type:"search",id:"sheetSearch",class:"sheet-search",placeholder:t("ob.otherPh",NAME[type]),"aria-label":t("ob.otherPh",NAME[type]),autocomplete:"off",value:ob.sq});
+  const grid=el("div",{class:"sheet-grid"}),more=el("div",{class:"ob-results"});
+  const draw=()=>{
+    const q=normText(ob.sq.trim());grid.innerHTML="";more.innerHTML="";
+    const mineCards=own.filter(b=>!q||normText(b.name).includes(q)).map(b=>sheetCard(b.type,b.name,b.style,sub(b.type,b.style)));
+    // Typed text goes through the shared search, so Hebrew names and typos match too.
+    const hits=(q?searchIndex(itemIndex(),ob.sq,40).filter(e=>e.kind==="product"&&kinds.includes(e.type)&&!own.some(b=>b.name===e.name)).map(e=>Object.assign([e.name,e.style],{7:e.type})):shelf)
+      .map(p=>{const ty=kindOf(type,p);return sheetCard(ty,p[0],p[1],sub(ty,p[1]))});
+    grid.append(...mineCards,...hits);
+    // Not on the list: the shared finder (other products of this type, Claude, or by hand).
+    if(q&&!grid.children.length)finder(more,ob.sq,e=>{if(e.custom){ob.manual=e.custom;renderSheet()}else{obAdd([e],false);ob.sq="";renderSheet()}},{productsOnly:true,types:new Set(kinds)});
+  };
+  inp.addEventListener("input",()=>{ob.sq=inp.value;draw()});
+  body.append(
+    el("p",{class:"eyebrow gold"},t("ob.sheetEyebrow")),
+    el("h2",{id:"obSheetTitle"},t("ob.sheetTitle",NAME[type])),
+    el("p",{class:"lead"},t("ob.sheetLead",NAME[type])),
+    inp,grid,more);
+  if(ob.manual!=null)body.append(manualForm(ob.manual,e=>{ob.manual=null;if(e)obAdd([e],false);renderSheet()}));
+  draw();sheetFoot();
 }
 // Steps 1–2: search, photo, then the types; a chosen type opens in place to pick bottles.
 function pickStep(body,S){
@@ -3844,9 +4169,10 @@ function pickStep(body,S){
   if(S.photo&&ob.photoOK)body.append(...photoCta());
   if(ob.notice)body.append(el("p",{class:"status err"},ob.notice));
   const H=have();
-  body.append(el("div",{class:"tiles"},list.map(id=>H.has(id)&&PRESETS[id]?typeCard(id):tile(id,true,true))));
+  const addAndPick=id=>{obAdd([{id}],false);openSheet(id)};
+  body.append(el("div",{class:"tiles"},list.map(id=>owned(id,H)&&PRESETS[id]?typeCard(id):tile(id,true,true,PRESETS[id]?addAndPick:null))));
 }
-function obGo(step){ob.step=step;ob.last=null;ob.q="";ob.qType=null;ob.manual=null;ob.notice="";renderOb();$("ob").scrollTop=0}
+function obGo(step){if(ob.sheet){ob.sheet=null;$("obSheet").hidden=true}ob.step=step;ob.last=null;ob.q="";ob.qType=null;ob.manual=null;ob.notice="";renderOb();$("ob").scrollTop=0}
 function renderOb(bump){
   const y=$("ob").scrollTop;
   stepsEl();
@@ -3898,11 +4224,12 @@ async function obIdentify(file){
 }
 function obSetPhoto(ok){ob.photoOK=!!ok;if(!$("ob").hidden)renderOb()}
 function openOb(){ob={...ob,step:barEmpty()?0:1,q:"",qType:null,last:null,notice:""};$("ob").hidden=false;document.body.style.overflow="hidden";renderOb()}
-function closeOb(){$("ob").hidden=true;document.body.style.overflow="";try{localStorage.setItem(OB_KEY,"1")}catch(e){}}
+function closeOb(){ob.sheet=null;$("obSheet").hidden=true;$("ob").hidden=true;document.body.style.overflow="";try{localStorage.setItem(OB_KEY,"1")}catch(e){}}
 function finishOb(){closeOb();setTab(barEmpty()?"bar":"mix");window.scrollTo({top:0})}
 function finishBar(){closeOb();setTab("bar");window.scrollTo({top:0})}
 $("obClose").addEventListener("click",closeOb);
-document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("recipe").hidden)closeRecipe();else if(!$("ob").hidden)closeOb()});
+$("sheetClose").addEventListener("click",closeSheet);
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("recipe").hidden)closeRecipe();else if(ob.sheet)closeSheet();else if(!$("ob").hidden)closeOb()});
 $("openOb").addEventListener("click",openOb);
 let obSeen=null;try{obSeen=localStorage.getItem(OB_KEY)}catch(e){}
 
@@ -3932,6 +4259,7 @@ function setLang(next){
   applyLocale();setSync($("sync").classList.contains("on"),syncKey);render();
   const v=document.querySelector(".app").dataset.view;if(v==="shop")renderShop();if(v==="menu")renderMenu();
   if(!$("ob").hidden)renderOb();
+  if(ob.sheet)renderSheet();
   if(rcOpen)openRecipe(rcOpen);
   ["bottleSearch","obSearch","wineSearch"].forEach(id=>{const i=$(id);if(i&&i.value.trim())i.dispatchEvent(new Event("input"))});
   window.dispatchEvent(new Event("hb-lang")); // lets the web build repaint its account button

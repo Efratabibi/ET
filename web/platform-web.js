@@ -90,11 +90,31 @@
     ".gate .or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px}.gate .or::before,.gate .or::after{content:'';flex:1;border-top:1px solid var(--line)}"+
     ".gate .err{color:var(--warn);font-size:14px;margin:0;min-height:1.2em}"+
     ".gate .note{font-size:13px;color:var(--muted);text-align:center;margin:0}"+
+    ".gate .gtabs{display:grid;grid-template-columns:1fr 1fr;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:3px;margin-top:10px}"+
+    ".gate .gtabs button{border:0;border-radius:9px;min-height:42px;background:transparent;color:var(--ink);font:600 15px var(--body);cursor:pointer}"+
+    ".gate .gtabs button[aria-selected=true]{background:var(--cream);color:var(--bg)}"+
+    ".gate .pw{position:relative}.gate .pw input{padding-inline-end:76px}"+
+    ".gate .eye{position:absolute;inset-block:0;inset-inline-end:6px;border:0;background:none;color:var(--muted);font:600 13px var(--body);cursor:pointer;padding:0 10px}"+
+    ".gate .hint{margin:-4px 0 0;font-size:13px;color:var(--muted)}"+
+    ".gate form{margin-top:6px}"+
     "#sync{cursor:pointer}";
   document.head.appendChild(css);
   document.documentElement.classList.add("hb-gate"); // hide the app until we know who this is
 
-  let step={name:"email",email:""};
+  // Steps: signin, signup, forgot, resetSent, confirm (sign-up needs the email confirmed), newpass (from a reset link),
+  // link and code (sign in with an emailed link instead of a password).
+  // A reset link lands here with "type=recovery"; remember it so the page asks for a new password.
+  if(/type=recovery/.test(location.hash+location.search))sessionStorage.setItem("hb-recovery","1");
+  let step={name:sessionStorage.getItem("hb-recovery")?"newpass":"signin",email:""};
+  const errText=(error,fallback)=>{
+    const m=(error&&(error.code||error.message)||"").toLowerCase();
+    if(error&&error.status===429||/rate|too many/.test(m))return tr("gate.tooMany");
+    if(/invalid.*cred|invalid login/.test(m))return tr("gate.badLogin");
+    if(/not.*confirmed/.test(m))return tr("gate.notConfirmed");
+    if(/already|exists/.test(m))return tr("gate.exists");
+    if(/weak|password.*(short|least|characters)/.test(m))return tr("gate.weakPassword");
+    return tr(fallback);
+  };
   function gate(){
     let g=document.getElementById("gate");
     if(!g){g=document.createElement("div");g.id="gate";g.className="gate";g.setAttribute("role","dialog");g.setAttribute("aria-modal","true");document.body.appendChild(g)}
@@ -106,49 +126,103 @@
     g.querySelector("[data-lang]").onclick=()=>{if(lb)lb.click()}; // the app switches language and fires hb-lang
     const body=g.querySelector("[data-body]");
     const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e};
-    if(step.name==="email"){
-      const h=el("h1");h.append(tr("app.h1a").trim(),document.createElement("br"),tr("app.h1b"));
-      body.append(el("div","eyebrow gold",tr("gate.eyebrow")),h,el("p","motto",tr("app.motto")),el("p","lead",tr("gate.lead")));
-      if(cfg.google){
-        const gb=el("button","btn ghost",tr("acct.google"));gb.type="button";
-        gb.onclick=()=>sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin}});
-        body.append(gb,el("div","or",tr("gate.or")));
-      }
-      const f=el("form");const lab=el("label",null,tr("gate.emailLabel"));lab.htmlFor="gate-email";
-      const inp=el("input");inp.id="gate-email";inp.type="email";inp.required=true;inp.autocomplete="email";inp.inputMode="email";inp.placeholder="name@example.com";inp.value=step.email;
-      const btn=el("button","btn",tr("gate.send"));btn.type="submit";const msg=el("p","err");
-      f.append(lab,inp,btn,msg);
-      f.onsubmit=async e=>{e.preventDefault();btn.disabled=true;btn.textContent=tr("gate.sending");
-        const email=inp.value.trim();const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin}});
-        btn.disabled=false;btn.textContent=tr("gate.send");
-        if(error){msg.textContent=error.status===429?tr("gate.tooMany"):tr("acct.sendFailed");return}
-        step={name:"code",email};gate();};
-      body.append(f,el("p","note",tr("gate.note")));
-      setTimeout(()=>inp.focus(),0);
-    }else{
+    const go=(name,extra)=>{step={...step,...extra,name};gate()};
+    const field=(id,label,type,auto)=>{
+      const lab=el("label",null,label);lab.htmlFor=id;
+      const inp=el("input");inp.id=id;inp.type=type;inp.required=true;inp.autocomplete=auto;
+      if(type==="email"){inp.inputMode="email";inp.placeholder="name@example.com";inp.value=step.email||""}
+      if(type!=="password")return [lab,inp];
+      inp.minLength=8;
+      // Show / hide, so a typo on a phone keyboard is easy to catch.
+      const wrap=el("div","pw");const eye=el("button","eye",tr("gate.show"));eye.type="button";
+      eye.onclick=()=>{const show=inp.type==="password";inp.type=show?"text":"password";eye.textContent=tr(show?"gate.hide":"gate.show")};
+      wrap.append(inp,eye);return [lab,wrap,inp];
+    };
+    const row=(...items)=>{const r=el("div","row");r.append(...items);return r};
+    const link=(text,fn)=>{const b=el("button","link",text);b.type="button";b.onclick=fn;return b};
+    const submit=(f,btn,msg,run)=>{f.onsubmit=async e=>{e.preventDefault();const label=btn.textContent;btn.disabled=true;btn.textContent=tr("gate.working");msg.textContent="";
+      try{await run()}finally{if(btn.isConnected){btn.disabled=false;btn.textContent=label}}}};
+    const title=()=>{const h=el("h1");h.append(tr("app.h1a").trim(),document.createElement("br"),tr("app.h1b"));
+      body.append(el("div","eyebrow gold",tr("gate.eyebrow")),h,el("p","motto",tr("app.motto")))};
+    const google=()=>{if(!cfg.google)return;const gb=el("button","btn ghost",tr("acct.google"));gb.type="button";
+      gb.onclick=()=>sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin}});body.append(gb,el("div","or",tr("gate.or")))};
+    const n=step.name;
+    if(n==="signin"||n==="signup"){
+      title();
+      body.append(el("p","lead",tr(n==="signin"?"gate.lead":"gate.signupLead")));
+      // Two tabs: sign in / create an account.
+      const tabs=el("div","gtabs");tabs.setAttribute("role","tablist");
+      [["signin","gate.tabSignin"],["signup","gate.tabSignup"]].forEach(([k,key])=>{const b=el("button",null,tr(key));b.type="button";b.setAttribute("role","tab");b.setAttribute("aria-selected",String(n===k));b.onclick=()=>{if(n!==k)go(k,{email:(document.getElementById("gate-email")||{}).value||step.email})};tabs.append(b)});
+      body.append(tabs);
+      google();
+      const f=el("form");const [el1,emailIn]=field("gate-email",tr("gate.emailLabel"),"email","email");
+      const [pl,pw,pwIn]=field("gate-pass",tr(n==="signin"?"gate.passLabel":"gate.newPassLabel"),"password",n==="signin"?"current-password":"new-password");
+      const btn=el("button","btn",tr(n==="signin"?"gate.signin":"gate.signup"));btn.type="submit";const msg=el("p","err");
+      f.append(el1,emailIn,pl,pw);if(n==="signup")f.append(el("p","hint",tr("gate.passHint")));f.append(btn,msg);
+      submit(f,btn,msg,async()=>{
+        const email=emailIn.value.trim(),password=pwIn.value;step.email=email;
+        if(n==="signin"){const {error}=await sb.auth.signInWithPassword({email,password});if(error)msg.textContent=errText(error,"gate.badLogin");return} // success reloads via onAuthStateChange
+        const {data,error}=await sb.auth.signUp({email,password,options:{emailRedirectTo:location.origin}});
+        if(error){msg.textContent=errText(error,"acct.sendFailed");return}
+        // Supabase answers a sign-up for a taken address without an error but with no identities.
+        if(data&&data.user&&Array.isArray(data.user.identities)&&!data.user.identities.length){msg.textContent=tr("gate.exists");return}
+        if(!data.session)go("confirm",{email});
+      });
+      body.append(f);
+      const links=row();
+      if(n==="signin")links.append(link(tr("gate.forgot"),()=>go("forgot",{email:emailIn.value.trim()})));
+      links.append(link(tr("gate.useLink"),()=>go("link",{email:emailIn.value.trim()})));
+      body.append(links,el("p","note",tr("gate.note")));
+      setTimeout(()=>(emailIn.value?pwIn:emailIn).focus(),0);
+    }else if(n==="forgot"||n==="link"){
+      body.append(el("h2",null,tr(n==="forgot"?"gate.forgotTitle":"gate.linkTitle")),el("p","lead",tr(n==="forgot"?"gate.forgotLead":"gate.linkLead")));
+      const f=el("form");const [l1,emailIn]=field("gate-email",tr("gate.emailLabel"),"email","email");
+      const btn=el("button","btn",tr(n==="forgot"?"gate.sendReset":"gate.send"));btn.type="submit";const msg=el("p","err");
+      f.append(l1,emailIn,btn,msg);
+      submit(f,btn,msg,async()=>{
+        const email=emailIn.value.trim();
+        const {error}=n==="forgot"?await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin})
+          :await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin}});
+        if(error){msg.textContent=errText(error,"acct.sendFailed");return}
+        go(n==="forgot"?"resetSent":"code",{email});
+      });
+      body.append(f,row(link(tr("gate.back"),()=>go("signin"))));
+      setTimeout(()=>emailIn.focus(),0);
+    }else if(n==="resetSent"||n==="confirm"){
+      body.append(el("h2",null,tr("gate.checkTitle")),el("p","lead",tr(n==="resetSent"?"gate.resetLead":"gate.confirmLead",step.email)),
+        row(link(tr("gate.back"),()=>go("signin"))));
+    }else if(n==="newpass"){
+      body.append(el("h2",null,tr("gate.newPassTitle")),el("p","lead",tr("gate.newPassLead")));
+      const f=el("form");const [pl,pw,pwIn]=field("gate-pass",tr("gate.newPassLabel"),"password","new-password");
+      const btn=el("button","btn",tr("gate.savePass"));btn.type="submit";const msg=el("p","err");
+      f.append(pl,pw,el("p","hint",tr("gate.passHint")),btn,msg);
+      submit(f,btn,msg,async()=>{
+        const {error}=await sb.auth.updateUser({password:pwIn.value});
+        if(error){msg.textContent=errText(error,"gate.resetFailed");return}
+        sessionStorage.removeItem("hb-recovery");history.replaceState(null,"",location.pathname);location.reload();
+      });
+      body.append(f);
+      setTimeout(()=>pwIn.focus(),0);
+    }else{ // code: the email link was sent; a code typed here works too
       body.append(el("h2",null,tr("gate.checkTitle")),el("p","lead",tr("gate.checkLead",step.email)));
       const f=el("form");const lab=el("label",null,tr("gate.codeLabel"));lab.htmlFor="gate-code";
       const inp=el("input","code");inp.id="gate-code";inp.inputMode="numeric";inp.autocomplete="one-time-code";inp.maxLength=10;inp.required=true;
       const btn=el("button","btn",tr("gate.verify"));btn.type="submit";const msg=el("p","err");
       f.append(lab,inp,btn,msg);
-      f.onsubmit=async e=>{e.preventDefault();btn.disabled=true;
+      submit(f,btn,msg,async()=>{
         const {error}=await sb.auth.verifyOtp({email:step.email,token:inp.value.replace(/\D/g,""),type:"email"});
-        btn.disabled=false;if(error){msg.textContent=tr("gate.badCode");return} // success reloads through onAuthStateChange
-      };
-      const row=el("div","row");
-      const again=el("button","link",tr("gate.resend"));again.type="button";
-      again.onclick=async()=>{const {error}=await sb.auth.signInWithOtp({email:step.email,options:{emailRedirectTo:location.origin}});msg.textContent=error?(error.status===429?tr("gate.tooMany"):tr("acct.sendFailed")):"✓"};
-      const other=el("button","link",tr("gate.otherEmail"));other.type="button";other.onclick=()=>{step={name:"email",email:""};gate()};
-      row.append(again,other);
-      body.append(f,row);
-      setTimeout(()=>inp.focus(),0);
+        if(error)msg.textContent=tr("gate.badCode"); // success reloads through onAuthStateChange
+      });
+      body.append(f,row(link(tr("gate.resend"),async()=>{const {error}=await sb.auth.signInWithOtp({email:step.email,options:{emailRedirectTo:location.origin}});msg.textContent=error?errText(error,"acct.sendFailed"):"✓"}),
+        link(tr("gate.back"),()=>go("signin"))));
     }
   }
 
   // Signed in: the save indicator signs out, with a second tap to confirm.
   async function paintAccount(){
     const s=await session(),el=document.getElementById("sync");
-    if(!s){gate();return}
+    if(!s){if(step.name==="newpass")step.name="signin";gate();return}
+    if(sessionStorage.getItem("hb-recovery")){step.name="newpass";document.documentElement.classList.add("hb-gate");gate();return}
     document.documentElement.classList.remove("hb-gate");
     sessionStorage.removeItem("hb-reloaded");
     const old=document.getElementById("gate");if(old)old.remove();
@@ -164,6 +238,8 @@
   // Just signed in (code, email link or Google): reload once so the app starts with the account's bar.
   // The flag stops a second reload if the event repeats while the page is loading.
   sb.auth.onAuthStateChange((event)=>{
+    if(event==="PASSWORD_RECOVERY"){sessionStorage.setItem("hb-recovery","1");step.name="newpass";document.documentElement.classList.add("hb-gate");gate();return}
+    if(sessionStorage.getItem("hb-recovery"))return;
     if(event==="SIGNED_IN"&&document.documentElement.classList.contains("hb-gate")&&!sessionStorage.getItem("hb-reloaded")){
       sessionStorage.setItem("hb-reloaded","1");location.reload();
     }

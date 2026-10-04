@@ -58,7 +58,7 @@ Steps marked **[you]** need your accounts.
    - New project. Region: Frankfurt, the closest to Israel.
    - SQL Editor → paste `supabase/schema.sql` → Run.
    - Authentication → Providers: Email is on by default. Google needs an OAuth client from Google Cloud Console; the provider page explains how. Once it works, set `AUTH_GOOGLE=on` in Vercel to show the "Continue with Google" button.
-   - Sign-in is by an email link. The sign-in screen also takes a 6-digit code, which helps on phones where an app installed to the home screen and the mail link open in different browsers. Supabase lets you edit the email (Authentication → Email Templates → Magic Link: add `{{ .Token }}`) only after custom SMTP is set up.
+   - Sign-in is by email and password: people create an account once and then sign in without waiting for an email. "Forgot password" emails a reset link, and signing in with an email link (or its 6-digit code) remains as an option. Authentication → Providers → Email → "Confirm email" decides whether a new account must confirm its address first (one email at sign-up); with it off, nobody gets an email unless they reset a password. Authentication → URL Configuration → Redirect URLs must include the site address, so reset links come back to it.
    - Supabase's built-in email is rate-limited (a few emails an hour). Before inviting many people, turn on Google sign-in or set up custom SMTP under Authentication → Emails.
    - Authentication → URL Configuration: set Site URL to the address Vercel gives you.
    - Project Settings → API: copy `URL`, `anon` and `service_role`. These go straight into Vercel, never into a chat.

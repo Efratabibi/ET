@@ -688,15 +688,21 @@ const PLATFORM=window.HB_PLATFORM||{
 
 /* ---------- catalog ---------- */
 const CATS=[ // names come from the locale
- {id:"spirit",items:["vodka","gin","white_rum","dark_rum","tequila","mezcal","bourbon","rye","scotch","irish","japanese","world_whisky","brandy","arak","cachaca","pisco"].map(id=>[id])},
+ {id:"spirit",items:["vodka","gin","white_rum","dark_rum","tequila","mezcal","whisky","bourbon","rye","scotch","irish","japanese","world_whisky","brandy","arak","cachaca","pisco"].map(id=>[id])},
  {id:"liqueur",items:["triple_sec","campari","aperol","sweet_vermouth","dry_vermouth","kahlua","amaretto","baileys","limoncello","elderflower","peach","blue_curacao","cassis","maraschino","chartreuse","amaro","absinthe"].map(id=>[id])},
  {id:"wine",items:["prosecco","white_wine","red_wine","beer"].map(id=>[id])},
  {id:"mixer",items:["orange","cranberry","pineapple","grapefruit","tomato","soda","tonic","cola","ginger_beer","sprite","coffee"].map(id=>[id])},
  {id:"pantry",items:["lime","lemon","mint","basil","ginger","sugar","simple_syrup","honey","grenadine","bitters","cream","coconut_cream","egg_white","orgeat","cucumber","berries","passion_fruit"].map(id=>[id])}
 ];
 const NAME={},CAT_OF={};CATS.forEach(c=>c.items.forEach(([id])=>{CAT_OF[id]=c.id}));
-// Sugar and simple syrup stand in for each other.
+// Sugar and simple syrup stand in for each other, and so do all whiskies.
+// The app shows one "Whisky"; the kinds stay in the data for bottles, styles and prices.
+const WHISKY=["bourbon","rye","scotch","irish","japanese","world_whisky"];
 const EQUIV={sugar:["simple_syrup"],simple_syrup:["sugar"]};
+["whisky",...WHISKY].forEach(w=>EQUIV[w]=["whisky",...WHISKY].filter(x=>x!==w));
+const listed=id=>!WHISKY.includes(id); // kinds of whisky are not listed on their own
+// Whether the bar has this item; "whisky" counts any kind of whisky.
+function owned(id,H=have()){return id==="whisky"?H.has("whisky")||WHISKY.some(w=>H.has(w)):H.has(id)}
 const GROUPS=[
  {key:"whiskey",ids:["bourbon","rye","scotch","irish","japanese","world_whisky"]},
  {key:"rum",ids:["white_rum","dark_rum"]}
@@ -991,6 +997,8 @@ BRANDS.forEach(b=>b.exprs.forEach(([x,style,il,us,type,note])=>{
   const t=type||b.type;
   addProduct({name:(b.brand+" "+x).trim(),brand:b.brand,he:b.he,type:t,style,il:rng(il),us:rng(us),note});
 }));
+PRESETS.whisky=WHISKY.flatMap(w=>(PRESETS[w]||[]).map(p=>Object.assign(p.slice(),{7:w})));
+const kindOf=(type,p)=>p[7]||type; // a preset's real type (whisky entries carry their kind)
 
 /* ---------- search engine: typo-tolerant, Hebrew/English mixed ---------- */
 const FINALS={"ך":"כ","ם":"מ","ן":"נ","ף":"פ","ץ":"צ"};
@@ -1368,7 +1376,8 @@ function bottleScore(d,b){
 function bottlePicks(d){
   const sel=selectedBottle(),picks={};
   d.i.forEach(([spec],idx)=>{
-    let cands=state.bottles.filter(b=>ids(spec).includes(b.type));
+    const want=new Set(ids(spec).flatMap(x=>[x,...(EQUIV[x]||[])]));
+    let cands=state.bottles.filter(b=>want.has(b.type));
     if(sel&&cands.includes(sel))cands=[sel];
     if(!cands.length)return;
     const scored=cands.map(b=>({b,score:idx===0?bottleScore(d,b):0})).sort((a,b)=>b.score-a.score);
@@ -1394,14 +1403,14 @@ function renderInventory(){
   const H=have(),box=$("inventory");box.innerHTML="";
   const q=filterText.trim();
   CATS.forEach(c=>{
-    const items=c.items.filter(([id,n])=>!q||n.toLowerCase().includes(q.toLowerCase())||id.includes(q.toLowerCase()));
+    const items=c.items.filter(([id,n])=>listed(id)&&(!q||n.toLowerCase().includes(q.toLowerCase())||id.includes(q.toLowerCase())));
     if(!items.length)return;
-    const n=c.items.filter(([id])=>H.has(id)).length;
+    const n=c.items.filter(([id])=>listed(id)&&owned(id,H)).length,total=c.items.filter(([id])=>listed(id)).length;
     box.append(el("div",{class:"cat"},
-      el("div",{class:"cat-h"},el("h3",{},c.name),el("small",{},n+" / "+c.items.length)),
+      el("div",{class:"cat-h"},el("h3",{},c.name),el("small",{},n+" / "+total)),
       el("div",{class:"chips"},items.map(([id,name])=>{
-        const bc=state.bottles.filter(b=>b.type===id).length;
-        return el("button",{type:"button",class:"chip","aria-pressed":String(H.has(id)),onclick:()=>toggle(id)},name,bc?el("span",{class:"n"},"· "+bc):null);
+        const bc=state.bottles.filter(b=>b.type===id||id==="whisky"&&WHISKY.includes(b.type)).length;
+        return el("button",{type:"button",class:"chip","aria-pressed":String(owned(id,H)),onclick:()=>toggle(id)},name,bc?el("span",{class:"n"},"· "+bc):null);
       }))
     ));
   });
@@ -1417,6 +1426,14 @@ function renderInventory(){
 }
 
 function toggle(id){
+  if(id==="whisky"){
+    // On: add plain whisky. Off: remove every kind of whisky and its bottles.
+    if(!owned("whisky")){state.items.push("whisky");commit();return}
+    const kinds=new Set(["whisky",...WHISKY]),gone=new Set(state.bottles.filter(b=>kinds.has(b.type)).map(b=>"b:"+b.id));
+    state.items=state.items.filter(x=>!kinds.has(x));state.bottles=state.bottles.filter(b=>!kinds.has(b.type));
+    mood.withs=mood.withs.filter(k=>!(k.startsWith("i:")&&kinds.has(k.slice(2)))&&!gone.has(k));
+    commit();return;
+  }
   const i=state.items.indexOf(id);
   if(i>=0){
     state.items.splice(i,1);
@@ -1504,7 +1521,7 @@ function fitInfo(d,picks){
   }
   return {b,cls,verdict,others,tip};
 }
-function whereBuyType(missing){return missing.length?ids(missing[0]).find(x=>PRESETS[x]):null}
+function whereBuyType(missing){if(!missing.length)return null;const ty=ids(missing[0]).find(x=>PRESETS[x]);return ty&&WHISKY.includes(ty)?"whisky":ty}
 
 function drinkCard(d,H,missing){
   const fi=fitInfo(d,bottlePicks(d));
@@ -1817,7 +1834,7 @@ function unlockCount(type){
   return DRINKS.filter(d=>analyze(d,H).length&&!analyze(d,H2).length).length;
 }
 function suggestions(){
-  return Object.keys(PRESETS).filter(t=>!state.items.includes(t)).map(t=>({t,n:unlockCount(t)})).filter(x=>x.n>0).sort((a,b)=>b.n-a.n).slice(0,6);
+  return Object.keys(PRESETS).filter(t=>listed(t)&&!owned(t)).map(t=>({t,n:unlockCount(t)})).filter(x=>x.n>0).sort((a,b)=>b.n-a.n).slice(0,6);
 }
 function goodFor(type,style){
   const b={type,style};
@@ -1849,10 +1866,11 @@ function renderShop(){
   sug.slice(0,4).forEach(({t:ty,n})=>sg.append(el("button",{type:"button",class:"sug-row","aria-pressed":String(shop.type===ty),onclick:()=>{shop.type=ty;shop.style="";renderShop()}},el("b",{},NAME[ty]),el("span",{},t("ob.plus",n)))));
 
   const ts=$("typeSeg");ts.innerHTML="";
-  Object.keys(PRESETS).filter(t=>CAT_OF[t]==="spirit"||CAT_OF[t]==="liqueur").forEach(t=>ts.append(el("button",{type:"button",class:"chip","aria-pressed":String(shop.type===t),onclick:()=>{shop.type=t;shop.style="";renderShop()}},NAME[t])));
-  const styles=STYLES[shop.type]||{},ss=$("styleSeg");ss.innerHTML="";
+  Object.keys(PRESETS).filter(t=>listed(t)&&(CAT_OF[t]==="spirit"||CAT_OF[t]==="liqueur")).forEach(t=>ts.append(el("button",{type:"button",class:"chip","aria-pressed":String(shop.type===t),onclick:()=>{shop.type=t;shop.style="";renderShop()}},NAME[t])));
+  // Whisky's "styles" are its kinds: Bourbon, Scotch, Irish…
+  const styles=shop.type==="whisky"?Object.fromEntries(WHISKY.filter(w=>PRESETS[w]).map(w=>[w,{n:NAME[w],t:[]}])):STYLES[shop.type]||{},ss=$("styleSeg");ss.innerHTML="";
   [["",t("shop.allStyles"),null]].concat(Object.entries(styles).filter(([,s])=>s.n).map(([k,s])=>[k,s.n,s.t])).forEach(([k,n,notes])=>ss.append(
-    el("button",{type:"button",class:"chip","aria-pressed":String(shop.style===k),title:notes?notes.map(x=>NOTE[x]).join(", "):null,onclick:()=>{shop.style=k;renderShop()}},n)));
+    el("button",{type:"button",class:"chip","aria-pressed":String(shop.style===k),title:notes&&notes.length?notes.map(x=>NOTE[x]).join(", "):null,onclick:()=>{shop.style=k;renderShop()}},n)));
   // On phones these rows scroll sideways; keep the selected chip visible after a re-render.
   [ts,ss].forEach(row=>{const a=row.querySelector('[aria-pressed="true"]');if(!a||row.scrollWidth<=row.clientWidth)return;
     const r=a.getBoundingClientRect(),p=row.getBoundingClientRect();row.scrollLeft+=(r.left+r.width/2)-(p.left+p.width/2)});
@@ -1860,7 +1878,7 @@ function renderShop(){
   const q=shop.q.trim().toLowerCase();
   let list=[];
   if(q)searchIndex(itemIndex(),shop.q,24).filter(e=>e.kind==="product").forEach(e=>list.push({t:e.type,p:[e.name,e.style,e.il[0],e.il[1],e.us[0],e.us[1],e.note||null]}));
-  else (PRESETS[shop.type]||[]).forEach(p=>{if(!shop.style||p[1]===shop.style)list.push({t:shop.type,p})});
+  else (PRESETS[shop.type]||[]).forEach(p=>{if(!shop.style||(shop.type==="whisky"?p[7]:p[1])===shop.style)list.push({t:kindOf(shop.type,p),p})});
   list.sort((a,b)=>{const ra=priceRange(a.p),rb=priceRange(b.p);return (ra?ra[0]:1e9)-(rb?rb[0]:1e9)});
 
   $("shopTitle").textContent=q?t("shop.results"):NAME[shop.type]+(shop.style?" · "+styles[shop.style].n:"");
@@ -2152,7 +2170,7 @@ $("menuCountry").addEventListener("change",e=>{shop.country=e.target.value;setPr
 /* ---------- bottle thumbnails: a drawn bottle in the drink's shape and colour ---------- */
 // "clear" drinks take the theme's line colour so they read as clear glass in both themes.
 const LIQUID={vodka:"clear",gin:"clear",white_rum:"clear",mezcal:"clear",arak:"clear",cachaca:"clear",pisco:"clear",maraschino:"clear",triple_sec:"clear",
- tequila:"clear",dark_rum:"#8A4B1C",bourbon:"#B5651D",rye:"#A85A1A",scotch:"#C07A2A",irish:"#C68A3A",japanese:"#B8732A",world_whisky:"#B06A24",brandy:"#93441A",
+ tequila:"clear",dark_rum:"#8A4B1C",whisky:"#B9702A",bourbon:"#B5651D",rye:"#A85A1A",scotch:"#C07A2A",irish:"#C68A3A",japanese:"#B8732A",world_whisky:"#B06A24",brandy:"#93441A",
  campari:"#C8102E",aperol:"#F26B21",sweet_vermouth:"#6B1A1A",dry_vermouth:"#E6DDB4",kahlua:"#2B1A12",amaretto:"#A0521D",baileys:"#D2B98F",limoncello:"#EFCF2F",
  elderflower:"#EFE6BE",peach:"#F2A774",blue_curacao:"#1E7FD0",cassis:"#4A0E2E",chartreuse:"#7DB33A",absinthe:"#9BC53D",amaro:"#3B2414",bitters:"#7A2E12",
  red_wine:"#6E0F24",white_wine:"#E6D57E",rose:"#EE9AA2",prosecco:"#EBDB8C",beer:"#D9A13A"};
@@ -2184,7 +2202,7 @@ function bottleThumb(type,style,note,name){
   if(photo){const s=el("span",{class:"thumb photo","aria-hidden":"true"});s.append(el("img",{src:photo,alt:"",loading:"lazy",decoding:"async"}));return s}
   const kind=type&&type!=="red_wine"&&type!=="white_wine"?type:(note?wineKind(note):type);
   const shape=["red_wine","white_wine","rose","prosecco"].includes(kind)?"wine"
-    :["bourbon","rye","scotch","irish","japanese","world_whisky","brandy","dark_rum"].includes(kind)?"square"
+    :["whisky","bourbon","rye","scotch","irish","japanese","world_whisky","brandy","dark_rum"].includes(kind)?"square"
     :CAT_OF[kind]==="liqueur"?"round":CAT_OF[kind]==="spirit"?"tall":"small";
   let liquid=LIQUID[kind]||"clear";
   const fizz=kind==="prosecco";
@@ -2281,7 +2299,7 @@ function finder(box,q,onPick,opts={}){
 }
 /* Manual add form: name + type + style */
 function manualForm(name,onDone){
-  const types=Object.keys(NAME).filter(id=>CAT_OF[id]==="spirit"||CAT_OF[id]==="liqueur"||CAT_OF[id]==="wine");
+  const types=Object.keys(NAME).filter(id=>id!=="whisky"&&(CAT_OF[id]==="spirit"||CAT_OF[id]==="liqueur"||CAT_OF[id]==="wine"));
   const nameIn=el("input",{type:"text",id:"man-name",value:name,"aria-label":t("find.bottleName")});
   const typeSel=el("select",{id:"man-type","aria-label":t("find.type")},el("option",{value:""},t("find.whichType")),types.map(id=>el("option",{value:id},NAME[id])));
   const styleSel=el("select",{id:"man-style","aria-label":t("find.style"),hidden:""});
@@ -2332,9 +2350,9 @@ function obAdd(entries,rerender=true){
   ob.q="";ob.notice="";finder.ai=null;
   if(rerender)renderOb(true);
 }
-function obRemoveItem(id){if(state.items.includes(id))toggle(id);ob.last=null;renderOb()}
+function obRemoveItem(id){if(owned(id))toggle(id);ob.last=null;renderOb()}
 
-const typesOf=(...cats)=>CATS.filter(c=>cats.includes(c.id)).flatMap(c=>c.items.map(([id])=>id));
+const typesOf=(...cats)=>CATS.filter(c=>cats.includes(c.id)).flatMap(c=>c.items.map(([id])=>id)).filter(listed);
 const OB_STEPS=[
  {key:"spirits",ids:()=>typesOf("spirit","liqueur"),pick:true,photo:true,next:"ob.next.wine"},
  {key:"wine",ids:()=>typesOf("wine"),pick:true,next:"ob.next.kitchen"},
@@ -2369,7 +2387,7 @@ function photoCta(){
 }
 function meterEl(s){return el("div",{class:"meter","aria-label":t("drink.strengthAria",STRENGTH[s][1])},[1,2,3].map(k=>el("b",{class:k<=s?"f":""})))}
 function tile(id,withBottle,reach,onAdd){
-  const on=have().has(id),u=on?0:(reach?reachGain(id):unlockCount(id));
+  const on=owned(id),u=on?0:(reach?reachGain(id):unlockCount(id));
   return el("button",{type:"button",class:"tile","aria-pressed":String(on),onclick:()=>{on?obRemoveItem(id):onAdd?onAdd(id):obAdd([{id}])}},
     withBottle?bottleThumb(id):null,el("span",{class:"nm"},NAME[id]),u?el("span",{class:"plus"},t("ob.plus",u)):null);
 }
@@ -2388,8 +2406,9 @@ function bottleCard(type,name,style){
 }
 // A type the user has: a wide card in the grid with that type's well-known bottles (optional), the user's own first.
 // A type the user has: a wide card in the grid showing the chosen bottles, if any, and a way to pick them.
+const kindsOf=type=>type==="whisky"?["whisky",...WHISKY]:[type];
 function typeCard(type){
-  const own=state.bottles.filter(b=>b.type===type);
+  const own=state.bottles.filter(b=>kindsOf(type).includes(b.type));
   const head=el("button",{type:"button",class:"tc-head","aria-pressed":"true","aria-label":t("ob.removeType",NAME[type]),onclick:()=>obRemoveItem(type)},
     bottleThumb(type),el("span",{class:"nm"},NAME[type]),el("span",{class:"x","aria-hidden":"true"},"×"));
   return el("section",{class:"type-card"},head,
@@ -2412,26 +2431,27 @@ function sheetCard(type,name,style,sub){
   return card;
 }
 function sheetFoot(){
-  const type=ob.sheet,n=state.bottles.filter(b=>b.type===type).length,f=$("sheetFoot");f.innerHTML="";
+  const type=ob.sheet,n=state.bottles.filter(b=>kindsOf(type).includes(b.type)).length,f=$("sheetFoot");f.innerHTML="";
   f.append(el("button",{class:"btn"+(n?"":" light"),type:"button",onclick:closeSheet},n?t("ob.sheetDone",n):t("ob.sheetSkip",NAME[type])));
 }
 function renderSheet(){
   const type=ob.sheet,body=$("sheetBody");body.innerHTML="";
-  const own=state.bottles.filter(b=>b.type===type);
-  const listed=(PRESETS[type]||[]).filter(p=>!own.some(b=>b.name===p[0]));
-  listed.sort((a,b)=>(PHOTOS&&PHOTOS[b[0].toLowerCase()]?1:0)-(PHOTOS&&PHOTOS[a[0].toLowerCase()]?1:0));
-  const styleName=st=>STYLES[type]&&STYLES[type][st]?STYLES[type][st].n:"";
+  const kinds=kindsOf(type),own=state.bottles.filter(b=>kinds.includes(b.type));
+  const shelf=(PRESETS[type]||[]).filter(p=>!own.some(b=>b.name===p[0]));
+  shelf.sort((a,b)=>(PHOTOS&&PHOTOS[b[0].toLowerCase()]?1:0)-(PHOTOS&&PHOTOS[a[0].toLowerCase()]?1:0));
+  // Under each bottle: its style, and for whisky also its kind (Scotch, Bourbon…).
+  const sub=(ty,st)=>[type==="whisky"?NAME[ty]:"",STYLES[ty]&&STYLES[ty][st]?STYLES[ty][st].n:""].filter(Boolean).join(" · ");
   const inp=el("input",{type:"search",id:"sheetSearch",class:"sheet-search",placeholder:t("ob.otherPh",NAME[type]),"aria-label":t("ob.otherPh",NAME[type]),autocomplete:"off",value:ob.sq});
   const grid=el("div",{class:"sheet-grid"}),more=el("div",{class:"ob-results"});
   const draw=()=>{
     const q=normText(ob.sq.trim());grid.innerHTML="";more.innerHTML="";
-    const mineCards=own.filter(b=>!q||normText(b.name).includes(q)).map(b=>sheetCard(type,b.name,b.style,styleName(b.style)));
+    const mineCards=own.filter(b=>!q||normText(b.name).includes(q)).map(b=>sheetCard(b.type,b.name,b.style,sub(b.type,b.style)));
     // Typed text goes through the shared search, so Hebrew names and typos match too.
-    const hits=(q?searchIndex(itemIndex(),ob.sq,40).filter(e=>e.kind==="product"&&e.type===type&&!own.some(b=>b.name===e.name)).map(e=>[e.name,e.style]):listed)
-      .map(p=>sheetCard(type,p[0],p[1],styleName(p[1])));
+    const hits=(q?searchIndex(itemIndex(),ob.sq,40).filter(e=>e.kind==="product"&&kinds.includes(e.type)&&!own.some(b=>b.name===e.name)).map(e=>Object.assign([e.name,e.style],{7:e.type})):shelf)
+      .map(p=>{const ty=kindOf(type,p);return sheetCard(ty,p[0],p[1],sub(ty,p[1]))});
     grid.append(...mineCards,...hits);
     // Not on the list: the shared finder (other products of this type, Claude, or by hand).
-    if(q&&!grid.children.length)finder(more,ob.sq,e=>{if(e.custom){ob.manual=e.custom;renderSheet()}else{obAdd([e],false);ob.sq="";renderSheet()}},{productsOnly:true,types:new Set([type])});
+    if(q&&!grid.children.length)finder(more,ob.sq,e=>{if(e.custom){ob.manual=e.custom;renderSheet()}else{obAdd([e],false);ob.sq="";renderSheet()}},{productsOnly:true,types:new Set(kinds)});
   };
   inp.addEventListener("input",()=>{ob.sq=inp.value;draw()});
   body.append(
@@ -2457,7 +2477,7 @@ function pickStep(body,S){
   if(ob.notice)body.append(el("p",{class:"status err"},ob.notice));
   const H=have();
   const addAndPick=id=>{obAdd([{id}],false);openSheet(id)};
-  body.append(el("div",{class:"tiles"},list.map(id=>H.has(id)&&PRESETS[id]?typeCard(id):tile(id,true,true,PRESETS[id]?addAndPick:null))));
+  body.append(el("div",{class:"tiles"},list.map(id=>owned(id,H)&&PRESETS[id]?typeCard(id):tile(id,true,true,PRESETS[id]?addAndPick:null))));
 }
 function obGo(step){if(ob.sheet){ob.sheet=null;$("obSheet").hidden=true}ob.step=step;ob.last=null;ob.q="";ob.qType=null;ob.manual=null;ob.notice="";renderOb();$("ob").scrollTop=0}
 function renderOb(bump){

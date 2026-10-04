@@ -374,6 +374,7 @@
     "dark_rum":"Dark / spiced rum",
     "tequila":"Tequila",
     "mezcal":"Mezcal",
+    "whisky":"Whisky",
     "bourbon":"Bourbon / Tennessee",
     "rye":"Rye whiskey",
     "scotch":"Scotch whisky",

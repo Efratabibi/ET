@@ -1,0 +1,368 @@
+<title>הפתק של המפורסמים</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: a ballot-envelope blue band, then a grid of cards shaped like ballot slips (tear line under the name, party in a heavy box). */
+:root {
+  --ground: #F2F4F7;
+  --slip: #FFFFFF;
+  --ink: #121826;
+  --muted: #4A5468;
+  --soft: #3A4356;
+  --line: #DCE1E8;
+  --field: #C9D0DB;
+  --band: #2347A6;          /* ballot-envelope blue */
+  --band-ink: #FFFFFF;
+  --band-muted: #DCE4F7;
+  --band-line: #5672C0;
+  --link: #2347A6;
+  --direct-bg: #E3EAF8;
+  --direct-ink: #16306F;
+  --new-bg: #B4471A;
+  --new-ink: #FFFFFF;
+  --note-bg: #FFF4E5;
+  --note-line: #F0D9B8;
+  --note-ink: #3B3020;
+  --note-strong: #8A4A0F;
+  --chip-on: #121826;
+  --chip-on-ink: #FFFFFF;
+  --display: "Frank Ruhl Libre", "David Libre", Georgia, serif;
+  --body: "Assistant", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --ground: #0F131A; --slip: #181E28; --ink: #EDF0F5; --muted: #A3ADBD; --soft: #C3CAD6; --line: #2A3240; --field: #3A4352;
+  --band: #18295C; --band-ink: #FFFFFF; --band-muted: #C9D4F0; --band-line: #3A54A0; --link: #9DB7F2;
+  --direct-bg: #1F2D4D; --direct-ink: #B9CCF7; --new-bg: #F08A50; --new-ink: #1A1008;
+  --note-bg: #2A2114; --note-line: #4A3A22; --note-ink: #E9DCC6; --note-strong: #F2B36B;
+  --chip-on: #EDF0F5; --chip-on-ink: #121826; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --ground: #0F131A; --slip: #181E28; --ink: #EDF0F5; --muted: #A3ADBD; --soft: #C3CAD6; --line: #2A3240; --field: #3A4352;
+  --band: #18295C; --band-ink: #FFFFFF; --band-muted: #C9D4F0; --band-line: #3A54A0; --link: #9DB7F2;
+  --direct-bg: #1F2D4D; --direct-ink: #B9CCF7; --new-bg: #F08A50; --new-ink: #1A1008;
+  --note-bg: #2A2114; --note-line: #4A3A22; --note-ink: #E9DCC6; --note-strong: #F2B36B;
+  --chip-on: #EDF0F5; --chip-on-ink: #121826; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--ground); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55 }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--band) }
+.in { max-width: 1200px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+a { color: var(--link) }
+:focus-visible { outline: 3px solid var(--link); outline-offset: 2px }
+
+.band { background: var(--band); color: var(--band-ink) }
+.band .in { padding-block: 48px 40px; display: flex; flex-direction: column; gap: 28px }
+.band-top { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between }
+.eyebrow { font-size: 15px; font-weight: 700; letter-spacing: .06em }
+.pill { font-size: 15px; font-weight: 600; background: var(--band-ink); color: var(--band); padding: 6px 14px; border-radius: 999px }
+.hero { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-end; justify-content: space-between }
+.hero-text { display: flex; flex-direction: column; gap: 14px; flex: 1 1 480px; min-width: 0 }
+h1 { margin: 0; font-family: var(--display); font-weight: 900; font-size: clamp(52px, 8vw, 88px); line-height: .95; letter-spacing: -.01em }
+.lede { margin: 0; font-size: clamp(17px, 2vw, 20px); max-width: 560px; color: var(--band-muted) }
+.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; flex: 1 1 340px; max-width: 400px }
+.stat { border: 1px solid var(--band-line); border-radius: 6px; padding: 12px 16px; display: flex; flex-direction: column; gap: 2px }
+.stat b { font-family: var(--display); font-size: clamp(32px, 4vw, 40px); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums }
+.stat span { font-size: 15px; color: var(--band-muted) }
+.stat.fresh { background: var(--slip); border-color: var(--slip) }
+.stat.fresh b { color: var(--new-bg) }
+.stat.fresh span { color: var(--muted) }
+
+.note { background: var(--note-bg); border-bottom: 1px solid var(--note-line); color: var(--note-ink); font-size: 16px }
+.note .in { padding-block: 14px; display: flex; flex-wrap: wrap; gap: 6px 24px }
+.note b { color: var(--note-strong) }
+
+main.in { padding-block: 32px 56px; display: flex; flex-direction: column; gap: 20px }
+.controls { display: flex; flex-direction: column; gap: 14px; background: var(--slip); border: 1px solid var(--line); border-radius: 8px; padding: 18px }
+.row { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center }
+input[type="search"] { flex: 1 1 300px; min-width: 0; height: 48px; padding: 0 16px; font: inherit; color: var(--ink); background: var(--ground); border: 1px solid var(--field); border-radius: 6px }
+label.toggle { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; font-size: 16px; color: var(--soft); cursor: pointer }
+label.toggle input { width: 18px; height: 18px; accent-color: var(--band) }
+.chips { display: flex; flex-wrap: wrap; gap: 8px }
+.chip { min-height: 44px; padding: 0 14px; font: inherit; font-size: 16px; font-weight: 700; color: var(--ink); background: var(--slip); border: 1px solid var(--field); border-radius: 4px; cursor: pointer; display: inline-flex; gap: 8px; align-items: center }
+.chip .n { font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums }
+.chip[aria-pressed="true"] { background: var(--chip-on); border-color: var(--chip-on); color: var(--chip-on-ink) }
+.chip[aria-pressed="true"] .n { color: inherit; opacity: .7 }
+.count { margin: 0; font-size: 16px; color: var(--muted) }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 20px }
+.card { background: var(--slip); border: 1px solid var(--line); border-radius: 4px; display: flex; flex-direction: column; min-width: 0 }
+.card.is-new { border-color: var(--new-bg) }
+.card-head { border-bottom: 2px dashed var(--line); padding: 18px 20px 14px; display: flex; flex-direction: column; gap: 4px }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px }
+.card h3 { margin: 0; font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1.15 }
+.new { flex: none; font-size: 14px; font-weight: 800; color: var(--new-ink); background: var(--new-bg); padding: 3px 10px; border-radius: 3px }
+.role { font-size: 15px; color: var(--muted) }
+.card-body { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 14px; flex: 1 }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
+.tag { font-size: 17px; font-weight: 800; color: var(--ink); border: 2px solid var(--ink); padding: 2px 10px; border-radius: 2px }
+.badge { font-size: 14px; font-weight: 700; padding: 3px 10px; border-radius: 3px }
+.badge.direct { background: var(--direct-bg); color: var(--direct-ink); padding-block: 4px }
+.badge.roundup { color: var(--muted); border: 1px solid var(--field) }
+.badge.declined { color: var(--soft); border: 1px dashed var(--muted) }
+blockquote { margin: 0; font-family: var(--display); font-size: 21px; font-weight: 500; line-height: 1.4 }
+.how { margin: 0; font-size: 16px; color: var(--soft) }
+.src { margin-top: auto; padding-top: 4px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 15px; font-weight: 600 }
+.empty { color: var(--muted); padding: 40px 0 }
+
+footer { background: var(--slip); border-top: 1px solid var(--line) }
+footer .in { padding-block: 40px 56px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 28px 32px }
+footer .col { display: flex; flex-direction: column; gap: 8px; min-width: 0 }
+footer h2 { margin: 0; font-family: var(--display); font-size: 24px }
+footer p { margin: 0; font-size: 16px; color: var(--soft) }
+@media (max-width: 520px) { .card h3 { font-size: 24px } blockquote { font-size: 19px } .card-head, .card-body { padding-inline: 16px } }
+@media (prefers-reduced-motion: no-preference) { .card { transition: border-color .15s } .card:hover { border-color: var(--link) } .card.is-new:hover { border-color: var(--new-bg) } }
+</style>
+
+<div dir="rtl" lang="he">
+  <header class="band">
+    <div class="in">
+      <div class="band-top">
+        <span class="eyebrow">הבחירות לכנסת ה־26</span>
+        <span class="pill">יום שלישי 27.10 · הקלפיות פתוחות 07:00–22:00</span>
+      </div>
+      <div class="hero">
+        <div class="hero-text">
+          <h1>הפתק של<br>המפורסמים</h1>
+          <p class="lede">מי מאנשי התרבות, הבידור והספורט אמר בפומבי למי יצביע, ומי בחר לשמור את הפתק לעצמו. ליד כל שם יש קישור לכתבה.</p>
+        </div>
+        <div class="stats">
+          <div class="stat"><b id="sTotal">0</b><span>מפורסמים ברשימה</span></div>
+          <div class="stat"><b id="sDirect">0</b><span>הצהרות במילים שלהם</span></div>
+          <div class="stat"><b id="sDeclined">0</b><span>בחרו לא לחשוף</span></div>
+          <div class="stat fresh"><b id="sNew">0</b><span>חדשים ביממה האחרונה</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="note">
+    <div class="in">
+      <span><b>זו לא המלצת הצבעה.</b> ריכוז של דיווחים בתקשורת, נבדק מול הכתבות עצמן.</span>
+      <span id="updated"></span>
+    </div>
+  </div>
+
+  <main class="in">
+    <section class="controls" aria-label="סינון">
+      <div class="row">
+        <input type="search" id="q" placeholder="חיפוש לפי שם…" aria-label="חיפוש לפי שם">
+        <label class="toggle"><input type="checkbox" id="directOnly"> רק הצהרות ישירות</label>
+        <label class="toggle"><input type="checkbox" id="freshOnly"> רק חדשים</label>
+        <label class="toggle"><input type="checkbox" id="newestFirst"> מיין לפי חדש</label>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="סינון לפי מפלגה"></div>
+    </section>
+    <p class="count" id="count"></p>
+    <div id="list"></div>
+  </main>
+
+  <footer>
+    <div class="in">
+      <div class="col">
+        <h2>מי בחר לא לחשוף</h2>
+        <p>ההצבעה בישראל חשאית, ואף אחד לא חייב לספר למי הצביע. חלקם לא התבטאו פוליטית בכלל, וחלקם הביעו עמדה בלי לומר איזה פתק ישימו.</p>
+      </div>
+      <div class="col">
+        <h2>איך לקרוא את התוויות</h2>
+        <p><b>הצהרה שלו/ה</b>: הכתבה מצטטת את דבריו. <b>מופיע ברשימה</b>: הכתבה רק מונה את השם, כדאי לבדוק לפני שמצטטים.</p>
+      </div>
+      <div class="col">
+        <h2>ההצבעה שלכם</h2>
+        <p>הקלפיות פתוחות ביום שלישי 27.10 משעה 07:00 עד 22:00. ההחלטה למי להצביע שייכת רק לכם.</p>
+      </div>
+      <div class="col">
+        <h2>כתבות סיכום</h2>
+        <p class="src" id="roundups"></p>
+        <p>מצאתם טעות או שם שחסר? הכתבות מתעדכנות, ואנשים משנים דעה. תמיד עדיף לסמוך על מה שהאדם עצמו פרסם.</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+const S = {
+  mako: ["N12: למי מצביעים אנשי התרבות", "https://www.mako.co.il/news-entertainment/2026_q4/Article-aeca4d6246c01a1027.htm"],
+  makoMsg: ["N12: המסרים של סלע ורז", "https://www.mako.co.il/news-entertainment/2026_q4/Article-e38bf88d27f51a1026.htm"],
+  makoNo: ["mako: סערת הסלבס והפתק בקלפי", "https://www.mako.co.il/entertainment-celebs/local-2026/Article-bc4d16e440141a1027.htm"],
+  ice: ["אייס: למי יצביעו הסלבס", "https://www.ice.co.il/culture/news/article/1134372"],
+  iceFrieder: ["אייס: דנה פרידר חושפת למי תצביע", "https://www.ice.co.il/culture/news/article/1135020"],
+  kipa: ["כיפה: כוכבי הבידור חושפים", "https://www.kipa.co.il/%D7%91%D7%A8%D7%A0%D7%96%D7%94/1234628-0/"],
+  wallaPat: ["וואלה: כוכבי הפטריוטים חושפים", "https://celebs.walla.co.il/item/3873159"],
+  tmiBaruch: ["מעריב TMI: ציון ברוך", "https://tmi.maariv.co.il/celebs-news/article-1381583"]
+};
+const PARTIES = {
+  together: { name: "ביחד", lead: "נפתלי בנט ויאיר לפיד" },
+  democrats: { name: "הדמוקרטים", lead: "יאיר גולן" },
+  likud: { name: "הליכוד", lead: "בנימין נתניהו" },
+  reservists: { name: "המילואימניקים־הכלכלית", lead: "יועז הנדל וירון זליכה" },
+  rz: { name: "הציונות הדתית", lead: "בצלאל סמוטריץ'" },
+  joint: { name: "הרשימה המשותפת", lead: "חד״ש, תע״ל ובל״ד" },
+  yashar: { name: "ישר!", lead: "גדי איזנקוט" },
+  yb: { name: "ישראל ביתנו", lead: "אביגדור ליברמן" },
+  winter: { name: "עמך ישראל", lead: "עופר וינטר" },
+  zehut: { name: "זהות", lead: "משה פייגלין" }
+};
+const DECLINED = { name: "לא חשפו", lead: "" };
+// status: "direct" = the article quotes the person's own words; "roundup" = only listed by name; "declined" = chose not to reveal a vote.
+const P = [
+  // Likud
+  { name: "אורי גלר", role: "אמן חושים", party: "likud", status: "direct", how: "אמר ל־N12 שהוא מצביע לנתניהו.", quote: "אני מצביע לביבי. גאון, קוסם, מנהיג עולמי, אין שני לו", src: ["mako", "kipa"] },
+  { name: "סאבלימינל (קובי שמעוני)", role: "ראפר", party: "likud", status: "direct", how: "בריאיון ל־mako מוקדם יותר השנה. אמר שהוא לא מסכים עם הכול, אבל נתניהו עדיף בעיניו על כל החלופות.", quote: "אני חושב שבנימין נתניהו הוא מנהיג דגול, אחד בדורו", src: ["mako", "kipa"] },
+  { name: "אבי ביטר", role: "זמר", party: "likud", status: "direct", how: "קרא למעריצים להצביע לליכוד.", quote: "ביבי הוא ראש ממשלה נבון, אציל, חכם ואין מי שיחליף אותו", src: ["mako", "wallaPat"] },
+  { name: "עמיר בניון", role: "זמר", party: "likud", status: "roundup", how: "מופיע ברשימת תומכי הליכוד.", src: ["ice"] },
+  { name: "עופר לוי", role: "זמר", party: "likud", status: "roundup", how: "מופיע ברשימות תומכי הליכוד.", src: ["mako", "ice"] },
+  { name: "מאור בוזגלו", role: "כדורגלן", party: "likud", status: "roundup", how: "לפי אייס, הוא ורעייתו מירן תומכים בליכוד, בניגוד לאביו יעקב שתומך בדמוקרטים.", src: ["ice"] },
+
+  // Yashar
+  { name: "רותם סלע", role: "שחקנית ומגישה", party: "yashar", status: "direct", how: "בסרטון באינסטגרם, יום לפני הבחירות. סיפרה שהתלבטה עד לאחרונה.", quote: "להצביע לגדי זה פשוט להעביר מסר ברור: ישראל רוצה מנהיג חדש, מנהיג שאפשר לסמוך עליו", src: [["וואלה: רותם סלע חושפת למי תצביע", "https://celebs.walla.co.il/item/3873775"], "mako"] },
+  { name: "אייל ברקוביץ'", role: "כדורגלן עבר ומגיש", party: "yashar", status: "direct", how: "במשדר הבחירות של חדשות 13 שלף פתק של ישר! והגיש אותו לאיזנקוט.", quote: "אני חושב שאתה האיש הראוי להנהיג את מדינת ישראל", src: [["ערוץ 7: ברקוביץ' שלף פתק", "https://www.inn.co.il/news/709213"]] },
+  { name: "רן דנקר", role: "שחקן וזמר", party: "yashar", status: "direct", how: "בפוסט באינסטגרם.", quote: "הוא מרגיש לי הכי נכון כרגע ואני מקווה שהשינוי בפתח. בלי להתנצל", src: ["mako", "kipa"] },
+  { name: "אסי עזר", role: "מגיש ויוצר", party: "yashar", status: "roundup", how: "מופיע ברשימת מי שיצביעו לישר!.", src: ["mako"] },
+  { name: "שוש פוליאקוב ויעל פוליאקוב", role: "שחקניות (אם ובת)", party: "yashar", status: "roundup", how: "מופיעות ברשימות מי שיצביעו לישר!.", src: ["mako", "kipa"] },
+  { name: "נאור ציון", role: "שחקן ובמאי", party: "yashar", status: "direct", how: "באינסטגרם, אחרי סרטון התעמולה של הליכוד נגד איזנקוט. אמר שזו הפעם הראשונה שהוא מצהיר למי יצביע.", quote: "אני בוחר בבחירות האלה רק בגדי איזנקוט", src: [["אייס: נאור ציון חושף", "https://www.ice.co.il/culture/news/article/1122625"], "ice"] },
+  { name: "רותם אבוהב", role: "שחקנית וקומיקאית", party: "yashar", status: "direct", how: "הביעה תמיכה בחילי טרופר, שרץ במשותף עם איזנקוט ברשימת ישר!.", quote: "צריך אנשים כמוך שם", src: ["mako"] },
+  { name: "דנה זרמון", role: "שחקנית ויוצרת", party: "yashar", status: "roundup", how: "פרסמה סרטונים משותפים עם איזנקוט. בליכוד דרשו ממנה להסיר אותם.", src: ["makoNo", "wallaPat"] },
+
+  // Together
+  { name: "קובי אוז", role: "זמר, סולן טיפקס", party: "together", status: "direct", how: "כתב ב־X. אמר שזו תהיה הפעם הראשונה שיצביע לבנט.", quote: "בקלפי כנראה שאבחר במפלגת ביחד", src: ["mako", "kipa"] },
+  { name: "אברי גלעד", role: "מגיש ושדרן", party: "together", status: "direct", how: "בפודקאסט של איתי סגל (ALL IN). מגדיר את עצמו איש ימין ואמר שאיבד אמון בנתניהו.", quote: "אלא אם יהיו התפתחויות דרמטיות, מבחינתי הרע במיעוטו זה בנט", src: [["מעריב TMI: אברי גלעד חושף", "https://tmi.maariv.co.il/celebs-news/article-1377353"], ["ערוץ 7: הרע במיעוטו", "https://www.inn.co.il/news/708411"]] },
+  { name: "איה כורם", role: "זמרת ויוצרת", party: "together", status: "direct", how: "כתבה לעוקבים שהחליטה אחרי ששקלה ניסיון, ייצוג ורטוריקה מאחדת.", quote: "החלטתי להצביע ל'ביחד' של בנט. אתם יכולים להסכים או להסתייג, זה בסדר גמור", src: ["mako"] },
+  { name: "דנה פרידר", role: "שחקנית", party: "together", status: "direct", how: "בסרטון עם ימית סול, שניסתה לשכנע אותה.", quote: "את מתפרצת לדלת פתוחה, אני כבר מצביעה לבנט", src: ["iceFrieder", "mako"] },
+  { name: "ימית סול", role: "שחקנית", party: "together", status: "direct", how: "משתתפת בקמפיין של בנט, כולל הסרטון עם דנה פרידר.", src: ["iceFrieder", "mako"] },
+  { name: "שלמה שרף", role: "מאמן נבחרת לשעבר ופרשן כדורגל", party: "together", status: "roundup", how: "מופיע ברשימות תומכי ביחד.", src: ["ice", "wallaPat"] },
+  { name: "גיורא חמיצר", role: "יוצר (״השמינייה״, ״האי״)", party: "together", status: "direct", how: "סיפר שכל חייו הצביע למרצ, והפעם יצביע לבנט.", quote: "אתן את הקול ליחיד שמשדר איזושהי אנרגיה של שינוי אמיתי", src: ["mako"] },
+  { name: "לירון ויצמן", role: "מגישה", party: "together", status: "roundup", how: "מופיעה ברשימות תומכי ביחד.", src: ["mako", "kipa"] },
+  { name: "מעיין אדם", role: "אשת תקשורת, איבדה את אחותה מפל בטבח בנובה", party: "together", status: "direct", added: "2026-10-26T21:30", how: "בפוסט באינסטגרם, יממה לפני הבחירות. סיפרה שבנט היה הראשון שבא לנחם את המשפחה.", quote: "הוא הראשון והיחיד שבא לנחם", src: [["וואלה: מעיין אדם חושפת למי תצביע", "https://celebs.walla.co.il/item/3873757"], "mako"] },
+  { name: "רוני סומק", role: "משורר וסופר", party: "together", status: "direct", how: "הוצב במקום ה־120, מקום כבוד ברשימה.", quote: "אני חייל בצבא 'יש עתיד'", src: ["mako"] },
+  { name: "מאור ברוכמן", role: "כוכבת רשת, יוצאת ״האח הגדול״", party: "together", status: "roundup", how: "לפי אייס, הודיעה שתצביע לבנט.", src: ["ice"] },
+
+  // Democrats
+  { name: "אחינועם ניני", role: "זמרת", party: "democrats", status: "direct", how: "פירטה את המועמדים ברשימה שהיא מעריכה.", quote: "לדמוקרטים נבחרת נהדרת של לוחמי צדק, שוויון ושלום", src: ["mako"] },
+  { name: "אורנה בנאי", role: "שחקנית וקומיקאית", party: "democrats", status: "roundup", how: "מופיעה ברשימות תומכי הדמוקרטים.", src: ["mako", "ice"] },
+  { name: "רונה קינן", role: "זמרת", party: "democrats", status: "roundup", how: "מופיעה ברשימת תומכי הדמוקרטים.", src: ["mako"] },
+  { name: "עלמה זהר", role: "זמרת", party: "democrats", status: "roundup", how: "מופיעה ברשימת תומכי הדמוקרטים.", src: ["mako"] },
+  { name: "דנה מודן", role: "שחקנית ויוצרת", party: "democrats", status: "direct", how: "שיתפה למה היא בוחרת בדמוקרטים.", quote: "אצביע לדמוקרטים כי זו מפלגה שחברים בה בני אדם", src: ["mako"] },
+  { name: "נלי תגר", role: "שחקנית וקומיקאית", party: "democrats", status: "direct", how: "בריאיון ל״ערב טוב עם גיא פינס״.", quote: "אני מצביעה לדמוקרטים", src: ["mako", "makoNo"] },
+  { name: "יהלי סובול", role: "זמר, סולן מוניקה סקס", party: "democrats", status: "direct", how: "כתב שהקול שלו הוא תודה על עבודת חברי הכנסת של המפלגה.", quote: "ביום שלישי אני נותן להם את הפתק שלי כהבעת תודה והבעת אמון מחודש", src: ["mako"] },
+  { name: "יוסי מרשק", role: "שחקן", party: "democrats", status: "roundup", how: "מופיע ברשימות תומכי הדמוקרטים.", src: ["mako", "ice"] },
+  { name: "יעקב בוזגלו", role: "כדורגלן עבר, ״הבוזגלוס״", party: "democrats", status: "direct", how: "בפוסט שעורר הדים.", quote: "אני לא מתבייש להיות שמאלני", src: ["mako", "kipa"] },
+  { name: "אסתי זקהיים", role: "שחקנית, זוכת פרס אופיר", party: "democrats", status: "direct", how: "היא גם מועמדת ברשימה, במקום ה־68.", quote: "אני מצביעה לדמוקרטים כי אני רוצה להרגיש שיש מי ששומר על המדינה שאני מאמינה בה", src: ["mako"] },
+  { name: "לימור גולדשטיין", role: "שחקנית", party: "democrats", status: "direct", how: "הנחתה כמה כנסים של המפלגה.", quote: "הם הכי קרובים לייצג נאמנה את הדעות שלי", src: ["mako"] },
+  { name: "אלונה סער", role: "שחקנית", party: "democrats", status: "direct", how: "באינסטגרם. היא בתו של גדעון סער, שרץ ברשימת הליכוד.", quote: "יש לנו את נעמה לזימי במפלגת הדמוקרטים, אז אפשר להצביע להם", src: ["mako", "kipa"] },
+  { name: "דליה מזור", role: "מגישת חדשות", party: "democrats", status: "roundup", how: "מופיעה ברשימות תומכי הדמוקרטים.", src: ["mako", "kipa"] },
+
+  // Reservists
+  { name: "עידן עמדי", role: "זמר ושחקן, נפצע במילואים בעזה", party: "reservists", status: "direct", how: "בסרטון ברשתות. קרא להצביע לפי ערכים ולא לפי אחוז החסימה.", quote: "אני מצביע ליועז הנדל וירון זליכה", src: [["וואלה: עידן עמדי", "https://celebs.walla.co.il/item/3873626"], "mako", "kipa"] },
+  { name: "אורי גבריאל", role: "שחקן", party: "reservists", status: "roundup", how: "לפי אייס, הביע תמיכה בירון זליכה.", src: ["ice"] },
+  { name: "בר כהן", role: "יוצאת ״האח הגדול״", party: "reservists", status: "direct", how: "הסבירה למה היא בוחרת בזליכה.", quote: "אני בוחרת בירון כי אני מקשיבה לו כל הזמן", src: ["mako", "kipa"] },
+  { name: "אליאב טעטי", role: "יוצא ״האח הגדול״", party: "reservists", status: "roundup", how: "לפי וואלה, הודיע על תמיכה בירון זליכה.", src: ["wallaPat"] },
+
+  // Religious Zionism
+  { name: "יותם זמרי ואיתמר פליישמן", role: "פאנליסטים ב״הפטריוטים״, ערוץ 14", party: "rz", status: "direct", how: "בפודקאסט שלהם ״צמד רעים״. אמרו שהם רוצים שנתניהו יישאר ראש ממשלה, אבל יצביעו לסמוטריץ'.", quote: "ביבי מביא לי 70% ממה שאני רוצה", src: ["wallaPat"] },
+
+  // Yisrael Beiteinu
+  { name: "טיטי איינאו", role: "מלכת יופי לשעבר ודוגמנית", party: "yb", status: "direct", how: "אמרה שכמי שעלתה לישראל, ליברמן מבין את אתגרי העלייה.", quote: "לליברמן יש הניסיון המתאים ביותר להוביל את המדינה", src: ["mako", "kipa"] },
+  { name: "שני גולדשטיין", role: "יוצאת ״האח הגדול״", party: "yb", status: "roundup", how: "לפי וואלה, הודיעה על תמיכה בליברמן.", src: ["wallaPat"] },
+
+  // Am Yisrael
+  { name: "אודיה פינטו", role: "כוכבת רשת, תושבת הצפון", party: "winter", status: "direct", how: "אמרה שהשיקול המרכזי שלה הוא הביטחון בצפון, וקראה למפלגות הימין להתאחד.", quote: "אני הולכת להצביע למי שייתן לי פה ביטחון, למי שאני הכי מאמינה לו", src: ["mako", "kipa"] },
+
+  // Zehut
+  { name: "מתן פרץ", role: "סטנדאפיסט", party: "zehut", status: "roundup", how: "לפי אייס, הביע תמיכה במשה פייגלין בגלל עקרונות החירות האישית והשוק החופשי.", src: ["ice"] },
+
+  // Joint List
+  { name: "שהם סמיט", role: "סופרת", party: "joint", status: "direct", how: "בפייסבוק, על אותיות הרשימה בקלפי.", quote: "נחוץ בכנסת דם חדש, שינוי אמיתי שלא יקרה בלי שותפות אמת של יהודים וערבים", src: ["mako"] },
+  { name: "אילנה ברנשטיין", role: "סופרת", party: "joint", status: "roundup", how: "מופיעה ברשימה לצד שהם סמיט.", src: ["mako"] },
+
+  { name: "אביב גפן", role: "זמר", party: "together", status: "direct", added: "2026-10-26T21:30", how: "בסרטון באינסטגרם, יממה לפני הבחירות. תקף את הממשלה והצהיר על תמיכה בבנט ולפיד.", quote: "מחר הגיע הרגע לבקש, לדרוש שינוי בישראל", src: [["אייס: אביב גפן", "https://www.ice.co.il/culture/news/article/1135241"]] },
+  { name: "ליאור ברקוביץ'", role: "כוכב רשת, בנו של אייל ברקוביץ'", party: "reservists", status: "direct", added: "2026-10-26T21:30", how: "בפוסט באינסטגרם, יום לפני הבחירות. לפני כן אמר שיצביע לאיזנקוט, ושינה את דעתו. אביו אייל מצביע לישר!.", quote: "יועז הנדל וירון זליכה קיבלתם את הקול שלי", src: [["אייס: ליאור ברקוביץ'", "https://www.ice.co.il/social/news/article/1135226"]] },
+
+  // Declined
+  { name: "גל גדות", role: "שחקנית", party: "declined", status: "declined", added: "2026-10-26T21:30", how: "הגיעה לארץ במיוחד כדי להצביע, אבל לא הביעה עמדה ולא אמרה למי תצביע.", src: [["וואלה: גל גדות הגיעה לארץ לקראת הבחירות", "https://celebs.walla.co.il/item/3873444"]] },
+  { name: "יעל בר זוהר", role: "שחקנית ומגישה", party: "declined", status: "declined", added: "2026-10-26T21:30", how: "קראה לא לפחד לבחור בשינוי, לזכרו של עילי ברעם, אחיין של בעלה שנרצח בנובה. לא אמרה איזו מפלגה.", quote: "אל תפחדו לבחור בשינוי", src: [["אייס: יעל בר זוהר", "https://www.ice.co.il/culture/news/article/1135192"]] },
+  { name: "עדי הימלבלוי", role: "שחקנית ודוגמנית", party: "declined", status: "declined", added: "2026-10-26T21:30", how: "קראה לשינוי ולצאת להצביע, בלי לומר איזו מפלגה.", quote: "אני חושבת שהגיע הזמן לשינוי אמיתי", src: [["אייס: עדי הימלבלוי", "https://www.ice.co.il/culture/news/article/1135229"]] },
+  { name: "נינט טייב", role: "זמרת ושחקנית", party: "declined", status: "declined", added: "2026-10-26T21:30", how: "לפי ישראל היום, רמזה על עמדתה כשכתבה לנעמה לזימי מהדמוקרטים ״לוחמת צדק אמיתית״. לא אמרה למי תצביע.", src: [["ישראל היום: נינט טייב רמזה", "https://www.israelhayom.co.il/culture/internet-culture/article/21713410"]] },
+  { name: "ליאור רז", role: "שחקן ויוצר ״פאודה״", party: "declined", status: "declined", how: "הביע עמדה בפוסט באינסטגרם, אבל לא אמר באיזו מפלגה יתמוך.", quote: "אני לא אצביע לממשלה שלא עומדת לצד משרתי המילואים, ובאותו זמן תומכת במי שבוחר להשתמט", src: [["אייס: ליאור רז במתקפה", "https://www.ice.co.il/culture/news/article/1134675"], "makoMsg"] },
+  { name: "מירי מסיקה", role: "זמרת", party: "declined", status: "declined", how: "לא אמרה שם. אמרה שהיא רוצה ראש ממשלה מרוקאי שהיה רמטכ״ל, ו־mako פירש זאת כרמז לאיזנקוט.", src: ["makoNo"] },
+  { name: "יהודה לוי", role: "שחקן", party: "declined", status: "declined", how: "אמר שכל אחד צריך לבחור בעצמו, וספג על כך ביקורת.", quote: "חשוב שכל אחד לפני הבחירות ישאל את עצמו באיזו מדינה הוא רוצה להיות ויעמיק בזה", src: ["makoNo", "iceFrieder"] },
+  { name: "ציון ברוך", role: "שחקן וקומיקאי", party: "declined", status: "declined", how: "ביום הולדתו, יום לפני הבחירות, בחר לא לחשוף.", quote: "שמי שנכון לעם ישראל ייבחר", src: ["tmiBaruch"] },
+  { name: "עינב בובליל", role: "שחקנית ומגישה", party: "declined", status: "declined", how: "הבהירה שאין בכוונתה לספר לעוקבים למי תצביע.", src: ["makoNo"] },
+  { name: "מאיה ורטהיימר", role: "שחקנית", party: "declined", status: "declined", how: "דיברה על הצורך בשינוי בלי לחשוף למי תצביע.", src: ["makoNo"] },
+  { name: "נעמה קסרי", role: "אשת עסקים, זוכת ״הישרדות״", party: "declined", status: "declined", how: "קראה להחליף את הממשלה ואיבדה מאות עוקבים, אבל לא אמרה איזה פתק תשים.", quote: "אני לא מסוגלת לשתוק", src: [["וואלה: נעמה קסרי", "https://celebs.walla.co.il/item/3872884"]] },
+  { name: "ספיר אביסרור", role: "כוכבת רשת", party: "declined", status: "declined", how: "קראה לעוקבים לצאת ולהצביע, בלי לחשוף את בחירתה.", src: ["makoNo"] },
+  { name: "נועה אסטנג'לוב", role: "שחקנית", party: "declined", status: "declined", how: "יצאה נגד הלחץ על מפורסמים לחשוף עמדה, והזכירה שההצבעה חשאית בכוונה.", quote: "יש סיבה שהבחירות בישראל הן דיסקרטיות ואנונימיות", src: ["makoNo"] },
+  { name: "יובל כספית", role: "שחקנית", party: "declined", status: "declined", how: "דיברה על הצורך בשינוי בלי לחשוף למי תצביע.", src: ["makoNo"] }
+];
+// Editorial estimate of how widely known each person is to the general Israeli public (higher = better known). Sets the list order only.
+const FAME = {
+  "אחינועם ניני": 96, "ליאור רז": 95, "אורי גלר": 94, "עידן עמדי": 92, "רותם סלע": 90, "אייל ברקוביץ'": 89,
+  "סאבלימינל (קובי שמעוני)": 87, "קובי אוז": 86, "מירי מסיקה": 86, "אורנה בנאי": 85, "יהודה לוי": 84, "עמיר בניון": 82,
+  "אברי גלעד": 81, "אסי עזר": 80, "ציון ברוך": 78, "רן דנקר": 77, "איה כורם": 75, "דנה מודן": 74, "רונה קינן": 72,
+  "טיטי איינאו": 72, "עלמה זהר": 71, "שוש פוליאקוב ויעל פוליאקוב": 71, "עינב בובליל": 70, "עופר לוי": 70,
+  "נלי תגר": 69, "אורי גבריאל": 68, "אבי ביטר": 67, "רותם אבוהב": 66, "דנה זרמון": 66, "שלמה שרף": 65,
+  "מאיה ורטהיימר": 65, "יהלי סובול": 64, "דנה פרידר": 64, "לירון ויצמן": 63, "נאור ציון": 62, "יוסי מרשק": 62,
+  "אודיה פינטו": 61, "מאור בוזגלו": 60, "נעמה קסרי": 59, "ימית סול": 58, "אסתי זקהיים": 58, "רוני סומק": 57,
+  "יותם זמרי ואיתמר פליישמן": 56, "מתן פרץ": 55, "מעיין אדם": 55, "גיורא חמיצר": 54, "אלונה סער": 52,
+  "נועה אסטנג'לוב": 52, "גל גדות": 99, "אביב גפן": 88, "נינט טייב": 83, "יעל בר זוהר": 76, "עדי הימלבלוי": 62, "ליאור ברקוביץ'": 50, "ספיר אביסרור": 50, "יעקב בוזגלו": 50, "יובל כספית": 49, "דליה מזור": 48, "לימור גולדשטיין": 48,
+  "בר כהן": 45, "אליאב טעטי": 45, "שני גולדשטיין": 45, "מאור ברוכמן": 45, "שהם סמיט": 42, "אילנה ברנשטיין": 40
+};
+// When the page data was last refreshed (Israel time). Entries whose `added` is within NEW_HOURS of it get a "new" badge.
+const UPDATED = "2026-10-26T21:30";
+const NEW_HOURS = 24;
+const isNew = p => p.added && (new Date(UPDATED) - new Date(p.added)) <= NEW_HOURS * 3600e3;
+P.sort((a, b) => (FAME[b.name] || 0) - (FAME[a.name] || 0));
+
+const state = { party: "all", q: "", direct: false, fresh: false, newest: false };
+const order = Object.keys(PARTIES).sort((a, b) => PARTIES[a].name.replace(/^ה/, "").localeCompare(PARTIES[b].name.replace(/^ה/, ""), "he"));
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const link = s => { const [label, url] = typeof s === "string" ? S[s] : s; return `<a href="${url}" target="_blank" rel="noopener">${esc(label)}</a>`; };
+
+function chips() {
+  const el = document.getElementById("chips");
+  const items = [["all", "הכול", P.length], ...[...order, "declined"].map(k => [k, (PARTIES[k] || DECLINED).name, P.filter(p => p.party === k).length])];
+  el.innerHTML = items.map(([k, label, n]) =>
+    `<button class="chip" type="button" data-k="${k}" aria-pressed="${state.party === k}">${esc(label)}<span class="n">${n}</span></button>`).join("");
+}
+
+function render() {
+  const q = state.q.trim();
+  const shown = P.filter(p => (state.party === "all" || p.party === state.party) && (!state.direct || p.status === "direct") && (!state.fresh || isNew(p)) && (!q || p.name.includes(q) || p.role.includes(q)));
+  document.getElementById("count").textContent = `מוצגים ${shown.length} מתוך ${P.length}`;
+  // P is already in fame order; a stable sort on `added` keeps that order among equal dates.
+  if (state.newest) shown.sort((a, b) => (b.added || "").localeCompare(a.added || ""));
+  const badge = { direct: "הצהרה שלו/ה", roundup: "מופיע ברשימה", declined: "בחר/ה לא לחשוף" };
+  const html = shown.map(p => {
+    const party = PARTIES[p.party];
+    return `<article class="card${isNew(p) ? " is-new" : ""}">
+        <div class="card-head">
+          <div class="top"><h3>${esc(p.name)}</h3>${isNew(p) ? `<span class="new">חדש</span>` : ""}</div>
+          <span class="role">${esc(p.role)}</span>
+        </div>
+        <div class="card-body">
+          <div class="tags">${party ? `<span class="tag" title="בראשות ${esc(party.lead)}">${esc(party.name)}</span>` : ""}<span class="badge ${p.status}">${badge[p.status]}</span></div>
+          ${p.quote ? `<blockquote>״${esc(p.quote)}״</blockquote>` : ""}
+          <p class="how">${esc(p.how)}</p>
+          <div class="src">${p.src.map(link).join("")}</div>
+        </div>
+      </article>`;
+  }).join("");
+  document.getElementById("list").innerHTML = html ? `<div class="grid">${html}</div>` : `<p class="empty">אין תוצאות. נסו שם אחר או הסירו את הסינון.</p>`;
+}
+
+document.getElementById("chips").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if (!b) return;
+  state.party = b.dataset.k; chips(); render();
+});
+document.getElementById("q").addEventListener("input", e => { state.q = e.target.value; render(); });
+document.getElementById("directOnly").addEventListener("change", e => { state.direct = e.target.checked; render(); });
+document.getElementById("freshOnly").addEventListener("change", e => { state.fresh = e.target.checked; render(); });
+document.getElementById("newestFirst").addEventListener("change", e => { state.newest = e.target.checked; render(); });
+document.getElementById("roundups").innerHTML = ["mako", "ice", "kipa", "makoNo", "wallaPat"].map(link).join("");
+const stat = (id, n) => document.getElementById(id).textContent = n;
+stat("sTotal", P.length);
+stat("sDirect", P.filter(p => p.status === "direct").length);
+stat("sDeclined", P.filter(p => p.status === "declined").length);
+stat("sNew", P.filter(isNew).length);
+document.getElementById("updated").textContent = `עודכן לאחרונה ${UPDATED.slice(8, 10)}.${UPDATED.slice(5, 7)} בשעה ${UPDATED.slice(11)} · מתעדכן כל שעתיים`;
+chips(); render();
+</script>

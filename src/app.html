@@ -288,6 +288,66 @@ select option{background:var(--surface);color:var(--ink)}
 .buy .primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
 .disclaimer{font-size:12px;line-height:1.5;color:var(--faint);margin:0;max-width:70ch}
 .app:not([data-view="menu"]) #pane-menu{display:none}
+.app:not([data-view="list"]) #pane-list{display:none}
+@media (min-width:861px){.app[data-view="list"] .grid{display:none}}
+/* home sub-navigation: what to make, my bar, shop */
+.subnav{display:flex;max-width:560px;gap:4px;margin:-10px 0 22px}
+.app:not([data-view="mix"]):not([data-view="bar"]):not([data-view="shop"]) .subnav{display:none}
+.subnav button{flex:1;border:1px solid var(--line);background:transparent;color:var(--muted);font:600 14px var(--body);border-radius:999px;padding:0 10px;min-height:38px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.subnav button[aria-selected="true"]{color:var(--gold);border-color:var(--gold);background:var(--tint)}
+.tabs .count{margin-inline-start:6px;display:inline-block;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:#fff;font:700 11px/18px var(--body);letter-spacing:0;text-align:center}
+.tabs .count:empty{display:none}
+.subnav .count{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:#fff;font:700 11px/18px var(--body);text-align:center}
+.subnav .count:empty{display:none}
+@media (min-width:861px){.subnav .tab-m{display:none}}
+@media (max-width:860px){.subnav .tab-d{display:none}.subnav{margin:0 0 18px}}
+/* my list and ratings */
+.mine{font:700 12px var(--body);border-radius:6px;padding:2px 8px;background:var(--tint);color:var(--gold)}
+.mine.want{background:transparent;border:1px dashed var(--gold)}
+.match{font:700 12px var(--body);border-radius:6px;padding:2px 8px;background:var(--ok-soft);color:var(--ok)}
+.match.like{background:transparent;border:1px solid var(--ok)}
+.match.meh{background:transparent;border:1px solid var(--line2);color:var(--muted)}
+.rc-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.rc-act{display:inline-flex;align-items:center;gap:8px;min-height:44px;border:1.5px solid var(--cream-line,#D9D1C4);background:transparent;color:inherit;border-radius:999px;padding:0 16px;font:700 14px var(--body);cursor:pointer}
+.rc-act.on{border-color:var(--accent-deep);color:var(--accent-deep)}
+.rc-act small{font-weight:400;opacity:.8}
+.rc-match{flex:1 1 100%;margin:0;font-size:14px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.stars-txt{color:var(--gold);letter-spacing:2px;font-size:16px;white-space:nowrap}
+.recipe .stars-txt{color:var(--accent-deep)}
+.rate-sheet{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
+.rate-sheet[hidden]{display:none}
+.rate-in{width:100%;max-width:560px;max-height:92vh;overflow-y:auto;background:var(--bg);border-radius:20px 20px 0 0;border:1px solid var(--line);padding:22px 20px calc(16px + env(safe-area-inset-bottom,0px));display:grid;gap:16px}
+.rate-body{display:grid;gap:16px}
+.rate-body h2{font:600 30px/1 var(--display);text-transform:uppercase;margin:0;font-synthesis:none}
+.rate-sec{display:grid;gap:8px}
+.rate-sec textarea,.rate-sec input{width:100%}
+.rate-foot{display:flex;gap:8px;justify-content:flex-end}
+.rate-foot .btn{flex:1}
+.stars{display:flex;gap:4px}
+.stars button{border:0;background:none;font-size:38px;line-height:1;color:var(--line2);cursor:pointer;padding:2px 4px;min-width:44px;min-height:44px}
+.stars button.on{color:var(--gold)}
+.stars.sm button{font-size:26px;min-width:38px;color:var(--gold);opacity:.55}
+.stars.sm button:hover,.stars.sm button:focus-visible{opacity:1}
+.rate-prompt{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;background:var(--surface);border:1px solid var(--gold);border-radius:16px;padding:12px 16px}
+.rate-prompt[hidden]{display:none}
+.rp-txt{flex:1 1 180px;display:grid;gap:2px}
+.rp-txt small{color:var(--muted)}
+.list-body{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;max-width:720px}
+.taste{background:var(--cream);color:var(--cream-ink);border-radius:16px;padding:16px;display:grid;gap:6px}
+.taste .eyebrow{color:var(--accent-deep)}
+.taste .serif{margin:0;font-size:16px;line-height:1.4;color:var(--cream-text)}
+.seg2{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px}
+.seg2 button{flex:1;border:0;background:transparent;color:var(--muted);font:600 15px var(--body);border-radius:9px;min-height:42px;cursor:pointer}
+.seg2 button[aria-selected="true"]{background:var(--tint);color:var(--gold)}
+.li-list{display:grid;gap:8px}
+.li-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 14px;cursor:pointer;color:var(--ink)}
+.li-main{flex:1;min-width:0;display:grid;gap:4px;justify-items:start}
+.li-main b{font-size:16px}
+.li-main small{color:var(--muted);font-size:13px}
+.li-note{font-style:italic}
+.li-row .btn.sm,.btn.sm{min-height:36px;padding:0 12px;font-size:13px}
+.art-box.bt{display:flex;align-items:center;justify-content:center}
+.art-box.bt .thumb svg{width:22px;height:44px}
 @media (min-width:861px){.app[data-view="menu"] .grid{display:none}}
 /* phones: bottom tab bar, scrolling chip rows */
 .jump{display:none}
@@ -482,12 +542,16 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
   </header>
 
   <nav class="tabs" role="tablist">
-    <button role="tab" class="tab-m" aria-selected="false" data-tab="bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4v4l2 3v12a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V9l2-3z"/><path d="M8 13h8"/></svg><span data-t="tab.bar"></span><span class="count" id="tabCount" aria-hidden="true"></span></button>
-    <button role="tab" class="tab-m" aria-selected="true" data-tab="mix"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16l-8 9z"/><path d="M12 13v7M8 20h8"/><path d="M15 2l-2 5"/></svg><span data-t="tab.mix"></span></button>
-    <button role="tab" class="tab-d" aria-selected="true" data-tab="home"><span data-t="tab.home"></span></button>
-    <button role="tab" aria-selected="false" data-tab="shop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span data-t="tab.shop"></span></button>
+    <button role="tab" aria-selected="true" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span data-t="tab.home"></span></button>
     <button role="tab" aria-selected="false" data-tab="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8l-.5 6a3.5 3.5 0 0 1-7 0z"/><path d="M12 12.5V20M8.5 20h7"/></svg><span data-t="tab.menu"></span></button>
+    <button role="tab" aria-selected="false" data-tab="list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg><span data-t="tab.list"></span><span class="count" id="listCount" aria-hidden="true"></span></button>
   </nav>
+  <div class="subnav" role="tablist" id="subnav">
+    <button role="tab" class="tab-m" aria-selected="true" data-sub="mix"><span data-t="tab.mix"></span></button>
+    <button role="tab" class="tab-m" aria-selected="false" data-sub="bar"><span data-t="tab.bar"></span><span class="count" id="tabCount" aria-hidden="true"></span></button>
+    <button role="tab" class="tab-d" aria-selected="true" data-sub="both"><span data-t="tab.both"></span></button>
+    <button role="tab" aria-selected="false" data-sub="shop"><span data-t="tab.shop"></span></button>
+  </div>
 
   <div class="grid">
     <section class="pane" id="pane-bar">
@@ -539,6 +603,7 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     </section>
 
     <section class="pane" id="pane-mix">
+      <div class="rate-prompt" id="ratePrompt" hidden></div>
       <div class="pane-head">
         <p class="greet" id="greet"></p>
         <h2 data-t="mix.title"></h2>
@@ -594,6 +659,13 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     <div class="results-h"><h3 id="shopTitle"></h3><small id="shopCount"></small></div>
     <div class="shop-list" id="shopList"></div>
     <p class="disclaimer" id="disclaimer"></p>
+  </section>
+  <section class="pane" id="pane-list">
+    <div class="pane-head">
+      <h2 data-t="list.title"></h2>
+      <p class="sub" data-t="list.sub"></p>
+    </div>
+    <div class="list-body" id="listBody"></div>
   </section>
   <section class="pane" id="pane-menu">
     <h2 data-t="menu.title"></h2>
@@ -658,6 +730,10 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     <div class="rc-art" id="rcArt"></div>
   </div>
   <div class="rc-body" id="rcBody"></div>
+</div>
+
+<div class="rate-sheet" id="rateSheet" hidden role="dialog" aria-modal="true" aria-labelledby="rateTitle">
+  <div class="rate-in"><div class="rate-body" id="rateBody"></div><div class="rate-foot" id="rateFoot"></div></div>
 </div>
 
 <script>/*@@I18N@@*/</script>
@@ -1323,7 +1399,9 @@ const DRINKS=[ // names, methods, glasses and tips come from the locale
 /* ---------- state ---------- */
 let uidN=0;const uid=()=>"b"+Date.now().toString(36)+(uidN++).toString(36);
 const LS_KEY="homebar.v1";
-let state=clean(loadLocal())||{items:[],custom:[],bottles:[],learned:[]};
+const TASTE_KEYS=["sweet","sour","bitter","fresh","fruity","creamy","boozy"];
+const DRINK_TYPES=["cocktail","wine","beer","spirit","other"];
+let state=clean(loadLocal())||{items:[],custom:[],bottles:[],learned:[],log:[]};
 let mood={strength:0,tastes:[],withs:[]};
 let filterText="",openOther=null;
 let db=null,docRef=null,saveTimer=null,lastRemote="";
@@ -1336,23 +1414,30 @@ function clean(d){
     items:!sample&&Array.isArray(d.items)?d.items.filter(x=>CAT_OF[x]):[],
     custom:!sample&&Array.isArray(d.custom)?d.custom.map(String).slice(0,100):[],
     bottles:!sample&&Array.isArray(d.bottles)?d.bottles.filter(b=>b&&STYLES[b.type]&&STYLES[b.type][b.style]&&b.name).map(b=>({id:String(b.id||uid()),type:b.type,name:String(b.name).slice(0,60),style:b.style})):[],
-    learned:Array.isArray(d.learned)?d.learned.filter(l=>l&&l.name&&STYLES[l.type]&&STYLES[l.type][l.style]).slice(0,200).map(l=>({name:String(l.name).slice(0,70),type:l.type,style:l.style,il:Array.isArray(l.il)?l.il.slice(0,2):[null,null],us:Array.isArray(l.us)?l.us.slice(0,2):[null,null]})):[]
+    learned:Array.isArray(d.learned)?d.learned.filter(l=>l&&l.name&&STYLES[l.type]&&STYLES[l.type][l.style]).slice(0,200).map(l=>({name:String(l.name).slice(0,70),type:l.type,style:l.style,il:Array.isArray(l.il)?l.il.slice(0,2):[null,null],us:Array.isArray(l.us)?l.us.slice(0,2):[null,null]})):[],
+    // My list: drinks to try and drinks tried, with ratings (see "my drinks" below).
+    log:Array.isArray(d.log)?d.log.filter(e=>e&&(e.ref?DRINKS.some(x=>x.id===e.ref):e.name)).slice(0,1000).map(e=>({id:String(e.id||uid()),ref:e.ref||null,
+      name:e.ref?"":String(e.name).slice(0,80),type:e.ref?"cocktail":DRINK_TYPES.includes(e.type)?e.type:"other",
+      tags:Array.isArray(e.tags)?e.tags.filter(k=>TASTE_KEYS.includes(k)):[],base:typeof e.base==="string"?e.base.slice(0,30):null,desc:String(e.desc||"").slice(0,120),
+      status:e.status==="tried"?"tried":"want",rating:[1,2,3,4,5].includes(e.rating)?e.rating:null,liked:Array.isArray(e.liked)?e.liked.filter(k=>TASTE_KEYS.includes(k)):[],
+      comment:String(e.comment||"").slice(0,300),place:String(e.place||"").slice(0,60),at:+e.at||0,ask:+e.ask||0})):[]
   };
 }
 function loadLocal(){try{const r=localStorage.getItem(LS_KEY);return r?JSON.parse(r):null}catch(e){return null}}
 function saveLocal(){try{localStorage.setItem(LS_KEY,JSON.stringify(state))}catch(e){}}
 function have(){return new Set(state.items)}
 function barEmpty(){return !state.items.length&&!state.custom.length&&!state.bottles.length}
-function payloadKey(s){return JSON.stringify({items:s.items,custom:s.custom,bottles:s.bottles,learned:s.learned||[]})}
+function payloadKey(s){return JSON.stringify({items:s.items,custom:s.custom,bottles:s.bottles,learned:s.learned||[],log:s.log||[]})}
+function payload(){return {items:state.items,custom:state.custom,bottles:state.bottles,learned:state.learned||[],log:state.log}}
 
 function commit(){
   saveLocal();render();
   if(docRef){
     clearTimeout(saveTimer);
     saveTimer=setTimeout(()=>{
-      const payload={items:state.items,custom:state.custom,bottles:state.bottles,learned:state.learned||[],updatedAt:Date.now()};
-      lastRemote=payloadKey(payload);
-      docRef.set(payload).then(()=>setSync(true,"sync.account")).catch(()=>setSync(false,"sync.failed"));
+      const p={...payload(),updatedAt:Date.now()};
+      lastRemote=payloadKey(p);
+      docRef.set(p).then(()=>setSync(true,"sync.account")).catch(()=>setSync(false,"sync.failed"));
     },500);
   }
 }
@@ -1531,15 +1616,17 @@ function fitInfo(d,picks){
 }
 function whereBuyType(missing){if(!missing.length)return null;const ty=ids(missing[0]).find(x=>PRESETS[x]);return ty&&WHISKY.includes(ty)?"whisky":ty}
 
-function drinkCard(d,H,missing){
-  const fi=fitInfo(d,bottlePicks(d));
+function drinkCard(d,H,missing,P){
+  const fi=fitInfo(d,bottlePicks(d)),lg=findLog({ref:d.id});
+  const mark=lg&&lg.status==="tried"&&lg.rating?el("span",{class:"mine","aria-label":t("rate.starN",lg.rating)},"★ "+lg.rating)
+    :lg&&lg.status==="want"?el("span",{class:"mine want"},t("list.wantBadge")):matchBadge(matchFor({ref:d.id},P));
   const pic=drinkPic(d,H);
   const card=el("article",{class:"drink"+(missing.length?" near":""),tabindex:"0",role:"button","aria-haspopup":"dialog",
       onclick:()=>openRecipe(d),onkeydown:e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openRecipe(d)}}},pic,el("div",{class:"drink-main"},
     el("div",{class:"drink-top"},el("h4",{},d.name),meterEl(d.s)),
     d.alt?el("div",{class:"alt",lang:"en",dir:"ltr"},d.alt):null,
     fi?el("div",{class:"with"},t("drink.with"),el("b",{},fi.b.name)):null,
-    el("div",{class:"tags"},d.t.map(x=>el("span",{class:"tag"},TASTE_NAME[x]))),
+    el("div",{class:"tags"},mark,d.t.map(x=>el("span",{class:"tag"},TASTE_NAME[x]))),
     missing.length?el("div",{class:"missing"},el("span",{},t("drink.missing",missing.map(specName).join(", "))),
       (()=>{const ty=whereBuyType(missing);return ty?el("button",{type:"button",onclick:e=>{e.stopPropagation();openShop(ty)}},t("drink.whereBuy")):null})()):null));
   card.dataset.id=d.id;
@@ -1750,7 +1837,7 @@ function recipeSteps(d,H){
 
 /* ---------- recipe sheet ---------- */
 let rcOpen=null;
-function openRecipe(d){
+function openRecipe(d,keep){
   const H=have(),missing=analyze(d,H),picks=bottlePicks(d),fi=fitInfo(d,picks);
   const body=$("rcBody");body.innerHTML="";
   const shot=SHOTS&&SHOTS[d.id],art=$("rcArt");art.innerHTML="";art.parentElement.classList.toggle("photo",!!shot);
@@ -1770,6 +1857,7 @@ function openRecipe(d){
       el("h2",{class:"rc-name",id:"rcName"},d.name),
       d.alt?el("div",{class:"rc-alt",lang:"en",dir:"ltr"},d.alt):null,
       fi?el("p",{class:"rc-with"},t("drink.with"),fi.b.name,fi.verdict):null),
+    recipeActions(d),
     el("div",{class:"rc-stats"},
       el("div",{},el("span",{class:"k"},t("rec.strength")),el("span",{class:"v",style:"display:flex;align-items:center;gap:6px"},meterEl(d.s),STRENGTH[d.s][1])),
       el("div",{},el("span",{class:"k"},t("rec.flavour")),el("span",{class:"v"},d.t.map(x=>TASTE_NAME[x]).join(", "))),
@@ -1784,13 +1872,180 @@ function openRecipe(d){
     shot?el("p",{class:"rc-credit"},t("rec.photo"),el("a",{href:shot.src,target:"_blank",rel:"noopener"},[shot.by,shot.lic,"Wikimedia Commons"].filter(Boolean).join(" · "))):null].filter(Boolean));
   const r=$("recipe");
   if(r.hidden){r.hidden=false;document.body.style.overflow="hidden";try{history.pushState({recipe:1},"")}catch(e){}}
-  rcOpen=d;r.scrollTop=0;$("rcBack").focus();
+  rcOpen=d;if(!keep){r.scrollTop=0;$("rcBack").focus()}
+}
+// Want to try, I made it / my rating, and why it suits you.
+function recipeActions(d){
+  const x={ref:d.id},lg=findLog(x),m=matchFor(x);
+  const box=el("div",{class:"rc-actions"});
+  if(lg&&lg.status==="tried")box.append(el("button",{type:"button",class:"rc-act on",onclick:()=>openRate(x)},
+    lg.rating?el("span",{class:"stars-txt"},starsText(lg.rating)):t("rate.rateNow"),el("small",{},t("rec.editRating"))));
+  else box.append(
+    el("button",{type:"button",class:"rc-act"+(lg?" on":""),"aria-pressed":String(!!lg),onclick:()=>{lg?removeLog(lg):saveLog(x,{status:"want"});openRecipe(d,true)}},lg?t("rec.wanted"):t("rec.want")),
+    el("button",{type:"button",class:"rc-act",onclick:()=>openRate(x)},t("rec.made")));
+  if(m&&m.level!=="maybe"&&!(lg&&lg.rating))box.append(el("p",{class:"rc-match"},matchBadge(m),m.why?" "+m.why:""));
+  return box;
 }
 function closeRecipe(fromHistory){
   const r=$("recipe");if(r.hidden)return;
   r.hidden=true;document.body.style.overflow="";
   const c=rcOpen&&document.querySelector('.drink[data-id="'+rcOpen.id+'"]');rcOpen=null;if(c)c.focus();
   if(!fromHistory&&history.state&&history.state.recipe)try{history.back()}catch(e){}
+}
+
+/* ---------- my drinks: what you want to try and what you tried, with ratings ---------- */
+// One entry per drink: a catalog cocktail (ref) or anything else by name (a wine, a cocktail from a menu).
+// status "want" or "tried"; rating 1–5 or null (tried, not rated yet); liked = taste keys; place = where.
+function baseOf(d){const id=ids(d.i[0][0])[0];return WHISKY.includes(id)?"whisky":id}
+const logKey=x=>x.ref?"c:"+x.ref:"n:"+normText(x.name||"");
+function findLog(x){const k=logKey(x);return state.log.find(e=>logKey(e)===k)||null}
+const drinkOf=e=>e.ref?DRINKS.find(d=>d.id===e.ref)||null:null;
+function logName(e){const d=drinkOf(e);return d?d.name:e.name}
+function logTags(e){const d=drinkOf(e);return d?d.t:(e.tags||[])}
+function logBase(e){const d=drinkOf(e);return d?baseOf(d):(e.base||null)}
+// Add or update an entry; x describes the drink, patch the change (status, rating…).
+function saveLog(x,patch){
+  let e=findLog(x);
+  if(!e){
+    e={id:uid(),ref:x.ref||null,name:x.ref?"":String(x.name||"").slice(0,80),type:x.ref?"cocktail":DRINK_TYPES.includes(x.type)?x.type:"other",
+      tags:(x.tags||[]).filter(k=>TASTE_KEYS.includes(k)),base:x.base||null,desc:String(x.desc||"").slice(0,120),
+      status:"want",rating:null,liked:[],comment:"",place:String(x.place||"").slice(0,60),at:Date.now(),ask:0};
+    state.log.unshift(e);
+  }
+  if(patch.status==="tried"&&e.status!=="tried")e.at=Date.now();
+  Object.assign(e,patch);commit();return e;
+}
+function removeLog(e){state.log=state.log.filter(x=>x!==e);commit()}
+// Tried but not rated yet, and not put off: these get a "How was it?".
+function toRate(){const now=Date.now();return state.log.filter(e=>e.status==="tried"&&!e.rating&&(e.ask||0)<=now)}
+
+/* Your taste: every rating pushes the drink's flavours and base spirit up (4–5 stars) or down (1–2),
+   and "what I liked" adds a little more. */
+function tasteProfile(){
+  const p={tag:{},base:{},n:0};
+  state.log.forEach(e=>{
+    if(e.status!=="tried"||!e.rating)return;
+    const w=e.rating-3;p.n++;
+    logTags(e).forEach(k=>p.tag[k]=(p.tag[k]||0)+w);
+    (e.liked||[]).forEach(k=>p.tag[k]=(p.tag[k]||0)+1);
+    const b=logBase(e);if(b)p.base[b]=(p.base[b]||0)+w;
+  });
+  return p;
+}
+// How well a drink fits: {score, level, why}. level: love, like, maybe, meh; null without ratings.
+function matchFor(x,p=tasteProfile()){
+  const own=findLog(x);
+  if(own&&own.rating)return {score:own.rating-3,level:own.rating>=4?"love":own.rating===3?"maybe":"meh",why:t("match.rated",own.rating)};
+  if(!p.n)return null;
+  const tags=x.ref?(drinkOf(x)||{t:[]}).t:(x.tags||[]),base=x.ref?baseOf(drinkOf(x)):x.base;
+  if(!tags.length&&!base)return null;
+  let s=0;tags.forEach(k=>s+=p.tag[k]||0);s=s/Math.max(1,Math.sqrt(tags.length));
+  const bw=base&&p.base[base]||0;s+=bw*.8;
+  const good=tags.filter(k=>(p.tag[k]||0)>0).sort((a,b)=>p.tag[b]-p.tag[a]).slice(0,2).map(k=>TASTE_NAME[k]);
+  const why=bw>0&&NAME[base]?t("match.base",NAME[base]):good.length?t("match.tags",good.join(", ")):"";
+  return {score:s,level:s>=2.5?"love":s>=1?"like":s<=-1?"meh":"maybe",why};
+}
+function matchBadge(m){
+  if(!m||m.level==="maybe")return null;
+  return el("span",{class:"match "+m.level,title:m.why||null},t("match."+m.level));
+}
+function starsText(n){return "★".repeat(n)+"☆".repeat(5-n)}
+
+// A small picture for a drink outside the catalog: a bottle for wine, beer and spirits, a glass for the rest.
+function typeIcon(type){
+  const box=el("span",{class:"art-box sm"});
+  if(type==="wine"||type==="beer"||type==="spirit"){box.classList.add("bt");box.append(bottleThumb(type==="wine"?"red_wine":type==="beer"?"beer":"vodka"));return box}
+  box.innerHTML='<svg viewBox="0 0 100 140" aria-hidden="true"><path d="'+GLASS.coupe.o+'" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>';
+  return box;
+}
+
+/* Rating sheet: stars, what you liked, a note and where. */
+let rateFor=null;
+function openRate(x,opts={}){
+  const e=findLog(x)||{rating:null,liked:[],comment:"",place:x.place||""};
+  rateFor={x,rating:e.rating||opts.rating||null,liked:(e.liked||[]).slice(),comment:e.comment||"",place:e.place||x.place||""};
+  const r=$("rateSheet");r.hidden=false;document.body.style.overflow="hidden";renderRate();
+  setTimeout(()=>{const b=r.querySelector(".stars button");if(b)b.focus()},30);
+}
+function closeRate(){$("rateSheet").hidden=true;rateFor=null;if($("recipe").hidden&&$("ob").hidden)document.body.style.overflow=""}
+function renderRate(){
+  const f=rateFor,box=$("rateBody");box.innerHTML="";if(!f)return;
+  const name=f.x.ref?logName(f.x):f.x.name;
+  const stars=el("div",{class:"stars",role:"radiogroup","aria-label":t("rate.stars")},[1,2,3,4,5].map(n=>el("button",{type:"button",role:"radio","aria-checked":String(f.rating===n),
+    "aria-label":t("rate.starN",n),class:f.rating>=n?"on":"",onclick:()=>{f.rating=n;renderRate()}},"★")));
+  const liked=el("div",{class:"chips"},TASTE_KEYS.map(k=>el("button",{type:"button",class:"chip","aria-pressed":String(f.liked.includes(k)),
+    onclick:()=>{f.liked=f.liked.includes(k)?f.liked.filter(x=>x!==k):[...f.liked,k];renderRate()}},TASTE_NAME[k])));
+  const note=el("textarea",{id:"rateNote",rows:"2",placeholder:t("rate.notePh"),"aria-label":t("rate.note")});note.value=f.comment;note.oninput=()=>f.comment=note.value;
+  const place=el("input",{type:"text",id:"ratePlace",placeholder:t("rate.placePh"),"aria-label":t("rate.place"),value:f.place});place.oninput=()=>f.place=place.value;
+  const has=findLog(f.x);
+  box.append(el("p",{class:"eyebrow gold"},t("rate.eyebrow")),el("h2",{id:"rateTitle"},name),
+    el("div",{class:"rate-sec"},el("span",{class:"lbl"},t("rate.how")),stars,el("small",{class:"note"},f.rating?t("rate.word"+f.rating):t("rate.tap"))),
+    el("div",{class:"rate-sec"},el("span",{class:"lbl"},t("rate.liked")),liked),
+    el("div",{class:"rate-sec"},el("span",{class:"lbl"},t("rate.where")),place),
+    el("div",{class:"rate-sec"},el("span",{class:"lbl"},t("rate.note")),note));
+  const foot=$("rateFoot");foot.innerHTML="";
+  foot.append(el("button",{class:"btn ghost",type:"button",onclick:closeRate},t("common.cancel")),
+    el("button",{class:"btn",type:"button",disabled:f.rating?null:"",onclick:()=>{
+      saveLog(f.x,{status:"tried",rating:f.rating,liked:f.liked,comment:f.comment.trim().slice(0,300),place:f.place.trim().slice(0,60)});
+      closeRate();if(rcOpen)openRecipe(rcOpen,true);renderList();renderRatePrompt();
+    }},t("rate.save")));
+  if(has)box.append(el("button",{type:"button",class:"linkbtn warn",onclick:()=>{removeLog(has);closeRate();if(rcOpen)openRecipe(rcOpen,true);renderList()}},t("rate.remove")));
+}
+
+/* "How was it?": one tried-but-unrated drink at a time, at the top of What to make. */
+function renderRatePrompt(){
+  const box=$("ratePrompt");if(!box)return;box.innerHTML="";
+  const e=toRate()[0];if(!e){box.hidden=true;return}
+  box.hidden=false;
+  box.append(el("div",{class:"rp-txt"},el("b",{},t("rate.prompt",logName(e))),el("small",{},e.place?e.place:t("rate.promptSub"))),
+    el("div",{class:"stars sm"},[1,2,3,4,5].map(n=>el("button",{type:"button","aria-label":t("rate.starN",n),onclick:()=>openRate(e,{rating:n})},"★"))),
+    el("button",{type:"button",class:"linkbtn",onclick:()=>{e.ask=Date.now()+864e5;commit();renderRatePrompt()}},t("rate.later")));
+}
+
+/* My list: want to try / tried, your taste, and what is waiting for a rating. */
+let listView="tried",listAdd="";
+function listItem(e){
+  const d=drinkOf(e),H=have();
+  const pic=d?drinkPic(d,H,"sm"):typeIcon(e.type);
+  const sub=[t("dtype."+(e.ref?"cocktail":e.type)),e.place,e.status==="tried"&&e.at?new Date(e.at).toLocaleDateString(L.locale,{day:"numeric",month:"short"}):null].filter(Boolean).flatMap((x,i)=>i?[" · ",el("bdi",{},x)]:[el("bdi",{},x)]);
+  const right=e.status==="tried"?(e.rating?el("span",{class:"stars-txt","aria-label":t("rate.starN",e.rating)},starsText(e.rating)):el("button",{type:"button",class:"btn sm",onclick:ev=>{ev.stopPropagation();openRate(e)}},t("rate.rateNow")))
+    :el("button",{type:"button",class:"btn ghost sm",onclick:ev=>{ev.stopPropagation();openRate(e)}},t("list.tried"));
+  const row=el("article",{class:"li-row",tabindex:"0",role:"button",onclick:()=>d?openRecipe(d):openRate(e),onkeydown:ev=>{if(ev.key==="Enter"){ev.preventDefault();d?openRecipe(d):openRate(e)}}},
+    pic,el("div",{class:"li-main"},el("b",{},logName(e)),el("small",{},sub),
+      e.status==="tried"&&(e.liked||[]).length?el("div",{class:"tags"},e.liked.map(k=>el("span",{class:"tag"},TASTE_NAME[k]))):null,
+      e.comment?el("small",{class:"li-note"},e.comment):null,
+      e.status==="want"?matchBadge(matchFor(e)):null),right);
+  return row;
+}
+function renderList(){
+  const box=$("listBody");if(!box)return;box.innerHTML="";
+  const tried=state.log.filter(e=>e.status==="tried"),want=state.log.filter(e=>e.status==="want"),waiting=toRate();
+  // Your taste
+  const p=tasteProfile();
+  const top=Object.entries(p.tag).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k])=>TASTE_NAME[k]);
+  const bases=Object.entries(p.base).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k])=>NAME[k]).filter(Boolean);
+  box.append(el("div",{class:"taste"},el("span",{class:"eyebrow"},t("list.taste")),
+    p.n>=2&&(top.length||bases.length)?el("p",{class:"serif"},t("list.tasteLine",top.join(", "),bases.join(", "))):el("p",{class:"serif"},t("list.tasteEmpty"))));
+  if(waiting.length)box.append(el("div",{class:"sec-h"},el("h3",{},t("list.waiting")),el("small",{},String(waiting.length))),
+    el("div",{class:"li-list"},waiting.map(listItem)));
+  // Want to try / Tried
+  const seg=el("div",{class:"seg2",role:"tablist"},[["tried",tried.length],["want",want.length]].map(([k,n])=>el("button",{type:"button",role:"tab","aria-selected":String(listView===k),onclick:()=>{listView=k;renderList()}},t("list."+k+"Tab")+" · "+n)));
+  box.append(seg);
+  const items=listView==="tried"?tried.filter(e=>e.rating||!waiting.includes(e)).sort((a,b)=>(b.rating||0)-(a.rating||0)||b.at-a.at):want;
+  if(!items.length)box.append(el("div",{class:"empty"},t(listView==="tried"?"list.triedEmpty":"list.wantEmpty")));
+  else box.append(el("div",{class:"li-list"},items.map(listItem)));
+  // Add anything: a cocktail from the app, a wine, or just a name.
+  const inp=el("input",{type:"search",id:"listSearch",placeholder:t("list.addPh"),"aria-label":t("list.addPh"),autocomplete:"off",value:listAdd});
+  const res=el("div",{class:"ob-results"});
+  const draw=()=>{res.innerHTML="";const q=listAdd.trim();if(!q)return;const nq=normText(q);
+    const hits=DRINKS.filter(d=>normText(d.name).includes(nq)||normText(LOCALES.en.drink[d.id].n).includes(nq)||normText(LOCALES.he.drink[d.id].n).includes(nq)).slice(0,5);
+    const add=(x)=>{listAdd="";listView==="want"?saveLog(x,{status:"want"}):openRate(x);renderList()};
+    hits.forEach(d=>res.append(el("button",{type:"button",class:"ob-res",onclick:()=>add({ref:d.id})},drinkPic(d,have(),"sm"),el("span",{},d.name,el("small",{},t("dtype.cocktail"))),el("span",{class:"plus"},t("common.addPlus")))));
+    res.append(el("button",{type:"button",class:"ob-res manual",onclick:()=>add({name:q,type:"other"})},el("span",{},t("list.addAsIs",q),el("small",{},t(listView==="want"?"list.addWantSub":"list.addTriedSub"))),el("span",{class:"plus"},t("common.addPlus"))));
+  };
+  inp.addEventListener("input",()=>{listAdd=inp.value;draw()});
+  box.append(el("div",{class:"sec-h"},el("h3",{},t(listView==="want"?"list.addWant":"list.addTried"))),inp,res);draw();
+  const n=waiting.length;$("listCount").textContent=n||"";
 }
 
 function renderResults(){
@@ -1800,21 +2055,23 @@ function renderResults(){
     const m=analyze(d,H);
     if(m.length===0)now.push(d);else if(m.length===1)near.push({d,m});
   });
-  const sort=(a,b)=>tasteScore(b)-tasteScore(a)||fitScore(b)-fitScore(a)||a.s-b.s;
+  const P=tasteProfile(),like={};
+  DRINKS.forEach(d=>{const m=matchFor({ref:d.id},P);like[d.id]=m?m.score:0});
+  const sort=(a,b)=>tasteScore(b)-tasteScore(a)||like[b.id]-like[a.id]||fitScore(b)-fitScore(a)||a.s-b.s;
   now.sort(sort);near.sort((a,b)=>sort(a.d,b.d));
   const nl=$("nowList"),rl=$("nearList");nl.innerHTML="";rl.innerHTML="";
   $("nowCount").textContent=t("count.cocktails",now.length);
   $("nearCount").textContent=t("count.cocktails",near.length);
-  if(now.length)now.forEach(d=>nl.append(drinkCard(d,H,[])));
+  if(now.length)now.forEach(d=>nl.append(drinkCard(d,H,[],P)));
   else nl.append(el("div",{class:"empty"},state.items.length?t("mix.noneFit"):el("div",{},t("mix.empty"),el("div",{class:"menu-actions",style:"justify-content:center"},el("button",{class:"btn",type:"button",onclick:openOb},t("mix.build"))))));
-  if(near.length)near.forEach(({d,m})=>rl.append(drinkCard(d,H,m)));
+  if(near.length)near.forEach(({d,m})=>rl.append(drinkCard(d,H,m,P)));
   else rl.append(el("div",{class:"empty"},t("mix.nearNone")));
   $("surpriseBtn").disabled=!now.length;
   $("jumpResults").textContent=t("mix.jump",now.length);
 }
 
 function greet(){$("greet").textContent=t("mix.greet",new Date().getHours())}
-function render(){greet();renderInventory();renderMood();renderResults();if(document.querySelector(".app").dataset.view==="shop")renderShop()}
+function render(){greet();renderInventory();renderMood();renderResults();renderRatePrompt();renderList();if(document.querySelector(".app").dataset.view==="shop")renderShop()}
 
 /* ---------- events ---------- */
 $("filter").addEventListener("input",e=>{filterText=e.target.value;renderInventory()});
@@ -1831,7 +2088,7 @@ $("customForm").addEventListener("submit",e=>{
   if(v&&!state.custom.includes(v)){state.custom.push(v);$("customName").value="";commit()}
 });
 $("exportBar").addEventListener("click",()=>{
-  const text=JSON.stringify({homebar:1,items:state.items,custom:state.custom,bottles:state.bottles,learned:state.learned||[]});
+  const text=JSON.stringify({homebar:1,...payload()});
   const done=ok=>{$("moveStatus").textContent=ok?t("move.copied"):t("move.copyFailed");if(!ok){$("importText").value=text;$("importText").select()}};
   try{navigator.clipboard.writeText(text).then(()=>done(true),()=>done(false))}catch(e){done(false)}
 });
@@ -1851,25 +2108,26 @@ $("surpriseBtn").addEventListener("click",()=>{
 });
 $("rcBack").addEventListener("click",()=>closeRecipe());
 window.addEventListener("popstate",()=>closeRecipe(true));
-document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{
-  const t=b.dataset.tab==="home"?"mix":b.dataset.tab;
-  if(document.querySelector(".app").dataset.view!==t){setTab(t);window.scrollTo(0,0)}
-}));
+// Three places: at home (what to make, my bar, shop), at a restaurant, and my list.
+const HOME=["mix","bar","shop"];let homeSub="mix";
+function go(t){if(document.querySelector(".app").dataset.view!==t){setTab(t);window.scrollTo(0,0)}}
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.tab==="home"?homeSub:b.dataset.tab)));
+document.querySelectorAll(".subnav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.sub==="both"?"mix":b.dataset.sub)));
 function setTab(t){
   document.querySelector(".app").dataset.view=t;
-  document.querySelectorAll(".tabs button").forEach(b=>{
-    const on=b.dataset.tab===t||(b.dataset.tab==="home"&&(t==="bar"||t==="mix"));
-    b.setAttribute("aria-selected",String(on));
-  });
+  if(HOME.includes(t))homeSub=t;
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===t||b.dataset.tab==="home"&&HOME.includes(t))));
+  document.querySelectorAll(".subnav button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.sub===t||b.dataset.sub==="both"&&(t==="bar"||t==="mix"))));
   if(t==="shop")renderShop();
   if(t==="menu")renderMenu();
+  if(t==="list")renderList();
   try{localStorage.setItem("homebar.tab",t)}catch(e){}
 }
 // The restaurant wine menu is parked for now: its code stays, the tab is hidden. Set to true to bring it back.
 const SHOW_MENU=false;
 if(!SHOW_MENU)document.querySelector('.tabs [data-tab="menu"]').hidden=true;
 let startTab="mix";try{startTab=localStorage.getItem("homebar.tab")||"mix"}catch(e){}
-if(!["bar","mix","shop"].concat(SHOW_MENU?["menu"]:[]).includes(startTab))startTab="mix";
+if(!["bar","mix","shop","list"].concat(SHOW_MENU?["menu"]:[]).includes(startTab))startTab="mix";
 
 /* ---------- colours: four themes and an optional button colour, kept on this device ---------- */
 const THEMES=["whiskey","absinthe","midnight","agave"];
@@ -2643,7 +2901,7 @@ function finishOb(){closeOb();setTab(barEmpty()?"bar":"mix");window.scrollTo({to
 function finishBar(){closeOb();setTab("bar");window.scrollTo({top:0})}
 $("obClose").addEventListener("click",closeOb);
 $("sheetClose").addEventListener("click",closeSheet);
-document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("recipe").hidden)closeRecipe();else if(ob.sheet)closeSheet();else if(!$("ob").hidden)closeOb()});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("rateSheet").hidden)closeRate();else if(!$("recipe").hidden)closeRecipe();else if(ob.sheet)closeSheet();else if(!$("ob").hidden)closeOb()});
 $("openOb").addEventListener("click",openOb);
 let obSeen=null;try{obSeen=localStorage.getItem(OB_KEY)}catch(e){}
 
@@ -2707,8 +2965,8 @@ function applyRemote(d){
       let moved=null;
       if(bar.legacy){const old=await bar.legacy.get().catch(()=>null);if(old&&old.exists){applyRemote(old.data()||{});moved=bar.legacy}}
       if(moved||!barEmpty()){
-        const payload={items:state.items,custom:state.custom,bottles:state.bottles,learned:state.learned||[],updatedAt:Date.now()};
-        lastRemote=payloadKey(payload);await docRef.set(payload);
+        const p={...payload(),updatedAt:Date.now()};
+        lastRemote=payloadKey(p);await docRef.set(p);
         if(moved)await moved.delete().catch(()=>{});   // only after the private copy is saved
       }
     }

@@ -15,7 +15,7 @@
   with the same keys. Never put text in `src/app.html`; use `data-t`/`data-t-ph`/`data-t-html` or `t("key", ...)`.
   Catalog data holds ids; names come from the locales. Prompts get `lang` for the language of notes.
 - Prices always state the bottle size. Catalog: `B(...)` bottle rows and `W(...)` wine rows in `src/app.html`
-  (wine notes are English terms; `he.js` `wineTerm` translates them).
+  (wine notes are English terms; `he.js` `wineTerm` translates them). Beers are `BEER_LIST`, with notes in the same form.
 - Bottle photos: `scripts/photos/fetch.py` then `build.py`; cocktail photos: `cocktails_fetch.py`, picks in `data/cocktail-photo-picks.json`, then `cocktails_build.py` (see README). Check the contact sheets before publishing;
   a wrong photo is worse than the drawn bottle.
 - Everything in the repository is in English (code, comments, docs); Hebrew appears only as translations and search aliases.

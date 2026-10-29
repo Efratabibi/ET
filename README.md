@@ -1,6 +1,6 @@
 # All Cohol
 
-An app that knows what's in your bar, suggests cocktails for your mood, helps you buy bottles, and (parked for now) compares wine prices at a restaurant. The interface is in Hebrew by default, with English one tap away.
+An app for everything you drink, in three places. **At home** it knows what's in your bar, suggests cocktails for your mood and helps you buy bottles. **At a restaurant** it reads a photo of the drinks menu, marks what suits you and compares wine prices with the shop. **My list** keeps what you want to try and what you tried, with your ratings; the ratings are what "suits you" is based on. The interface is in Hebrew by default, with English one tap away.
 
 The same source builds two versions:
 
@@ -92,4 +92,6 @@ The server calls Claude with a JSON response schema, so every answer parses. If 
 
 The client sends only a task name and parameters, and the server builds the prompt. Nobody can use the endpoint as an open proxy to Claude.
 
-The restaurant tab is hidden behind `SHOW_MENU` in `src/app.html`; its code stays for later.
+Ratings and the want-to-try list are saved with the bar (`log` in the bar document), so they sync like the bar does. The restaurant menu itself stays in the browser.
+
+Reading a menu photo needs Claude; on the web version that means `ANTHROPIC_API_KEY` (step 2). Without it the restaurant tab still works with drinks added by hand.

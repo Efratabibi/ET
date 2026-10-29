@@ -288,6 +288,66 @@ select option{background:var(--surface);color:var(--ink)}
 .buy .primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
 .disclaimer{font-size:12px;line-height:1.5;color:var(--faint);margin:0;max-width:70ch}
 .app:not([data-view="menu"]) #pane-menu{display:none}
+.app:not([data-view="list"]) #pane-list{display:none}
+@media (min-width:861px){.app[data-view="list"] .grid{display:none}}
+/* home sub-navigation: what to make, my bar, shop */
+.subnav{display:flex;max-width:560px;gap:4px;margin:-10px 0 22px}
+.app:not([data-view="mix"]):not([data-view="bar"]):not([data-view="shop"]) .subnav{display:none}
+.subnav button{flex:1;border:1px solid var(--line);background:transparent;color:var(--muted);font:600 14px var(--body);border-radius:999px;padding:0 10px;min-height:38px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.subnav button[aria-selected="true"]{color:var(--gold);border-color:var(--gold);background:var(--tint)}
+.tabs .count{margin-inline-start:6px;display:inline-block;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:#fff;font:700 11px/18px var(--body);letter-spacing:0;text-align:center}
+.tabs .count:empty{display:none}
+.subnav .count{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:#fff;font:700 11px/18px var(--body);text-align:center}
+.subnav .count:empty{display:none}
+@media (min-width:861px){.subnav .tab-m{display:none}}
+@media (max-width:860px){.subnav .tab-d{display:none}.subnav{margin:0 0 18px}}
+/* my list and ratings */
+.mine{font:700 12px var(--body);border-radius:6px;padding:2px 8px;background:var(--tint);color:var(--gold)}
+.mine.want{background:transparent;border:1px dashed var(--gold)}
+.match{font:700 12px var(--body);border-radius:6px;padding:2px 8px;background:var(--ok-soft);color:var(--ok)}
+.match.like{background:transparent;border:1px solid var(--ok)}
+.match.meh{background:transparent;border:1px solid var(--line2);color:var(--muted)}
+.rc-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.rc-act{display:inline-flex;align-items:center;gap:8px;min-height:44px;border:1.5px solid var(--cream-line,#D9D1C4);background:transparent;color:inherit;border-radius:999px;padding:0 16px;font:700 14px var(--body);cursor:pointer}
+.rc-act.on{border-color:var(--accent-deep);color:var(--accent-deep)}
+.rc-act small{font-weight:400;opacity:.8}
+.rc-match{flex:1 1 100%;margin:0;font-size:14px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.stars-txt{color:var(--gold);letter-spacing:2px;font-size:16px;white-space:nowrap}
+.recipe .stars-txt{color:var(--accent-deep)}
+.rate-sheet{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
+.rate-sheet[hidden]{display:none}
+.rate-in{width:100%;max-width:560px;max-height:92vh;overflow-y:auto;background:var(--bg);border-radius:20px 20px 0 0;border:1px solid var(--line);padding:22px 20px calc(16px + env(safe-area-inset-bottom,0px));display:grid;gap:16px}
+.rate-body{display:grid;gap:16px}
+.rate-body h2{font:600 30px/1 var(--display);text-transform:uppercase;margin:0;font-synthesis:none}
+.rate-sec{display:grid;gap:8px}
+.rate-sec textarea,.rate-sec input{width:100%}
+.rate-foot{display:flex;gap:8px;justify-content:flex-end}
+.rate-foot .btn{flex:1}
+.stars{display:flex;gap:4px}
+.stars button{border:0;background:none;font-size:38px;line-height:1;color:var(--line2);cursor:pointer;padding:2px 4px;min-width:44px;min-height:44px}
+.stars button.on{color:var(--gold)}
+.stars.sm button{font-size:26px;min-width:38px;color:var(--gold);opacity:.55}
+.stars.sm button:hover,.stars.sm button:focus-visible{opacity:1}
+.rate-prompt{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;background:var(--surface);border:1px solid var(--gold);border-radius:16px;padding:12px 16px}
+.rate-prompt[hidden]{display:none}
+.rp-txt{flex:1 1 180px;display:grid;gap:2px}
+.rp-txt small{color:var(--muted)}
+.list-body{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;max-width:720px}
+.taste{background:var(--cream);color:var(--cream-ink);border-radius:16px;padding:16px;display:grid;gap:6px}
+.taste .eyebrow{color:var(--accent-deep)}
+.taste .serif{margin:0;font-size:16px;line-height:1.4;color:var(--cream-text)}
+.seg2{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px}
+.seg2 button{flex:1;border:0;background:transparent;color:var(--muted);font:600 15px var(--body);border-radius:9px;min-height:42px;cursor:pointer}
+.seg2 button[aria-selected="true"]{background:var(--tint);color:var(--gold)}
+.li-list{display:grid;gap:8px}
+.li-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 14px;cursor:pointer;color:var(--ink)}
+.li-main{flex:1;min-width:0;display:grid;gap:4px;justify-items:start}
+.li-main b{font-size:16px}
+.li-main small{color:var(--muted);font-size:13px}
+.li-note{font-style:italic}
+.li-row .btn.sm,.btn.sm{min-height:36px;padding:0 12px;font-size:13px}
+.art-box.bt{display:flex;align-items:center;justify-content:center}
+.art-box.bt .thumb svg{width:22px;height:44px}
 @media (min-width:861px){.app[data-view="menu"] .grid{display:none}}
 /* phones: bottom tab bar, scrolling chip rows */
 .jump{display:none}
@@ -321,6 +381,30 @@ select option{background:var(--surface);color:var(--ink)}
 .summary{background:var(--ok-soft);color:var(--ink);border-radius:12px;padding:12px 14px;display:grid;gap:4px}
 .summary b{color:var(--ok)}
 .summary.plain{background:var(--surface);border:1px solid var(--line)}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+#photoBox{display:grid;gap:10px}
+#photoBox[hidden]{display:none}
+.bar-photo{display:grid;gap:8px}
+.bar-photo[hidden]{display:none}
+#photoBox .photo-cta{padding:22px 18px}
+.menu-filters{display:grid;gap:8px}
+.menu-filters:empty{display:none}
+.mi-head{display:flex;gap:12px;align-items:flex-start}
+.mi-main{flex:1;min-width:0;display:grid;gap:4px}
+.mi-main h4{margin:0;font:600 19px/1.1 var(--display);font-synthesis:none}
+.mi-main small{color:var(--muted);font-size:13px}
+.mi-price{display:grid;gap:2px;justify-items:end;flex:none}
+.mi-price span{font:600 18px var(--display);color:var(--gold);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mi-price small{font:500 11px var(--body);color:var(--muted);margin-inline-start:4px}
+.mi-why{color:var(--ok);font-size:13px}
+.mi-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mi-acts .btn[aria-pressed="true"]{border-color:var(--gold);color:var(--gold)}
+.mi-more summary{cursor:pointer;color:var(--muted);font-size:13px;padding:4px 0}
+.mi-more[open]{display:grid;gap:10px}
+.wine-name input{flex:1;min-width:0}
+.wine-name select{flex:none;width:auto;max-width:120px}
+.mi-more select{border:1px solid var(--line2);border-radius:8px;background:var(--bg);color:var(--ink);padding:0 6px;font-size:13px}
+.fields.one{grid-template-columns:minmax(0,140px)}
 .wines{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
 .wine{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px;position:relative}
 .wine.best{border-color:var(--ok)}
@@ -383,6 +467,11 @@ details summary::-webkit-details-marker{display:none}
 .ob-res>span small{font-weight:400}
 .ob-res .plus{flex:none;font:700 13px var(--body);color:var(--bg);background:var(--cream);border-radius:999px;padding:8px 14px;white-space:nowrap}
 .ob-res:last-child{border-bottom:0}
+.ob-res>.art-box{flex:none}
+.as-is{flex-wrap:wrap;cursor:default}
+.as-is .plus{border:1px solid var(--line2);cursor:pointer;font:700 13px var(--body)}
+.as-kind{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:6px}
+.as-kind .chip{min-height:34px;font-size:13px;padding:0 12px}
 .ob-res .thumb{flex:none;display:flex;align-items:center;justify-content:center;width:44px;height:60px;background:var(--surface);border-radius:8px}
 .ob-res .thumb svg{display:block;width:24px;height:48px}
 .ob-res .thumb.photo{background:var(--photo-bg);overflow:hidden}
@@ -482,12 +571,16 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
   </header>
 
   <nav class="tabs" role="tablist">
-    <button role="tab" class="tab-m" aria-selected="false" data-tab="bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4v4l2 3v12a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V9l2-3z"/><path d="M8 13h8"/></svg><span data-t="tab.bar"></span><span class="count" id="tabCount" aria-hidden="true"></span></button>
-    <button role="tab" class="tab-m" aria-selected="true" data-tab="mix"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16l-8 9z"/><path d="M12 13v7M8 20h8"/><path d="M15 2l-2 5"/></svg><span data-t="tab.mix"></span></button>
-    <button role="tab" class="tab-d" aria-selected="true" data-tab="home"><span data-t="tab.home"></span></button>
-    <button role="tab" aria-selected="false" data-tab="shop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span data-t="tab.shop"></span></button>
+    <button role="tab" aria-selected="true" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span data-t="tab.home"></span></button>
     <button role="tab" aria-selected="false" data-tab="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8l-.5 6a3.5 3.5 0 0 1-7 0z"/><path d="M12 12.5V20M8.5 20h7"/></svg><span data-t="tab.menu"></span></button>
+    <button role="tab" aria-selected="false" data-tab="list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg><span data-t="tab.list"></span><span class="count" id="listCount" aria-hidden="true"></span></button>
   </nav>
+  <div class="subnav" role="tablist" id="subnav">
+    <button role="tab" class="tab-m" aria-selected="true" data-sub="mix"><span data-t="tab.mix"></span></button>
+    <button role="tab" class="tab-m" aria-selected="false" data-sub="bar"><span data-t="tab.bar"></span><span class="count" id="tabCount" aria-hidden="true"></span></button>
+    <button role="tab" class="tab-d" aria-selected="true" data-sub="both"><span data-t="tab.both"></span></button>
+    <button role="tab" aria-selected="false" data-sub="shop"><span data-t="tab.shop"></span></button>
+  </div>
 
   <div class="grid">
     <section class="pane" id="pane-bar">
@@ -498,6 +591,7 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
         </div>
         <button class="btn-pill" type="button" id="openOb" data-t="bar.openOb"></button>
       </div>
+      <div class="bar-photo" id="barPhoto" hidden></div>
       <div class="bottles" id="bottleRows"></div>
       <div class="bottles" id="shelfBox"></div>
       <div class="pane-head">
@@ -539,6 +633,7 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     </section>
 
     <section class="pane" id="pane-mix">
+      <div class="rate-prompt" id="ratePrompt" hidden></div>
       <div class="pane-head">
         <p class="greet" id="greet"></p>
         <h2 data-t="mix.title"></h2>
@@ -595,20 +690,24 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     <div class="shop-list" id="shopList"></div>
     <p class="disclaimer" id="disclaimer"></p>
   </section>
+  <section class="pane" id="pane-list">
+    <div class="pane-head">
+      <h2 data-t="list.title"></h2>
+      <p class="sub" data-t="list.sub"></p>
+    </div>
+    <div class="list-body" id="listBody"></div>
+  </section>
   <section class="pane" id="pane-menu">
-    <h2 data-t="menu.title"></h2>
-    <p class="sub" data-t="menu.sub"></p>
-    <div class="card menu-top">
-      <div>
-        <label class="lbl" for="wineSearch" data-t="menu.addLabel"></label>
-        <input type="search" id="wineSearch" data-t-ph="menu.searchPh" autocomplete="off">
-        <div class="ob-results" id="wineResults" style="margin-top:8px"></div>
-      </div>
+    <div class="pane-head">
+      <h2 data-t="menu.title"></h2>
+      <p class="sub" data-t="menu.sub"></p>
+    </div>
+    <div class="menu-top">
       <div id="photoBox">
-        <label class="lbl" for="menuPhoto" data-t="menu.photoLabel"></label>
         <div class="photo-row">
-          <input type="file" id="menuPhoto" accept="image/*" capture="environment">
-          <button class="btn" type="button" id="readMenu" disabled data-t="menu.read"></button>
+          <label class="photo-cta" for="menuPhoto"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><span><b data-t="menu.shoot"></b><small data-t="menu.shootSub"></small></span></label>
+          <input type="file" id="menuPhoto" accept="image/*" class="vh">
+          <button class="btn" type="button" id="readMenu" hidden data-t="menu.read"></button>
           <button class="btn ghost" type="button" id="stopRead" hidden data-t="menu.stop"></button>
         </div>
         <p class="status" id="menuStatus" data-t="menu.status"></p>
@@ -619,12 +718,19 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
           <button class="btn" type="button" id="parseText" data-t="menu.parse"></button>
         </details>
       </div>
-      <div class="shop-controls" style="margin:0">
-        <label><span data-t="menu.pour"></span><select id="pour"><option value="150" data-t="menu.pour150"></option><option value="175" data-t="menu.pour175"></option><option value="187.5" data-t="menu.pour187"></option></select></label>
-        <label><span data-t="shop.country"></span><select id="menuCountry"></select></label>
+      <p class="note" id="menuNoAI" hidden data-t="menu.noAI"></p>
+      <div>
+        <label class="lbl" for="menuPlace" data-t="menu.place"></label>
+        <input type="text" id="menuPlace" data-t-ph="menu.placePh" autocomplete="off">
+      </div>
+      <div>
+        <label class="lbl" for="wineSearch" data-t="menu.addLabel"></label>
+        <input type="search" id="wineSearch" data-t-ph="menu.searchPh" autocomplete="off">
+        <div class="ob-results" id="wineResults" style="margin-top:8px"></div>
       </div>
     </div>
 
+    <div id="menuFilters" class="menu-filters"></div>
     <div id="menuSummary"></div>
     <div class="wines" id="wineList"></div>
     <div class="menu-actions">
@@ -632,6 +738,13 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
       <button class="btn ghost" type="button" id="estimateRetail" hidden data-t="menu.estimate"></button>
       <button class="btn ghost" type="button" id="clearMenu" data-t="menu.clear"></button>
     </div>
+    <details class="paste">
+      <summary data-t="menu.settings"></summary>
+      <div class="shop-controls" style="margin:10px 0 0">
+        <label><span data-t="menu.pour"></span><select id="pour"><option value="150" data-t="menu.pour150"></option><option value="175" data-t="menu.pour175"></option><option value="187.5" data-t="menu.pour187"></option></select></label>
+        <label><span data-t="shop.country"></span><select id="menuCountry"></select></label>
+      </div>
+    </details>
     <p class="note photo-credit" hidden data-t-html="photo.credit"></p>
     <p class="disclaimer" data-t="menu.disclaimer"></p>
   </section>
@@ -660,6 +773,10 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
   <div class="rc-body" id="rcBody"></div>
 </div>
 
+<div class="rate-sheet" id="rateSheet" hidden role="dialog" aria-modal="true" aria-labelledby="rateTitle">
+  <div class="rate-in"><div class="rate-body" id="rateBody"></div><div class="rate-foot" id="rateFoot"></div></div>
+</div>
+
 <script>/* English. Every piece of text the app shows, plus English names for catalog data.
    Keys must match src/i18n/he.js. Values that are functions take counts or names. */
 (window.HB_LOCALES=window.HB_LOCALES||{}).en={
@@ -677,7 +794,65 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "sync.failed":"Couldn't save online; saved in this browser",
     "tab.bar":"My bar",
     "tab.mix":"What to make",
-    "tab.home":"Bar & recipes",
+    "tab.home":"At home",
+    "tab.both":"Bar & recipes",
+    "tab.list":"My list",
+    "match.love":"Made for you",
+    "match.like":"You'll likely enjoy",
+    "match.maybe":"Maybe",
+    "match.meh":"Less your thing",
+    "match.rated":n=>"You rated it "+n+" of 5",
+    "match.base":x=>"You liked drinks with "+x,
+    "match.tags":x=>"You like "+x,
+    "rate.eyebrow":"How was it?",
+    "rate.how":"My rating",
+    "rate.stars":"Star rating",
+    "rate.starN":n=>n===1?"1 star":n+" stars",
+    "rate.tap":"Tap a star to rate",
+    "rate.word1":"Not for me",
+    "rate.word2":"So-so",
+    "rate.word3":"Fine",
+    "rate.word4":"Tasty",
+    "rate.word5":"Perfect",
+    "rate.liked":"What did I like?",
+    "rate.where":"Where?",
+    "rate.place":"Where I had it",
+    "rate.placePh":"Home, or the name of a place",
+    "rate.note":"Note",
+    "rate.notePh":"e.g. less sugar next time",
+    "rate.save":"Save rating",
+    "rate.remove":"Remove from my list",
+    "rate.prompt":x=>"How was the "+x+"?",
+    "rate.promptSub":"A quick rating makes the suggestions better",
+    "rate.later":"Later",
+    "rate.rateNow":"Rate",
+    "dtype.cocktail":"Cocktail",
+    "dtype.wine":"Wine",
+    "dtype.beer":"Beer",
+    "dtype.spirit":"Spirit",
+    "dtype.other":"Drink",
+    "list.title":"My list",
+    "list.sub":"What you want to try, what you've tried, and how it was.",
+    "list.taste":"Your taste",
+    "list.tasteLine":(tags,bases)=>(tags?"Flavours you like: "+tags+". ":"")+(bases?"Your favourite drinks have "+bases+". ":"")+"That's how we mark what you'll like, at home and out.",
+    "list.tasteEmpty":"Rate at least two drinks and we'll start marking what you'll like.",
+    "list.waiting":"Waiting for a rating",
+    "list.triedTab":"Tried",
+    "list.wantTab":"Want to try",
+    "list.tried":"Tried it",
+    "list.wantBadge":"Want to try",
+    "list.triedEmpty":"Nothing rated yet. Recipes have an \"I made it\" button, or add one below.",
+    "list.wantEmpty":"Nothing here yet. Recipes have a \"Want to try\" button, or add one below.",
+    "list.addTried":"Add something I had",
+    "list.addWant":"Add something to try",
+    "list.addPh":"A cocktail, wine, beer…",
+    "list.addAsIs":x=>"Add \""+x+"\"",
+    "list.addTriedSub":"and rate it",
+    "list.addWantSub":"to \"Want to try\"",
+    "rec.want":"+ Want to try",
+    "rec.wanted":"✓ On my list",
+    "rec.made":"I made it · Rate",
+    "rec.editRating":"Edit",
     "tab.shop":"Shop",
     "tab.menu":"Restaurant",
     "tab.barAria":n=>"My bar"+(n?", "+n+(n===1?" item":" items"):""),
@@ -698,6 +873,12 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "size.for":s=>"for "+s,
     "size.perL":"per litre",
     "bar.title":"My bar",
+    "bar.photoBtn":"Photograph bottles",
+    "bar.photoSub":"Claude spots the bottles in the photo and adds them to your bar",
+    "bar.photoAdded":x=>"Added to your bar: "+x+".",
+    "bar.photoHad":"Everything in the photo is already in your bar.",
+    "bar.photoUndo":"Undo",
+    "bar.photoUndone":"Undone.",
     "bar.sub":"Tap to add, tap again to remove. Saved automatically.",
     "bar.openOb":"Add step by step",
     "bar.addTitle":"Add a bottle",
@@ -789,14 +970,34 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "shop.prices":"Current prices",
     "shop.bought":"Bought it, add to my bar",
     "shop.disclaimer":(ml,wolt)=>"Prices are an estimated shelf-price range ("+ml+" ml) as of late 2026, and vary between shops and with offers. For the UK and Europe they are a rough estimate based on US prices. "+(wolt?"\"Order on Wolt\" opens the liquor stores in the area you chose; copy the bottle's name and search for it in the store. ":"")+"\"Shops nearby\" opens Google Maps, which lists shops near you.",
-    "menu.title":"At a restaurant",
-    "menu.sub":"Photograph or type the wine list and see what's the best deal and what each bottle costs in a shop.",
-    "menu.addLabel":"Add a wine from the menu",
-    "menu.searchPh":"Wine name, e.g. Yarden Cabernet",
+    "menu.shoot":"Photograph the menu",
+    "menu.shootSub":"Take or pick a photo and reading starts on its own",
+    "menu.noAI":"Reading a menu photo needs Claude, which isn't connected on this site yet. For now you can add drinks by hand.",
+    "menu.place":"Where am I? (optional)",
+    "menu.placePh":"Name of the restaurant or bar",
+    "menu.all":"All",
+    "menu.sortMatch":"Best for me first",
+    "menu.sortMenu":"Menu order",
+    "menu.perGlass1":"glass",
+    "menu.perServing":"each",
+    "menu.perBottle":"bottle",
+    "menu.ordered":"I ordered this",
+    "menu.orderedBadge":"Ordered",
+    "menu.orderedNote":"Saved to your list. We'll ask how it was later.",
+    "menu.recipe":"Recipe",
+    "menu.compare":"Price and shop comparison",
+    "menu.edit":"Edit",
+    "menu.price":"Price",
+    "menu.kind":"Kind of drink",
+    "menu.settings":"Price comparison settings",
+    "menu.title":"What to order?",
+    "menu.sub":"Photograph the drinks menu to see what suits you, based on what you liked, and how each wine compares with its shop price.",
+    "menu.addLabel":"Add by hand",
+    "menu.searchPh":"A wine, cocktail, beer…",
     "menu.photoLabel":"Or a photo of the whole menu",
     "menu.read":"Read the menu",
     "menu.stop":"Stop",
-    "menu.status":"Claude reads the wines and prices and estimates what each bottle costs in a shop.",
+    "menu.status":"Claude reads the drinks and prices, marks what suits you and estimates what each wine costs in a shop.",
     "menu.pasteSummary":"No photo? Paste text from the menu",
     "menu.pasteNote":"On iPhone: open the photo, long-press the text and choose \"Copy\". On Android: Google Lens, then \"Copy text\". You can also copy from the menu on the restaurant's website.",
     "menu.pastePh":"e.g.\nCabernet Sauvignon, Golan Heights 2021, glass 45, bottle 180",
@@ -805,7 +1006,7 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "menu.pour150":"150 ml (5 glasses a bottle)",
     "menu.pour175":"175 ml (4.3 glasses)",
     "menu.pour187":"187 ml (4 glasses)",
-    "menu.addWine":"+ Add a wine",
+    "menu.addWine":"+ Add by hand",
     "menu.estimate":"Estimate shop prices with Claude",
     "menu.clear":"Clear the menu",
     "menu.disclaimer":"The shop price is Claude's estimate from the wine's name, not a live price. Bottle and glass are judged separately. Up to 2× is a fair restaurant markup, 3× is typical, and more is expensive. The glass markup compares the glass price with the same amount of wine from a shop bottle. Bottles other than 750 ml are compared by volume.",
@@ -821,10 +1022,10 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "menu.from":"from",
     "menu.to":"to",
     "menu.howTitle":"How it works",
-    "menu.how1":"1. Find a wine from the menu and add it",
-    "menu.how2":"2. Type the restaurant's price, by the glass and by the bottle",
-    "menu.how3":"3. See what it costs in a shop, the markup, and when a bottle is the better deal",
-    "menu.how4":"Add two or more wines to see which is the best deal.",
+    "menu.how1":"1. Photograph the drinks menu, or add drinks by hand",
+    "menu.how2":"2. See what suits you, based on your ratings",
+    "menu.how3":"3. For wine, also see the shop price and when a bottle pays off",
+    "menu.how4":"What you order goes on your list, and later we ask how it was.",
     "menu.glassWithBottle":"A glass when you buy the bottle",
     "menu.save":p=>" ("+p+"% less)",
     "menu.bottleFrom":"A bottle pays off from",
@@ -856,11 +1057,11 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "menu.unsure":"not sure",
     "menu.aiNone":"Claude didn't find a matching wine. You can add it as it is.",
     "menu.reading":"Claude is reading the menu… this takes a few seconds.",
-    "menu.noWinesPhoto":"No wines found in the photo. Try a closer, straighter photo.",
+    "menu.noWinesPhoto":"No drinks found in the photo. Try a closer, straighter shot.",
     "menu.readCount":n=>"Read "+n+(n===1?" item":" items")+". Check the prices; you can correct them by hand.",
     "menu.noClaude":"Claude isn't available in this view. You can enter the wines by hand.",
     "menu.readingText":"Claude is reading the text…",
-    "menu.noWinesText":"No wines found in the text. Check that you copied the wine section.",
+    "menu.noWinesText":"No drinks found in the text. Check that you copied the drinks part.",
     "menu.estimating":"Claude is estimating shop prices…",
     "menu.estimated":n=>"Updated shop prices for "+n+(n===1?" item":" items")+". These are estimates.",
     "menu.estimateNone":"Claude couldn't identify these wines well enough to estimate a price.",
@@ -1423,7 +1624,65 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "sync.failed":"לא נשמר בענן, נשמר בדפדפן",
     "tab.bar":"הבר שלי",
     "tab.mix":"מה נכין?",
-    "tab.home":"הבר והמתכונים",
+    "tab.home":"בבית",
+    "tab.both":"הבר והמתכונים",
+    "tab.list":"הרשימה שלי",
+    "match.love":"בדיוק בשבילך",
+    "match.like":"כנראה יתאים לך",
+    "match.maybe":"אולי",
+    "match.meh":"פחות בשבילך",
+    "match.rated":n=>"הדירוג שלך: "+n+" מתוך 5",
+    "match.base":x=>"אהבת משקאות עם "+x,
+    "match.tags":x=>"בטעם שאהבת: "+x,
+    "rate.eyebrow":"איך היה?",
+    "rate.how":"הדירוג שלי",
+    "rate.stars":"דירוג בכוכבים",
+    "rate.starN":n=>n===1?"כוכב אחד":n+" כוכבים",
+    "rate.tap":"נגיעה בכוכב בוחרת דירוג",
+    "rate.word1":"לא בשבילי",
+    "rate.word2":"ככה ככה",
+    "rate.word3":"בסדר",
+    "rate.word4":"טעים",
+    "rate.word5":"מושלם",
+    "rate.liked":"מה אהבתי?",
+    "rate.where":"איפה?",
+    "rate.place":"איפה שתיתי",
+    "rate.placePh":"בבית, או שם של מקום",
+    "rate.note":"הערה",
+    "rate.notePh":"למשל: פחות סוכר בפעם הבאה",
+    "rate.save":"שמירת הדירוג",
+    "rate.remove":"הסרה מהרשימה שלי",
+    "rate.prompt":x=>x+": איך היה?",
+    "rate.promptSub":"דירוג קצר משפר את ההמלצות",
+    "rate.later":"אחר כך",
+    "rate.rateNow":"לדרג",
+    "dtype.cocktail":"קוקטייל",
+    "dtype.wine":"יין",
+    "dtype.beer":"בירה",
+    "dtype.spirit":"משקה חריף",
+    "dtype.other":"משקה",
+    "list.title":"הרשימה שלי",
+    "list.sub":"מה רצית לנסות, מה כבר ניסית, ואיך היה.",
+    "list.taste":"הטעם שלך",
+    "list.tasteLine":(tags,bases)=>(tags?"הטעמים שאהבת: "+tags+". ":"")+(bases?"הכי אהבת משקאות עם "+bases+". ":"")+"לפי זה מסומן מה יתאים לך, בבית ובמסעדה.",
+    "list.tasteEmpty":"אחרי שני דירוגים נתחיל לסמן מה יתאים לך.",
+    "list.waiting":"מחכים לדירוג",
+    "list.triedTab":"ניסיתי",
+    "list.wantTab":"רוצה לנסות",
+    "list.tried":"ניסיתי",
+    "list.wantBadge":"רוצה לנסות",
+    "list.triedEmpty":"עוד אין כאן דירוגים. במתכון יש כפתור \"הכנתי\", ואפשר גם להוסיף כאן למטה.",
+    "list.wantEmpty":"אין כאן עדיין כלום. במתכון יש כפתור \"רוצה לנסות\", ואפשר גם להוסיף כאן למטה.",
+    "list.addTried":"להוסיף משהו ששתיתי",
+    "list.addWant":"להוסיף משהו שרוצה לנסות",
+    "list.addPh":"קוקטייל, יין, בירה…",
+    "list.addAsIs":x=>"להוסיף את \""+x+"\"",
+    "list.addTriedSub":"ולדרג אותו",
+    "list.addWantSub":"לרשימת \"רוצה לנסות\"",
+    "rec.want":"+ רוצה לנסות",
+    "rec.wanted":"✓ ברשימה שלי",
+    "rec.made":"הכנתי · לדרג",
+    "rec.editRating":"עריכה",
     "tab.shop":"לקנות",
     "tab.menu":"במסעדה",
     "tab.barAria":n=>"הבר שלי"+(n?", "+(n===1?"פריט אחד":n+" פריטים"):""),
@@ -1444,6 +1703,12 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "size.for":s=>"ל-"+s,
     "size.perL":"לליטר",
     "bar.title":"הבר שלי",
+    "bar.photoBtn":"צילום בקבוקים",
+    "bar.photoSub":"Claude יזהה את הבקבוקים בתמונה ויוסיף אותם לבר",
+    "bar.photoAdded":x=>"נוסף לבר: "+x+".",
+    "bar.photoHad":"כל מה שבתמונה כבר נמצא בבר.",
+    "bar.photoUndo":"ביטול",
+    "bar.photoUndone":"ההוספה בוטלה.",
     "bar.sub":"לחיצה מוסיפה בקבוק, לחיצה נוספת מורידה אותו. נשמר אוטומטית.",
     "bar.openOb":"הוספה שלב אחר שלב",
     "bar.addTitle":"הוספת בקבוק",
@@ -1535,14 +1800,34 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "shop.prices":"מחירים עדכניים",
     "shop.bought":"קניתי, הוסיפו לבר",
     "shop.disclaimer":(ml,wolt)=>"המחירים הם טווח משוער של מחירי מדף ("+ml+" מ״ל), נכון לסוף 2026, ומשתנים בין חנויות ובמבצעים. בבריטניה ובאירופה זו הערכה גסה לפי מחירי ארה״ב. "+(wolt?"״הזמנה בוולט״ פותח את חנויות האלכוהול באזור שבחרת. העתיקו את שם הבקבוק וחפשו אותו בחנות. ":"")+"״חנויות קרובות״ פותח את מפות גוגל, שמציגות חנויות לפי המיקום שלך.",
-    "menu.title":"במסעדה",
-    "menu.sub":"מצלמים את תפריט היין או מקלידים אותו, ורואים מה הכי משתלם ומה המחיר של כל בקבוק בחנות.",
-    "menu.addLabel":"הוספת יין מהתפריט",
-    "menu.searchPh":"שם היין, למשל ירדן קברנה",
+    "menu.shoot":"צילום התפריט",
+    "menu.shootSub":"מצלמים או בוחרים תמונה, והקריאה מתחילה מעצמה",
+    "menu.noAI":"קריאת תפריט מצילום צריכה את Claude, שעוד לא מחובר באתר. בינתיים אפשר להוסיף משקאות ידנית.",
+    "menu.place":"איפה אני? (לא חובה)",
+    "menu.placePh":"שם המסעדה או הבר",
+    "menu.all":"הכל",
+    "menu.sortMatch":"מה שיתאים לי קודם",
+    "menu.sortMenu":"לפי הסדר בתפריט",
+    "menu.perGlass1":"לכוס",
+    "menu.perServing":"למנה",
+    "menu.perBottle":"לבקבוק",
+    "menu.ordered":"הזמנתי",
+    "menu.orderedBadge":"הזמנתי",
+    "menu.orderedNote":"נשמר ברשימה שלך. אחר כך נשאל איך היה.",
+    "menu.recipe":"למתכון",
+    "menu.compare":"מחיר והשוואה לחנות",
+    "menu.edit":"עריכה",
+    "menu.price":"מחיר",
+    "menu.kind":"סוג המשקה",
+    "menu.settings":"הגדרות להשוואת מחירים",
+    "menu.title":"מה להזמין?",
+    "menu.sub":"מצלמים את תפריט המשקאות ורואים מה יתאים לך לפי מה שאהבת, וכמה משתלם כל יין לעומת המחיר בחנות.",
+    "menu.addLabel":"הוספה ידנית",
+    "menu.searchPh":"יין, קוקטייל, בירה…",
     "menu.photoLabel":"או צילום של כל התפריט",
     "menu.read":"קריאת התפריט",
     "menu.stop":"עצירה",
-    "menu.status":"Claude יקרא את היינות והמחירים ויעריך כמה עולה כל בקבוק בחנות.",
+    "menu.status":"Claude יקרא את המשקאות והמחירים, יסמן מה יתאים לך ויעריך כמה עולה כל יין בחנות.",
     "menu.pasteSummary":"אין צילום? הדבקת טקסט מהתפריט",
     "menu.pasteNote":"באייפון: פותחים את התמונה, לוחצים לחיצה ארוכה על הטקסט ובוחרים ״העתקה״. באנדרואיד: Google Lens ואז ״העתקת טקסט״. אפשר גם להעתיק מתפריט באתר של המסעדה.",
     "menu.pastePh":"למשל:\nקברנה סוביניון, רמת הגולן 2021, כוס 45, בקבוק 180",
@@ -1551,7 +1836,7 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "menu.pour150":"150 מ״ל (5 כוסות לבקבוק)",
     "menu.pour175":"175 מ״ל (4.3 כוסות)",
     "menu.pour187":"187 מ״ל (4 כוסות)",
-    "menu.addWine":"+ הוספת יין",
+    "menu.addWine":"+ הוספה ידנית",
     "menu.estimate":"הערכת מחיר בחנות עם Claude",
     "menu.clear":"ניקוי התפריט",
     "menu.disclaimer":"המחיר בחנות הוא הערכה של Claude לפי שם היין, ולא מחיר עדכני. לבקבוק ולכוס יש הערכה נפרדת. מכפיל של עד פי 2 נחשב הוגן במסעדה, פי 3 רגיל, ומעל זה יקר. מכפיל הכוס משווה את מחיר הכוס למחיר של אותה כמות יין מבקבוק שקונים בחנות. בקבוק שאינו 750 מ״ל מושווה לפי נפח.",
@@ -1567,10 +1852,10 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "menu.from":"מ-",
     "menu.to":"עד",
     "menu.howTitle":"איך זה עובד",
-    "menu.how1":"1. מחפשים יין מהתפריט ומוסיפים אותו",
-    "menu.how2":"2. מקלידים את המחיר במסעדה, לכוס ולבקבוק",
-    "menu.how3":"3. רואים כמה הוא עולה בחנות, מכפיל המחיר, ומתי משתלם לקחת בקבוק",
-    "menu.how4":"הוסיפו שני יינות או יותר כדי לראות מה הכי משתלם.",
+    "menu.how1":"1. מצלמים את תפריט המשקאות, או מוסיפים משקאות ידנית",
+    "menu.how2":"2. רואים מה יתאים לך לפי הדירוגים שלך",
+    "menu.how3":"3. ביין רואים גם כמה הוא עולה בחנות ומתי משתלם לקחת בקבוק",
+    "menu.how4":"מה שהזמנתם נשמר ברשימה שלך, ואחר כך נשאל איך היה.",
     "menu.glassWithBottle":"כוס כשלוקחים בקבוק",
     "menu.save":p=>" (חיסכון "+p+"%)",
     "menu.bottleFrom":"בקבוק משתלם החל מ",
@@ -1602,11 +1887,11 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "menu.unsure":"לא בטוח",
     "menu.aiNone":"Claude לא מצא יין מתאים. אפשר להוסיף אותו כמו שהוא.",
     "menu.reading":"Claude קורא את התפריט… זה ייקח כמה שניות.",
-    "menu.noWinesPhoto":"לא מצאנו יינות בתמונה. נסו צילום קרוב וישר יותר.",
+    "menu.noWinesPhoto":"לא מצאנו משקאות בתמונה. נסו צילום קרוב וישר יותר.",
     "menu.readCount":n=>(n===1?"נקרא פריט אחד":"נקראו "+n+" פריטים")+". בדקו שהמחירים נכונים, ואפשר לתקן ידנית.",
     "menu.noClaude":"Claude לא זמין בתצוגה הזאת. אפשר להזין את היינות ידנית.",
     "menu.readingText":"Claude קורא את הטקסט…",
-    "menu.noWinesText":"לא מצאנו יינות בטקסט. בדקו שהעתקתם את החלק של היינות.",
+    "menu.noWinesText":"לא מצאנו משקאות בטקסט. בדקו שהעתקתם את החלק של המשקאות.",
     "menu.estimating":"Claude מעריך מחירים בחנות…",
     "menu.estimated":n=>"עודכנו מחירים בחנות "+(n===1?"לפריט אחד":"ל-"+n+" פריטים")+". אלה הערכות.",
     "menu.estimateNone":"Claude לא זיהה את היינות האלה מספיק טוב כדי להעריך מחיר.",
@@ -2183,7 +2468,26 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "Chile":"צ'ילה",
     "Argentina":"ארגנטינה",
     "California":"קליפורניה",
-    "Australia":"אוסטרליה"
+    "Australia":"אוסטרליה",
+    "Israel":"ישראל",
+    "Denmark":"דנמרק",
+    "Netherlands":"הולנד",
+    "Belgium":"בלגיה",
+    "Mexico":"מקסיקו",
+    "USA":"ארצות הברית",
+    "Ireland":"אירלנד",
+    "Scotland":"סקוטלנד",
+    "Lager":"לאגר",
+    "Dark lager":"לאגר כהה",
+    "Unfiltered lager":"לאגר לא מסונן",
+    "Pilsner":"פילזנר",
+    "Stout":"סטאוט",
+    "Pale ale":"פייל אייל",
+    "Blonde ale":"בלונד אייל",
+    "Belgian ale":"אייל בלגי",
+    "Witbier":"בירת חיטה בלגית",
+    "Wheat beer":"בירת חיטה",
+    "IPA":"IPA"
    },
   strength:["הכל", "קליל", "בינוני", "חזק"]
 };
@@ -2199,19 +2503,25 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
   // The language the user reads the app in; short notes come back in it. Defaults to Hebrew.
   const language=p=>p.lang==="en"?"English":"Hebrew";
 
-  const MENU_ITEM=obj({name:{type:"string"},kind:{type:"string",enum:["wine","spirit"]},glass:num,bottle:num,retail_low:num,retail_high:num,note:{type:"string"}});
+  // Flavours and base spirits use the app's own keys, so menu items can be matched to what the diner liked.
+  const TASTES=["sweet","sour","bitter","fresh","fruity","creamy","boozy"];
+  const BASES=["gin","vodka","white_rum","dark_rum","tequila","mezcal","whisky","brandy","cachaca","pisco","arak","absinthe","campari","aperol","amaretto","kahlua","prosecco","red_wine","white_wine","beer","other"];
+  const MENU_ITEM=obj({name:{type:"string"},kind:{type:"string",enum:["wine","cocktail","beer","spirit","other"]},glass:num,bottle:num,retail_low:num,retail_high:num,note:{type:"string"},
+    tags:{type:"array",items:{type:"string",enum:TASTES}},base:{type:"string",enum:BASES}});
   const WINE_HIT=obj({name:{type:"string"},he_name:{type:"string"},kind:{type:"string",enum:["red","white","rose","sparkling","other"]},note:{type:"string"},retail_low:num,retail_high:num,confidence:{type:"string",enum:["high","medium","low"]}});
   const BOTTLE_HIT=obj({id:{type:"string"},name:{type:"string"},style:{type:"string"},il_low:num,il_high:num,us_low:num,us_high:num});
   const PHOTO_HIT=obj({id:{type:"string"},name:{type:["string","null"]},style:{type:["string","null"]}});
 
   function menuPrompt(extra,p){
-    return "You help a diner in a restaurant judge a drinks menu. "+extra+
-      "\nFor each item estimate the typical retail shop price of one bottle (750 ml for wine, 700 ml for spirits) in "+p.country+" in "+p.currency+
-      ", as retail_low and retail_high numbers, or null if you cannot identify the wine well enough. Be realistic; do not guess wildly."+
-      "\nReturn ONLY JSON: {\"items\":[{\"name\":string,\"kind\":\"wine\"|\"spirit\",\"glass\":number|null,\"bottle\":number|null,\"retail_low\":number|null,\"retail_high\":number|null,\"note\":string}]}"+
-      "\n`note` is a very short description in "+language(p)+" (grape, region, vintage), e.g. \"Cabernet Sauvignon, Upper Galilee, 2021\". Keep names as printed on the menu.";
+    return "You help a diner in a restaurant choose from a drinks menu. "+extra+
+      "\nkind: wine, cocktail, beer, spirit (served neat or on the rocks) or other. glass is the price of one glass or one serving (a cocktail's or a beer's price goes in glass), bottle the price of a whole bottle."+
+      "\nFor wines and spirits estimate the typical retail shop price of one bottle (750 ml for wine, 700 ml for spirits) in "+p.country+" in "+p.currency+
+      ", as retail_low and retail_high numbers, or null if you cannot identify it well enough (always null for cocktails and beer). Be realistic; do not guess wildly."+
+      "\ntags: the flavours that fit the drink, from "+TASTES.join(", ")+" (boozy = strong and spirit-forward). base: its main spirit or drink, from "+BASES.join(", ")+"."+
+      "\nReturn ONLY JSON: {\"items\":[{\"name\":string,\"kind\":string,\"glass\":number|null,\"bottle\":number|null,\"retail_low\":number|null,\"retail_high\":number|null,\"note\":string,\"tags\":[string],\"base\":string}]}"+
+      "\n`note` is a very short description in "+language(p)+": for wine the grape, region and vintage (e.g. \"Cabernet Sauvignon, Upper Galilee, 2021\"), for a cocktail its main ingredients as the menu lists them, for beer the style. Keep names as printed on the menu.";
   }
-  const EXTRACT="Extract every wine, and any spirit sold by the glass, with its glass price and bottle price as printed (numbers only, null if missing). Skip food.";
+  const EXTRACT="Extract every alcoholic drink: wines, cocktails, beers and spirits, with prices as printed (numbers only, null if missing). Skip food and soft drinks.";
 
   const TASKS={
     // Every task also takes p.lang ("he" | "en"), the language for notes.
@@ -2909,7 +3219,9 @@ const DRINKS=[ // names, methods, glasses and tips come from the locale
 /* ---------- state ---------- */
 let uidN=0;const uid=()=>"b"+Date.now().toString(36)+(uidN++).toString(36);
 const LS_KEY="homebar.v1";
-let state=clean(loadLocal())||{items:[],custom:[],bottles:[],learned:[]};
+const TASTE_KEYS=["sweet","sour","bitter","fresh","fruity","creamy","boozy"];
+const DRINK_TYPES=["cocktail","wine","beer","spirit","other"];
+let state=clean(loadLocal())||{items:[],custom:[],bottles:[],learned:[],log:[]};
 let mood={strength:0,tastes:[],withs:[]};
 let filterText="",openOther=null;
 let db=null,docRef=null,saveTimer=null,lastRemote="";
@@ -2922,23 +3234,30 @@ function clean(d){
     items:!sample&&Array.isArray(d.items)?d.items.filter(x=>CAT_OF[x]):[],
     custom:!sample&&Array.isArray(d.custom)?d.custom.map(String).slice(0,100):[],
     bottles:!sample&&Array.isArray(d.bottles)?d.bottles.filter(b=>b&&STYLES[b.type]&&STYLES[b.type][b.style]&&b.name).map(b=>({id:String(b.id||uid()),type:b.type,name:String(b.name).slice(0,60),style:b.style})):[],
-    learned:Array.isArray(d.learned)?d.learned.filter(l=>l&&l.name&&STYLES[l.type]&&STYLES[l.type][l.style]).slice(0,200).map(l=>({name:String(l.name).slice(0,70),type:l.type,style:l.style,il:Array.isArray(l.il)?l.il.slice(0,2):[null,null],us:Array.isArray(l.us)?l.us.slice(0,2):[null,null]})):[]
+    learned:Array.isArray(d.learned)?d.learned.filter(l=>l&&l.name&&STYLES[l.type]&&STYLES[l.type][l.style]).slice(0,200).map(l=>({name:String(l.name).slice(0,70),type:l.type,style:l.style,il:Array.isArray(l.il)?l.il.slice(0,2):[null,null],us:Array.isArray(l.us)?l.us.slice(0,2):[null,null]})):[],
+    // My list: drinks to try and drinks tried, with ratings (see "my drinks" below).
+    log:Array.isArray(d.log)?d.log.filter(e=>e&&(e.ref?DRINKS.some(x=>x.id===e.ref):e.name)).slice(0,1000).map(e=>({id:String(e.id||uid()),ref:e.ref||null,
+      name:e.ref?"":String(e.name).slice(0,80),type:e.ref?"cocktail":DRINK_TYPES.includes(e.type)?e.type:"other",
+      tags:Array.isArray(e.tags)?e.tags.filter(k=>TASTE_KEYS.includes(k)):[],base:typeof e.base==="string"?e.base.slice(0,30):null,desc:String(e.desc||"").slice(0,120),
+      status:e.status==="tried"?"tried":"want",rating:[1,2,3,4,5].includes(e.rating)?e.rating:null,liked:Array.isArray(e.liked)?e.liked.filter(k=>TASTE_KEYS.includes(k)):[],
+      comment:String(e.comment||"").slice(0,300),place:String(e.place||"").slice(0,60),at:+e.at||0,ask:+e.ask||0})):[]
   };
 }
 function loadLocal(){try{const r=localStorage.getItem(LS_KEY);return r?JSON.parse(r):null}catch(e){return null}}
 function saveLocal(){try{localStorage.setItem(LS_KEY,JSON.stringify(state))}catch(e){}}
 function have(){return new Set(state.items)}
 function barEmpty(){return !state.items.length&&!state.custom.length&&!state.bottles.length}
-function payloadKey(s){return JSON.stringify({items:s.items,custom:s.custom,bottles:s.bottles,learned:s.learned||[]})}
+function payloadKey(s){return JSON.stringify({items:s.items,custom:s.custom,bottles:s.bottles,learned:s.learned||[],log:s.log||[]})}
+function payload(){return {items:state.items,custom:state.custom,bottles:state.bottles,learned:state.learned||[],log:state.log}}
 
 function commit(){
   saveLocal();render();
   if(docRef){
     clearTimeout(saveTimer);
     saveTimer=setTimeout(()=>{
-      const payload={items:state.items,custom:state.custom,bottles:state.bottles,learned:state.learned||[],updatedAt:Date.now()};
-      lastRemote=payloadKey(payload);
-      docRef.set(payload).then(()=>setSync(true,"sync.account")).catch(()=>setSync(false,"sync.failed"));
+      const p={...payload(),updatedAt:Date.now()};
+      lastRemote=payloadKey(p);
+      docRef.set(p).then(()=>setSync(true,"sync.account")).catch(()=>setSync(false,"sync.failed"));
     },500);
   }
 }
@@ -3117,15 +3436,17 @@ function fitInfo(d,picks){
 }
 function whereBuyType(missing){if(!missing.length)return null;const ty=ids(missing[0]).find(x=>PRESETS[x]);return ty&&WHISKY.includes(ty)?"whisky":ty}
 
-function drinkCard(d,H,missing){
-  const fi=fitInfo(d,bottlePicks(d));
+function drinkCard(d,H,missing,P){
+  const fi=fitInfo(d,bottlePicks(d)),lg=findLog({ref:d.id});
+  const mark=lg&&lg.status==="tried"&&lg.rating?el("span",{class:"mine","aria-label":t("rate.starN",lg.rating)},"★ "+lg.rating)
+    :lg&&lg.status==="want"?el("span",{class:"mine want"},t("list.wantBadge")):matchBadge(matchFor({ref:d.id},P));
   const pic=drinkPic(d,H);
   const card=el("article",{class:"drink"+(missing.length?" near":""),tabindex:"0",role:"button","aria-haspopup":"dialog",
       onclick:()=>openRecipe(d),onkeydown:e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openRecipe(d)}}},pic,el("div",{class:"drink-main"},
     el("div",{class:"drink-top"},el("h4",{},d.name),meterEl(d.s)),
     d.alt?el("div",{class:"alt",lang:"en",dir:"ltr"},d.alt):null,
     fi?el("div",{class:"with"},t("drink.with"),el("b",{},fi.b.name)):null,
-    el("div",{class:"tags"},d.t.map(x=>el("span",{class:"tag"},TASTE_NAME[x]))),
+    el("div",{class:"tags"},mark,d.t.map(x=>el("span",{class:"tag"},TASTE_NAME[x]))),
     missing.length?el("div",{class:"missing"},el("span",{},t("drink.missing",missing.map(specName).join(", "))),
       (()=>{const ty=whereBuyType(missing);return ty?el("button",{type:"button",onclick:e=>{e.stopPropagation();openShop(ty)}},t("drink.whereBuy")):null})()):null));
   card.dataset.id=d.id;
@@ -3336,7 +3657,7 @@ function recipeSteps(d,H){
 
 /* ---------- recipe sheet ---------- */
 let rcOpen=null;
-function openRecipe(d){
+function openRecipe(d,keep){
   const H=have(),missing=analyze(d,H),picks=bottlePicks(d),fi=fitInfo(d,picks);
   const body=$("rcBody");body.innerHTML="";
   const shot=SHOTS&&SHOTS[d.id],art=$("rcArt");art.innerHTML="";art.parentElement.classList.toggle("photo",!!shot);
@@ -3356,6 +3677,7 @@ function openRecipe(d){
       el("h2",{class:"rc-name",id:"rcName"},d.name),
       d.alt?el("div",{class:"rc-alt",lang:"en",dir:"ltr"},d.alt):null,
       fi?el("p",{class:"rc-with"},t("drink.with"),fi.b.name,fi.verdict):null),
+    recipeActions(d),
     el("div",{class:"rc-stats"},
       el("div",{},el("span",{class:"k"},t("rec.strength")),el("span",{class:"v",style:"display:flex;align-items:center;gap:6px"},meterEl(d.s),STRENGTH[d.s][1])),
       el("div",{},el("span",{class:"k"},t("rec.flavour")),el("span",{class:"v"},d.t.map(x=>TASTE_NAME[x]).join(", "))),
@@ -3370,13 +3692,216 @@ function openRecipe(d){
     shot?el("p",{class:"rc-credit"},t("rec.photo"),el("a",{href:shot.src,target:"_blank",rel:"noopener"},[shot.by,shot.lic,"Wikimedia Commons"].filter(Boolean).join(" · "))):null].filter(Boolean));
   const r=$("recipe");
   if(r.hidden){r.hidden=false;document.body.style.overflow="hidden";try{history.pushState({recipe:1},"")}catch(e){}}
-  rcOpen=d;r.scrollTop=0;$("rcBack").focus();
+  rcOpen=d;if(!keep){r.scrollTop=0;$("rcBack").focus()}
+}
+// Want to try, I made it / my rating, and why it suits you.
+function recipeActions(d){
+  const x={ref:d.id},lg=findLog(x),m=matchFor(x);
+  const box=el("div",{class:"rc-actions"});
+  if(lg&&lg.status==="tried")box.append(el("button",{type:"button",class:"rc-act on",onclick:()=>openRate(x)},
+    lg.rating?el("span",{class:"stars-txt"},starsText(lg.rating)):t("rate.rateNow"),el("small",{},t("rec.editRating"))));
+  else box.append(
+    el("button",{type:"button",class:"rc-act"+(lg?" on":""),"aria-pressed":String(!!lg),onclick:()=>{lg?removeLog(lg):saveLog(x,{status:"want"});openRecipe(d,true)}},lg?t("rec.wanted"):t("rec.want")),
+    el("button",{type:"button",class:"rc-act",onclick:()=>openRate(x)},t("rec.made")));
+  if(m&&m.level!=="maybe"&&!(lg&&lg.rating))box.append(el("p",{class:"rc-match"},matchBadge(m),m.why?" "+m.why:""));
+  return box;
 }
 function closeRecipe(fromHistory){
   const r=$("recipe");if(r.hidden)return;
   r.hidden=true;document.body.style.overflow="";
   const c=rcOpen&&document.querySelector('.drink[data-id="'+rcOpen.id+'"]');rcOpen=null;if(c)c.focus();
   if(!fromHistory&&history.state&&history.state.recipe)try{history.back()}catch(e){}
+}
+
+/* ---------- my drinks: what you want to try and what you tried, with ratings ---------- */
+// One entry per drink: a catalog cocktail (ref) or anything else by name (a wine, a cocktail from a menu).
+// status "want" or "tried"; rating 1–5 or null (tried, not rated yet); liked = taste keys; place = where.
+function baseOf(d){const id=ids(d.i[0][0])[0];return WHISKY.includes(id)?"whisky":id}
+const logKey=x=>x.ref?"c:"+x.ref:"n:"+normText(x.name||"");
+function findLog(x){const k=logKey(x);return state.log.find(e=>logKey(e)===k)||null}
+const drinkOf=e=>e.ref?DRINKS.find(d=>d.id===e.ref)||null:null;
+function logName(e){const d=drinkOf(e);return d?d.name:e.name}
+function logTags(e){const d=drinkOf(e);return d?d.t:(e.tags||[])}
+function logBase(e){const d=drinkOf(e);return d?baseOf(d):(e.base||null)}
+// Add or update an entry; x describes the drink, patch the change (status, rating…).
+function saveLog(x,patch){
+  let e=findLog(x);
+  if(!e){
+    e={id:uid(),ref:x.ref||null,name:x.ref?"":String(x.name||"").slice(0,80),type:x.ref?"cocktail":DRINK_TYPES.includes(x.type)?x.type:"other",
+      tags:(x.tags||[]).filter(k=>TASTE_KEYS.includes(k)),base:x.base||null,desc:String(x.desc||"").slice(0,120),
+      status:"want",rating:null,liked:[],comment:"",place:String(x.place||"").slice(0,60),at:Date.now(),ask:0};
+    state.log.unshift(e);
+  }
+  if(patch.status==="tried"&&e.status!=="tried")e.at=Date.now();
+  Object.assign(e,patch);commit();return e;
+}
+function removeLog(e){state.log=state.log.filter(x=>x!==e);commit()}
+// Tried but not rated yet, and not put off: these get a "How was it?".
+function toRate(){const now=Date.now();return state.log.filter(e=>e.status==="tried"&&!e.rating&&(e.ask||0)<=now)}
+
+/* Your taste: every rating pushes the drink's flavours and base spirit up (4–5 stars) or down (1–2),
+   and "what I liked" adds a little more. */
+function tasteProfile(){
+  const p={tag:{},base:{},n:0};
+  state.log.forEach(e=>{
+    if(e.status!=="tried"||!e.rating)return;
+    const w=e.rating-3;p.n++;
+    logTags(e).forEach(k=>p.tag[k]=(p.tag[k]||0)+w);
+    (e.liked||[]).forEach(k=>p.tag[k]=(p.tag[k]||0)+1);
+    const b=logBase(e);if(b)p.base[b]=(p.base[b]||0)+w;
+  });
+  return p;
+}
+// How well a drink fits: {score, level, why}. level: love, like, maybe, meh; null without ratings.
+function matchFor(x,p=tasteProfile()){
+  const own=findLog(x);
+  if(own&&own.rating)return {score:own.rating-3,level:own.rating>=4?"love":own.rating===3?"maybe":"meh",why:t("match.rated",own.rating)};
+  if(!p.n)return null;
+  const tags=x.ref?(drinkOf(x)||{t:[]}).t:(x.tags||[]),base=x.ref?baseOf(drinkOf(x)):x.base;
+  if(!tags.length&&!base)return null;
+  let s=0;tags.forEach(k=>s+=p.tag[k]||0);s=s/Math.max(1,Math.sqrt(tags.length));
+  const bw=base&&p.base[base]||0;s+=bw*.8;
+  const good=tags.filter(k=>(p.tag[k]||0)>0).sort((a,b)=>p.tag[b]-p.tag[a]).slice(0,2).map(k=>TASTE_NAME[k]);
+  const why=bw>0&&NAME[base]?t("match.base",NAME[base]):good.length?t("match.tags",good.join(", ")):"";
+  return {score:s,level:s>=2.5?"love":s>=1?"like":s<=-1?"meh":"maybe",why};
+}
+function matchBadge(m){
+  if(!m||m.level==="maybe")return null;
+  return el("span",{class:"match "+m.level,title:m.why||null},t("match."+m.level));
+}
+function starsText(n){return "★".repeat(n)+"☆".repeat(5-n)}
+
+// A small picture for a drink outside the catalog: a bottle for wine, beer and spirits, a glass for the rest.
+// A catalog wine (its English name and note) gets its photo or a bottle in its colour.
+function typeIcon(type,name,note){
+  const box=el("span",{class:"art-box sm"});
+  if(type==="wine"&&name){box.classList.add("bt");box.append(bottleThumb(null,null,note||"",name));return box}
+  if(type==="wine"||type==="beer"||type==="spirit"){box.classList.add("bt");box.append(bottleThumb(type==="wine"?"red_wine":type==="beer"?"beer":"vodka"));return box}
+  box.innerHTML='<svg viewBox="0 0 100 140" aria-hidden="true"><path d="'+GLASS.coupe.o+'" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>';
+  return box;
+}
+
+/* Beers people order in Israel. Style and country are English terms that the Hebrew locale translates (wineTerm). */
+const BEER_LIST=[
+ ["Goldstar","גולדסטאר","Dark lager · Israel"],["Goldstar Unfiltered","גולדסטאר לא מסוננת","Unfiltered lager · Israel"],["Maccabee","מכבי","Lager · Israel"],
+ ["Shapiro Pale Ale","שפירא פייל אייל","Pale ale · Israel"],["Alexander Blonde","אלכסנדר בלונד","Blonde ale · Israel"],["Malka Pale Ale","מלכה פייל אייל","Pale ale · Israel"],
+ ["Jem's Pils","ג׳מס פילס","Pilsner · Israel"],["Tuborg","טובורג","Lager · Denmark"],["Carlsberg","קרלסברג","Lager · Denmark"],["Heineken","הייניקן","Lager · Netherlands"],
+ ["Stella Artois","סטלה ארטואה","Pilsner · Belgium"],["Corona","קורונה","Lager · Mexico"],["Peroni","פרוני","Lager · Italy"],["Budweiser","בדווייזר","Lager · USA"],
+ ["Guinness","גינס","Stout · Ireland"],["Leffe Blonde","לף בלונד","Belgian ale · Belgium"],["Hoegaarden","הוגרדן","Witbier · Belgium"],["Blue Moon","בלו מון","Witbier · USA"],
+ ["Paulaner Hefe-Weissbier","פאולנר","Wheat beer · Germany"],["Weihenstephaner Hefeweissbier","וייהנשטפן","Wheat beer · Germany"],["Erdinger","ארדינגר","Wheat beer · Germany"],
+ ["BrewDog Punk IPA","ברודוג פאנק IPA","IPA · Scotland"]
+].map(([name,he,note])=>({name,he,note}));
+const BEER_TAGS={"Stout":["bitter","creamy"],"IPA":["bitter","fresh"],"Pale ale":["bitter","fresh"],"Wheat beer":["fresh","fruity"],"Witbier":["fresh","fruity"],"Belgian ale":["fruity","sweet"]};
+const beerTags=note=>BEER_TAGS[note.split(" · ")[0]]||["fresh"];
+let beerIdx=null;
+function localBeers(q){beerIdx=beerIdx||makeIndex(BEER_LIST,b=>[b.name,b.he,b.note,b.note.split(" · ").map(x=>LOCALES.he.wineTerm[x]||"").join(" ")]);return searchIndex(beerIdx,q,3)}
+// What a search finds: cocktails from the app, then wines and beers from the catalogs.
+function drinkHits(q){
+  const nq=normText(q);if(!nq)return [];
+  return [
+    ...DRINKS.filter(d=>[d.name,LOCALES.en.drink[d.id].n,LOCALES.he.drink[d.id].n].some(x=>normText(x).includes(nq))).slice(0,3)
+      .map(d=>({type:"cocktail",ref:d.id,name:d.name,note:"",tags:d.t,base:baseOf(d),pic:()=>drinkPic(d,have(),"sm")})),
+    ...localWines(q).slice(0,3).map(w=>({type:"wine",name:wineDisplay(w),note:wineNote(w.note),tags:[],base:wineKind(w.note),w,pic:()=>typeIcon("wine",w.name,w.note)})),
+    ...localBeers(q).map(b=>({type:"beer",name:lang==="he"?b.he:b.name,note:wineNote(b.note),tags:beerTags(b.note),base:"beer",pic:()=>typeIcon("beer")}))];
+}
+// "Add as it is", with a choice of what kind of drink it is.
+let asIsType=null;
+function asIsRow(q,sub,onAdd,redraw){
+  const ty=asIsType||(/יין|wine/i.test(q)?"wine":/ביר[הת]|beer|לאגר|lager|ipa/i.test(q)?"beer":"other");
+  return el("div",{class:"ob-res manual as-is"},
+    el("span",{},t("list.addAsIs",q),el("small",{},sub)),
+    el("button",{type:"button",class:"plus",onclick:()=>{asIsType=null;onAdd(ty)}},t("common.addPlus")),
+    el("div",{class:"as-kind",role:"group","aria-label":t("menu.kind")},DRINK_TYPES.map(k=>el("button",{type:"button",class:"chip","aria-pressed":String(k===ty),
+      onclick:()=>{asIsType=k;redraw()}},t("dtype."+k)))));
+}
+
+/* Rating sheet: stars, what you liked, a note and where. */
+let rateFor=null;
+function openRate(x,opts={}){
+  const e=findLog(x)||{rating:null,liked:[],comment:"",place:x.place||""};
+  rateFor={x,rating:e.rating||opts.rating||null,liked:(e.liked||[]).slice(),comment:e.comment||"",place:e.place||x.place||""};
+  const r=$("rateSheet");r.hidden=false;document.body.style.overflow="hidden";renderRate();
+  setTimeout(()=>{const b=r.querySelector(".stars button");if(b)b.focus()},30);
+}
+function closeRate(){$("rateSheet").hidden=true;rateFor=null;if($("recipe").hidden&&$("ob").hidden)document.body.style.overflow=""}
+function renderRate(){
+  const f=rateFor,box=$("rateBody");box.innerHTML="";if(!f)return;
+  const name=f.x.ref?logName(f.x):f.x.name;
+  const stars=el("div",{class:"stars",role:"radiogroup","aria-label":t("rate.stars")},[1,2,3,4,5].map(n=>el("button",{type:"button",role:"radio","aria-checked":String(f.rating===n),
+    "aria-label":t("rate.starN",n),class:f.rating>=n?"on":"",onclick:()=>{f.rating=n;renderRate()}},"★")));
+  const liked=el("div",{class:"chips"},TASTE_KEYS.map(k=>el("button",{type:"button",class:"chip","aria-pressed":String(f.liked.includes(k)),
+    onclick:()=>{f.liked=f.liked.includes(k)?f.liked.filter(x=>x!==k):[...f.liked,k];renderRate()}},TASTE_NAME[k])));
+  const note=el("textarea",{id:"rateNote",rows:"2",placeholder:t("rate.notePh"),"aria-label":t("rate.note")});note.value=f.comment;note.oninput=()=>f.comment=note.value;
+  const place=el("input",{type:"text",id:"ratePlace",placeholder:t("rate.placePh"),"aria-label":t("rate.place"),value:f.place});place.oninput=()=>f.place=place.value;
+  const has=findLog(f.x);
+  box.append(el("p",{class:"eyebrow gold"},t("rate.eyebrow")),el("h2",{id:"rateTitle"},name),
+    el("div",{class:"rate-sec"},el("span",{class:"lbl"},t("rate.how")),stars,el("small",{class:"note"},f.rating?t("rate.word"+f.rating):t("rate.tap"))),
+    el("div",{class:"rate-sec"},el("span",{class:"lbl"},t("rate.liked")),liked),
+    el("div",{class:"rate-sec"},el("span",{class:"lbl"},t("rate.where")),place),
+    el("div",{class:"rate-sec"},el("span",{class:"lbl"},t("rate.note")),note));
+  const foot=$("rateFoot");foot.innerHTML="";
+  foot.append(el("button",{class:"btn ghost",type:"button",onclick:closeRate},t("common.cancel")),
+    el("button",{class:"btn",type:"button",disabled:f.rating?null:"",onclick:()=>{
+      saveLog(f.x,{status:"tried",rating:f.rating,liked:f.liked,comment:f.comment.trim().slice(0,300),place:f.place.trim().slice(0,60)});
+      closeRate();if(rcOpen)openRecipe(rcOpen,true);renderList();renderRatePrompt();
+    }},t("rate.save")));
+  if(has)box.append(el("button",{type:"button",class:"linkbtn warn",onclick:()=>{removeLog(has);closeRate();if(rcOpen)openRecipe(rcOpen,true);renderList()}},t("rate.remove")));
+}
+
+/* "How was it?": one tried-but-unrated drink at a time, at the top of What to make. */
+function renderRatePrompt(){
+  const box=$("ratePrompt");if(!box)return;box.innerHTML="";
+  const e=toRate()[0];if(!e){box.hidden=true;return}
+  box.hidden=false;
+  box.append(el("div",{class:"rp-txt"},el("b",{},t("rate.prompt",logName(e))),el("small",{},e.place?e.place:t("rate.promptSub"))),
+    el("div",{class:"stars sm"},[1,2,3,4,5].map(n=>el("button",{type:"button","aria-label":t("rate.starN",n),onclick:()=>openRate(e,{rating:n})},"★"))),
+    el("button",{type:"button",class:"linkbtn",onclick:()=>{e.ask=Date.now()+864e5;commit();renderRatePrompt()}},t("rate.later")));
+}
+
+/* My list: want to try / tried, your taste, and what is waiting for a rating. */
+let listView="tried",listAdd="";
+function listItem(e){
+  const d=drinkOf(e),H=have();
+  const pic=d?drinkPic(d,H,"sm"):typeIcon(e.type);
+  const sub=[t("dtype."+(e.ref?"cocktail":e.type)),e.desc,e.place,e.status==="tried"&&e.at?new Date(e.at).toLocaleDateString(L.locale,{day:"numeric",month:"short"}):null].filter(Boolean).flatMap((x,i)=>i?[" · ",el("bdi",{},x)]:[el("bdi",{},x)]);
+  const right=e.status==="tried"?(e.rating?el("span",{class:"stars-txt","aria-label":t("rate.starN",e.rating)},starsText(e.rating)):el("button",{type:"button",class:"btn sm",onclick:ev=>{ev.stopPropagation();openRate(e)}},t("rate.rateNow")))
+    :el("button",{type:"button",class:"btn ghost sm",onclick:ev=>{ev.stopPropagation();openRate(e)}},t("list.tried"));
+  const row=el("article",{class:"li-row",tabindex:"0",role:"button",onclick:()=>d?openRecipe(d):openRate(e),onkeydown:ev=>{if(ev.key==="Enter"){ev.preventDefault();d?openRecipe(d):openRate(e)}}},
+    pic,el("div",{class:"li-main"},el("b",{},logName(e)),el("small",{},sub),
+      e.status==="tried"&&(e.liked||[]).length?el("div",{class:"tags"},e.liked.map(k=>el("span",{class:"tag"},TASTE_NAME[k]))):null,
+      e.comment?el("small",{class:"li-note"},e.comment):null,
+      e.status==="want"?matchBadge(matchFor(e)):null),right);
+  return row;
+}
+function renderList(){
+  const box=$("listBody");if(!box)return;box.innerHTML="";
+  const tried=state.log.filter(e=>e.status==="tried"),want=state.log.filter(e=>e.status==="want"),waiting=toRate();
+  // Your taste
+  const p=tasteProfile();
+  const top=Object.entries(p.tag).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k])=>TASTE_NAME[k]);
+  const bases=Object.entries(p.base).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([k])=>NAME[k]).filter(Boolean);
+  box.append(el("div",{class:"taste"},el("span",{class:"eyebrow"},t("list.taste")),
+    p.n>=2&&(top.length||bases.length)?el("p",{class:"serif"},t("list.tasteLine",top.join(", "),bases.join(", "))):el("p",{class:"serif"},t("list.tasteEmpty"))));
+  if(waiting.length)box.append(el("div",{class:"sec-h"},el("h3",{},t("list.waiting")),el("small",{},String(waiting.length))),
+    el("div",{class:"li-list"},waiting.map(listItem)));
+  // Want to try / Tried
+  const seg=el("div",{class:"seg2",role:"tablist"},[["tried",tried.length],["want",want.length]].map(([k,n])=>el("button",{type:"button",role:"tab","aria-selected":String(listView===k),onclick:()=>{listView=k;renderList()}},t("list."+k+"Tab")+" · "+n)));
+  box.append(seg);
+  const items=listView==="tried"?tried.filter(e=>e.rating||!waiting.includes(e)).sort((a,b)=>(b.rating||0)-(a.rating||0)||b.at-a.at):want;
+  if(!items.length)box.append(el("div",{class:"empty"},t(listView==="tried"?"list.triedEmpty":"list.wantEmpty")));
+  else box.append(el("div",{class:"li-list"},items.map(listItem)));
+  // Add anything: a cocktail from the app, a wine, or just a name.
+  const inp=el("input",{type:"search",id:"listSearch",placeholder:t("list.addPh"),"aria-label":t("list.addPh"),autocomplete:"off",value:listAdd});
+  const res=el("div",{class:"ob-results"});
+  const draw=()=>{res.innerHTML="";const q=listAdd.trim();if(!q)return;
+    const add=(x)=>{listAdd="";listView==="want"?saveLog(x,{status:"want"}):openRate(x);renderList()};
+    drinkHits(q).forEach(h=>res.append(el("button",{type:"button",class:"ob-res",onclick:()=>add(h.ref?{ref:h.ref}:{name:h.name,type:h.type,tags:h.tags,base:h.base,desc:h.note})},
+      h.pic(),el("span",{},h.name,el("small",{},[t("dtype."+h.type),h.note].filter(Boolean).join(" · "))),el("span",{class:"plus"},t("common.addPlus")))));
+    res.append(asIsRow(q,t(listView==="want"?"list.addWantSub":"list.addTriedSub"),ty=>add({name:q,type:ty}),draw));
+  };
+  inp.addEventListener("input",()=>{listAdd=inp.value;draw()});
+  box.append(el("div",{class:"sec-h"},el("h3",{},t(listView==="want"?"list.addWant":"list.addTried"))),inp,res);draw();
+  const n=waiting.length;$("listCount").textContent=n||"";
 }
 
 function renderResults(){
@@ -3386,21 +3911,23 @@ function renderResults(){
     const m=analyze(d,H);
     if(m.length===0)now.push(d);else if(m.length===1)near.push({d,m});
   });
-  const sort=(a,b)=>tasteScore(b)-tasteScore(a)||fitScore(b)-fitScore(a)||a.s-b.s;
+  const P=tasteProfile(),like={};
+  DRINKS.forEach(d=>{const m=matchFor({ref:d.id},P);like[d.id]=m?m.score:0});
+  const sort=(a,b)=>tasteScore(b)-tasteScore(a)||like[b.id]-like[a.id]||fitScore(b)-fitScore(a)||a.s-b.s;
   now.sort(sort);near.sort((a,b)=>sort(a.d,b.d));
   const nl=$("nowList"),rl=$("nearList");nl.innerHTML="";rl.innerHTML="";
   $("nowCount").textContent=t("count.cocktails",now.length);
   $("nearCount").textContent=t("count.cocktails",near.length);
-  if(now.length)now.forEach(d=>nl.append(drinkCard(d,H,[])));
+  if(now.length)now.forEach(d=>nl.append(drinkCard(d,H,[],P)));
   else nl.append(el("div",{class:"empty"},state.items.length?t("mix.noneFit"):el("div",{},t("mix.empty"),el("div",{class:"menu-actions",style:"justify-content:center"},el("button",{class:"btn",type:"button",onclick:openOb},t("mix.build"))))));
-  if(near.length)near.forEach(({d,m})=>rl.append(drinkCard(d,H,m)));
+  if(near.length)near.forEach(({d,m})=>rl.append(drinkCard(d,H,m,P)));
   else rl.append(el("div",{class:"empty"},t("mix.nearNone")));
   $("surpriseBtn").disabled=!now.length;
   $("jumpResults").textContent=t("mix.jump",now.length);
 }
 
 function greet(){$("greet").textContent=t("mix.greet",new Date().getHours())}
-function render(){greet();renderInventory();renderMood();renderResults();if(document.querySelector(".app").dataset.view==="shop")renderShop()}
+function render(){greet();renderInventory();renderMood();renderResults();renderRatePrompt();renderList();const v=document.querySelector(".app").dataset.view;if(v==="shop")renderShop();if(v==="menu")renderMenu()}
 
 /* ---------- events ---------- */
 $("filter").addEventListener("input",e=>{filterText=e.target.value;renderInventory()});
@@ -3417,7 +3944,7 @@ $("customForm").addEventListener("submit",e=>{
   if(v&&!state.custom.includes(v)){state.custom.push(v);$("customName").value="";commit()}
 });
 $("exportBar").addEventListener("click",()=>{
-  const text=JSON.stringify({homebar:1,items:state.items,custom:state.custom,bottles:state.bottles,learned:state.learned||[]});
+  const text=JSON.stringify({homebar:1,...payload()});
   const done=ok=>{$("moveStatus").textContent=ok?t("move.copied"):t("move.copyFailed");if(!ok){$("importText").value=text;$("importText").select()}};
   try{navigator.clipboard.writeText(text).then(()=>done(true),()=>done(false))}catch(e){done(false)}
 });
@@ -3437,25 +3964,26 @@ $("surpriseBtn").addEventListener("click",()=>{
 });
 $("rcBack").addEventListener("click",()=>closeRecipe());
 window.addEventListener("popstate",()=>closeRecipe(true));
-document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{
-  const t=b.dataset.tab==="home"?"mix":b.dataset.tab;
-  if(document.querySelector(".app").dataset.view!==t){setTab(t);window.scrollTo(0,0)}
-}));
+// Three places: at home (what to make, my bar, shop), at a restaurant, and my list.
+const HOME=["mix","bar","shop"];let homeSub="mix";
+function go(t){if(document.querySelector(".app").dataset.view!==t){setTab(t);window.scrollTo(0,0)}}
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.tab==="home"?homeSub:b.dataset.tab)));
+document.querySelectorAll(".subnav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.sub==="both"?"mix":b.dataset.sub)));
 function setTab(t){
   document.querySelector(".app").dataset.view=t;
-  document.querySelectorAll(".tabs button").forEach(b=>{
-    const on=b.dataset.tab===t||(b.dataset.tab==="home"&&(t==="bar"||t==="mix"));
-    b.setAttribute("aria-selected",String(on));
-  });
+  if(HOME.includes(t))homeSub=t;
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===t||b.dataset.tab==="home"&&HOME.includes(t))));
+  document.querySelectorAll(".subnav button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.sub===t||b.dataset.sub==="both"&&(t==="bar"||t==="mix"))));
   if(t==="shop")renderShop();
   if(t==="menu")renderMenu();
+  if(t==="list")renderList();
   try{localStorage.setItem("homebar.tab",t)}catch(e){}
 }
-// The restaurant wine menu is parked for now: its code stays, the tab is hidden. Set to true to bring it back.
-const SHOW_MENU=false;
+// The restaurant tab; set to false to hide it.
+const SHOW_MENU=true;
 if(!SHOW_MENU)document.querySelector('.tabs [data-tab="menu"]').hidden=true;
 let startTab="mix";try{startTab=localStorage.getItem("homebar.tab")||"mix"}catch(e){}
-if(!["bar","mix","shop"].concat(SHOW_MENU?["menu"]:[]).includes(startTab))startTab="mix";
+if(!["bar","mix","shop","list"].concat(SHOW_MENU?["menu"]:[]).includes(startTab))startTab="mix";
 
 /* ---------- colours: four themes and an optional button colour, kept on this device ---------- */
 const THEMES=["whiskey","absinthe","midnight","agave"];
@@ -3654,47 +4182,87 @@ function verdict(m){
   if(m<=3)return ["mid",t("menu.typical")];
   return ["bad",t("menu.pricey")];
 }
+const priced=it=>it.kind==="wine"||it.kind==="spirit";
 function bestItem(){
-  const withScore=menu.items.map(it=>({it,c:calc(it)})).filter(x=>x.c.score!=null);
+  const items=menu.items.filter(priced);
+  const withScore=items.map(it=>({it,c:calc(it)})).filter(x=>x.c.score!=null);
   if(withScore.length)return {by:"markup",...withScore.sort((a,b)=>a.c.score-b.c.score)[0]};
-  const withEq=menu.items.map(it=>({it,c:calc(it)})).filter(x=>x.c.glassEq!=null||x.it.bottle);
+  const withEq=items.map(it=>({it,c:calc(it)})).filter(x=>x.c.glassEq!=null||x.it.bottle);
   if(!withEq.length)return null;
   withEq.sort((a,b)=>(a.c.glassEq??a.it.bottle/a.c.perBottle)-(b.c.glassEq??b.it.bottle/b.c.perBottle));
   return {by:"price",...withEq[0]};
 }
 
+// The menu as a list of drinks: what each one is, how well it suits you, want / ordered,
+// and for wine and spirits the price comparison with a shop.
+let menuFilter="all",menuSort="match";const menuOpen=new Set();
+const menuX=it=>({ref:it.ref||null,name:it.name,type:it.kind,tags:it.tags||[],base:it.base||null,desc:it.note||"",place:menu.place||""});
 function renderMenu(){
   const cs=$("menuCountry");if(!cs.options.length)Object.entries(COUNTRIES).forEach(([k,c])=>cs.append(el("option",{value:k},c.n+" ("+c.cur+")")));
   cs.value=shop.country;$("pour").value=String(pour);
-  const box=$("wineList");box.innerHTML="";
-  menu.items.forEach(it=>{
-    const f=(key,label,ph)=>el("label",{},label,el("input",{type:"text",inputmode:"decimal",id:"w-"+key+"-"+it.id,value:it[key]??"",placeholder:ph,oninput:e=>{it[key]=num(e.target.value);touch()}}));
-    const card=el("article",{class:"wine","data-id":it.id},
-      el("div",{class:"wine-name"},
-        el("input",{type:"text",id:"w-name-"+it.id,value:it.name,"aria-label":t("menu.wineName"),oninput:e=>{it.name=e.target.value;touch(false)}}),
-        el("button",{type:"button","aria-label":t("common.remove"),title:t("common.remove"),onclick:()=>{menu.items=menu.items.filter(x=>x!==it);touch();renderMenu()}},"✕")),
-      it.note?el("div",{class:"meta"},it.note):null,
-      el("div",{class:"fields"},f("glass",it.kind==="spirit"?t("menu.serving"):t("menu.glass"),"—"),el("label",{},t("menu.bottleSize"),el("div",{style:"display:flex;gap:4px"},
+  if(document.activeElement!==$("menuPlace"))$("menuPlace").value=menu.place||"";
+  const P=tasteProfile(),box=$("wineList");box.innerHTML="";
+  const kinds=DRINK_TYPES.filter(k=>menu.items.some(it=>it.kind===k));
+  if(!kinds.includes(menuFilter))menuFilter="all";
+  const fb=$("menuFilters");fb.innerHTML="";
+  if(kinds.length>1)fb.append(el("div",{class:"seg"},["all",...kinds].map(k=>el("button",{type:"button",class:"chip","aria-pressed":String(menuFilter===k),
+    onclick:()=>{menuFilter=k;renderMenu()}},k==="all"?t("menu.all"):t("dtype."+k)))));
+  if(P.n&&menu.items.length>1)fb.append(el("div",{class:"seg"},["match","menu"].map(k=>el("button",{type:"button",class:"chip","aria-pressed":String(menuSort===k),
+    onclick:()=>{menuSort=k;renderMenu()}},t(k==="match"?"menu.sortMatch":"menu.sortMenu")))));
+  let list=menu.items.filter(it=>menuFilter==="all"||it.kind===menuFilter);
+  const mm=new Map(list.map(it=>[it,matchFor(menuX(it),P)]));
+  if(menuSort==="match"&&P.n)list=list.map((it,i)=>[it,i]).sort((a,b)=>((mm.get(b[0])||{score:0}).score-(mm.get(a[0])||{score:0}).score)||a[1]-b[1]).map(x=>x[0]);
+  list.forEach(it=>box.append(menuCard(it,mm.get(it))));
+  if(!menu.items.length)box.append(el("div",{class:"empty"},
+    el("b",{},t("menu.howTitle")),el("br"),t("menu.how1"),el("br"),t("menu.how2"),el("br"),t("menu.how3"),el("br"),el("br"),t("menu.how4")));
+  $("estimateRetail").hidden=!sampleApi||!menu.items.some(priced);
+  updateMenuStats();
+}
+function menuCard(it,m){
+  const x=menuX(it),lg=findLog(x),d=it.ref?DRINKS.find(z=>z.id===it.ref):null,pr=priced(it);
+  const mark=lg&&lg.rating?el("span",{class:"mine","aria-label":t("rate.starN",lg.rating)},"★ "+lg.rating)
+    :lg&&lg.status==="want"?el("span",{class:"mine want"},t("list.wantBadge")):lg?el("span",{class:"mine"},t("menu.orderedBadge")):matchBadge(m);
+  const price=it.glass||it.bottle?el("div",{class:"mi-price"},
+    it.glass?el("span",{},money(it.glass),el("small",{},t(it.kind==="wine"?"menu.perGlass1":"menu.perServing"))):null,
+    it.bottle?el("span",{},money(it.bottle),el("small",{},t("menu.perBottle"))):null):null;
+  const acts=el("div",{class:"mi-acts"});
+  if(lg&&lg.status==="tried")acts.append(el("button",{type:"button",class:"btn sm"+(lg.rating?" ghost":""),onclick:()=>openRate(x)},lg.rating?starsText(lg.rating):t("rate.rateNow")));
+  else acts.append(
+    el("button",{type:"button",class:"btn ghost sm","aria-pressed":String(!!lg),onclick:()=>{lg?removeLog(lg):saveLog(x,{status:"want"});renderMenu()}},lg?t("rec.wanted"):t("rec.want")),
+    el("button",{type:"button",class:"btn sm",onclick:()=>{saveLog(x,{status:"tried",place:menu.place||""});setStatus(t("menu.orderedNote"));renderMenu()}},t("menu.ordered")));
+  if(d)acts.append(el("button",{type:"button",class:"linkbtn",onclick:()=>openRecipe(d)},t("menu.recipe")));
+  // Editing (and, for wine and spirits, the price comparison) stays folded away.
+  const f=(key,label,ph)=>el("label",{},label,el("input",{type:"text",inputmode:"decimal",id:"w-"+key+"-"+it.id,value:it[key]??"",placeholder:ph,oninput:e=>{it[key]=num(e.target.value);touch()}}));
+  const kindSel=el("select",{id:"w-kind-"+it.id,"aria-label":t("menu.kind"),onchange:e=>{it.kind=e.target.value;touch(false);renderMenu()}},
+    DRINK_TYPES.map(k=>{const o=el("option",{value:k},t("dtype."+k));if(k===it.kind)o.selected=true;return o}));
+  const more=el("details",{class:"mi-more",ontoggle:e=>e.target.open?menuOpen.add(it.id):menuOpen.delete(it.id)},el("summary",{},t(pr?"menu.compare":"menu.edit")),
+    el("div",{class:"wine-name"},
+      el("input",{type:"text",id:"w-name-"+it.id,value:it.name,"aria-label":t("menu.wineName"),oninput:e=>{it.name=e.target.value;touch(false)}}),kindSel,
+      el("button",{type:"button","aria-label":t("common.remove"),title:t("common.remove"),onclick:()=>{menu.items=menu.items.filter(z=>z!==it);touch();renderMenu()}},"✕")),
+    pr?el("div",{class:"fields"},f("glass",it.kind==="spirit"?t("menu.serving"):t("menu.glass"),"—"),el("label",{},t("menu.bottleSize"),el("div",{style:"display:flex;gap:4px"},
           el("input",{type:"text",inputmode:"decimal",id:"w-bottle-"+it.id,value:it.bottle??"",placeholder:"—",oninput:e=>{it.bottle=num(e.target.value);touch()}}),
           el("select",{id:"w-size-"+it.id,"aria-label":t("menu.sizeAria"),style:"padding:6px 4px;font-size:13px",onchange:e=>{it.size=+e.target.value;touch()}},
             (it.kind==="spirit"?[700,1000]:[375,500,750,1500]).map(ml=>{const o=el("option",{value:String(ml)},String(ml));if(ml===(it.size||(it.kind==="spirit"?700:750)))o.selected=true;return o})))),
         el("label",{},t("menu.shopFor",it.kind==="spirit"?700:750),el("div",{style:"display:flex;gap:4px"},
           el("input",{type:"text",inputmode:"decimal",id:"w-rl-"+it.id,value:it.rl??"",placeholder:t("menu.from"),oninput:e=>{it.rl=num(e.target.value);touch()}}),
-          el("input",{type:"text",inputmode:"decimal",id:"w-rh-"+it.id,value:it.rh??"",placeholder:t("menu.to"),oninput:e=>{it.rh=num(e.target.value);touch()}})))),
-      el("div",{class:"stats"}),el("div",{class:"vwrap"}));
-    box.append(card);
-  });
-  if(!menu.items.length)box.append(el("div",{class:"empty"},
-    el("b",{},t("menu.howTitle")),el("br"),t("menu.how1"),el("br"),t("menu.how2"),el("br"),t("menu.how3"),el("br"),el("br"),t("menu.how4")));
-  $("estimateRetail").hidden=!sampleApi||!menu.items.length;
-  updateMenuStats();
+          el("input",{type:"text",inputmode:"decimal",id:"w-rh-"+it.id,value:it.rh??"",placeholder:t("menu.to"),oninput:e=>{it.rh=num(e.target.value);touch()}}))))
+      :el("div",{class:"fields one"},f("glass",t("menu.price"),"—")),
+    pr?el("div",{class:"stats"}):null);
+  if(menuOpen.has(it.id))more.open=true;
+  return el("article",{class:"wine mi","data-id":it.id},
+    el("div",{class:"mi-head"},d?drinkPic(d,have(),"sm"):typeIcon(it.kind),
+      el("div",{class:"mi-main"},el("h4",{},it.name||t("menu.noName")),
+        el("small",{},[t("dtype."+it.kind),it.note].filter(Boolean).join(" · ")),
+        el("div",{class:"tags"},mark,(it.tags||[]).map(k=>el("span",{class:"tag"},TASTE_NAME[k])))),price),
+    m&&m.why&&m.level!=="maybe"&&!(lg&&lg.rating)?el("small",{class:"mi-why"},m.why):null,
+    pr?el("div",{class:"vwrap"}):null,acts,more);
 }
 function touch(stats=true){menu.example=false;saveMenu();if(stats)updateMenuStats()}
 
 function updateMenuStats(){
   const best=bestItem();
   document.querySelectorAll("#wineList .wine").forEach(card=>{
-    const it=menu.items.find(x=>x.id===card.dataset.id);if(!it)return;
+    const it=menu.items.find(x=>x.id===card.dataset.id);if(!it||!priced(it))return;
     const c=calc(it),rows=[];
     if(c.glassEq!=null){
       rows.push([t("menu.glassWithBottle"),money(c.glassEq)+(c.save>0?t("menu.save",Math.round(c.save*100)):"")]);
@@ -3711,13 +4279,13 @@ function updateMenuStats(){
     // Separate verdicts: a fair bottle price says nothing about the glass price, and vice versa.
     const vw=card.querySelector(".vwrap");vw.innerHTML="";
     [[c.mB,t("menu.bottle")],[c.mG,it.kind==="spirit"?t("menu.serving1"):t("menu.glass")]].forEach(([m,label])=>{const v=verdict(m);if(v)vw.append(el("span",{class:"verdict "+v[0]},label+": "+v[1]+" "+mult(m)))});
-    const isBest=best&&best.it===it&&menu.items.length>1;
+    const isBest=best&&best.it===it&&menu.items.filter(priced).length>1;
     card.classList.toggle("best",!!isBest);
     const old=card.querySelector(".badge");if(old)old.remove();
     if(isBest)card.prepend(el("span",{class:"badge"},t("menu.best")));
   });
   const sm=$("menuSummary");sm.innerHTML="";
-  if(!best||menu.items.length<2)return;
+  if(!best||menu.items.filter(priced).length<2)return;
   const {it,c,by}=best;
   const lines=[el("div",{},t("menu.bestLine"),el("b",{},it.name||t("menu.noName")),
     by==="markup"?" · "+(c.mB?t("menu.bottleCosts",mult(c.mB)):t("menu.glassCosts",mult(c.mG))):" · "+t("menu.perGlass",money(c.glassEq??it.bottle/c.perBottle)))];
@@ -3731,8 +4299,18 @@ function updateMenuStats(){
 /* Claude: read a menu photo, or estimate shop prices for typed wines */
 function toItems(res){
   const arr=res&&Array.isArray(res.items)?res.items:[];
-  return arr.slice(0,80).map((x,i)=>({id:"m"+Date.now().toString(36)+i,name:String(x.name||"").slice(0,80),kind:x.kind==="spirit"?"spirit":"wine",
-    glass:num(x.glass),bottle:num(x.bottle),rl:num(x.retail_low),rh:num(x.retail_high),note:String(x.note||"").slice(0,80)})).filter(x=>x.name);
+  return arr.slice(0,80).map((x,i)=>{
+    const name=String(x.name||"").slice(0,80),kind=DRINK_TYPES.includes(x.kind)?x.kind:"wine";
+    const ref=kind==="cocktail"?refOf(name):null;
+    return {id:"m"+Date.now().toString(36)+i,name,kind,ref,glass:num(x.glass),bottle:num(x.bottle),rl:num(x.retail_low),rh:num(x.retail_high),note:String(x.note||"").slice(0,80),
+      tags:Array.isArray(x.tags)?x.tags.filter(k=>TASTE_KEYS.includes(k)):[],base:x.base&&x.base!=="other"?String(x.base):null};
+  }).filter(x=>x.name);
+}
+// A cocktail on a menu that the app knows by name, in either language.
+function refOf(name){
+  const n=normText(name);if(!n)return null;
+  const d=DRINKS.find(d=>[d.name,LOCALES.en.drink[d.id].n,LOCALES.he.drink[d.id].n].some(x=>normText(x)===n));
+  return d?d.id:null;
 }
 function sampleError(e){
   const code=e&&e.code;
@@ -3769,8 +4347,8 @@ function setStatus(msg,err){const s=$("menuStatus");s.textContent=msg;s.classLis
 function busy(on){$("readMenu").disabled=on||photoUnsupported||!$("menuPhoto").files.length;$("parseText").disabled=on;$("stopRead").hidden=!on;$("estimateRetail").disabled=on}
 
 function addWine(w){
-  const it={id:"m"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name:w.name,kind:"wine",glass:null,bottle:null,rl:w.rl??null,rh:w.rh??null,note:w.note||""};
-  menu.items.push(it);touch(false);wineQ="";wineAI=null;$("wineSearch").value="";renderWineResults();renderMenu();
+  const it={id:"m"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name:w.name,kind:w.kind||"wine",ref:w.ref||null,glass:null,bottle:null,rl:w.rl??null,rh:w.rh??null,note:w.note||"",tags:w.tags||[],base:w.base||null};
+  menu.items.push(it);menuOpen.add(it.id);menuFilter="all";touch(false);wineQ="";wineAI=null;$("wineSearch").value="";renderWineResults();renderMenu();
   const g=$("w-glass-"+it.id);if(g){g.focus();g.scrollIntoView({block:"center",behavior:"smooth"})}
   setStatus(t("menu.added",w.name));
 }
@@ -3778,9 +4356,13 @@ let wineIdx=null;
 function localWines(q){wineIdx=wineIdx||makeIndex(WINE_LIST,w=>[w.name,w.he,w.note,w.note.split(" · ").map(x=>LOCALES.he.wineTerm[x]||"").join(" ")]);return searchIndex(wineIdx,q,6)}
 function renderWineResults(){
   const box=$("wineResults");box.innerHTML="";const q=wineQ.trim();if(!q)return;
-  const il=shop.country==="il";
-  localWines(q).forEach(w=>{const shown=wineDisplay(w),note=wineNote(w.note);box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine({name:shown,note:note+(shown!==w.name?" · "+w.name:""),rl:il?w.il[0]:null,rh:il?w.il[1]:null})},
+  const il=shop.country==="il",nq=normText(q);
+  DRINKS.filter(d=>[d.name,LOCALES.en.drink[d.id].n,LOCALES.he.drink[d.id].n].some(x=>normText(x).includes(nq))).slice(0,3).forEach(d=>box.append(el("button",{type:"button",class:"ob-res",
+    onclick:()=>addWine({name:d.name,kind:"cocktail",ref:d.id,tags:d.t,base:baseOf(d)})},drinkPic(d,have(),"sm"),el("span",{},d.name,el("small",{},t("dtype.cocktail"))),el("span",{class:"plus"},t("common.addPlus")))));
+  localWines(q).forEach(w=>{const shown=wineDisplay(w),note=wineNote(w.note);box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine({name:shown,note:note+(shown!==w.name?" · "+w.name:""),base:wineKind(w.note),rl:il?w.il[0]:null,rh:il?w.il[1]:null})},
     bottleThumb(null,null,w.note,w.name),el("span",{},shown," ",el("small",{},(shown!==w.name?w.name+" · ":"")+note+(il&&w.il[0]?t("menu.inShopPrice",ltr("₪"+w.il[0]+"–"+w.il[1])):""))),el("span",{class:"plus"},t("common.addPlus"))))});
+  localBeers(q).forEach(b=>{const name=lang==="he"?b.he:b.name;box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine({name,kind:"beer",note:wineNote(b.note),tags:beerTags(b.note),base:"beer"})},
+    typeIcon("beer"),el("span",{},name,el("small",{},t("dtype.beer")+" · "+wineNote(b.note))),el("span",{class:"plus"},t("common.addPlus"))))});
   if(wineAI&&wineAI.q===q){
     if(wineAI.loading)box.append(el("p",{class:"status"},t("menu.aiSearching")));
     else if(wineAI.err)box.append(el("p",{class:"status err"},wineAI.err));
@@ -3789,8 +4371,7 @@ function renderWineResults(){
   }
   if(sampleApi&&!(wineAI&&wineAI.q===q&&!wineAI.err))box.append(el("button",{type:"button",class:"ob-res",onclick:()=>searchWineAI(q)},
     el("span",{},t("menu.aiSearch",q),el("small",{},t("menu.aiSearchSub"))),el("span",{class:"plus"},t("menu.search"))));
-  box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine({name:q})},
-    el("span",{},t("menu.addAsIs",q),el("small",{},t("menu.noShopPrice"))),el("span",{class:"plus"},t("common.addPlus"))));
+  box.append(asIsRow(q,t("menu.noShopPrice"),kind=>addWine({name:q,kind}),renderWineResults));
 }
 async function searchWineAI(q){
   wineAI={q,loading:true,items:[]};renderWineResults();
@@ -3808,7 +4389,8 @@ async function searchWineAI(q){
 }
 $("wineSearch").addEventListener("input",e=>{wineQ=e.target.value;renderWineResults()});
 $("wineSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();const f=$("wineResults").querySelector(".ob-res");if(f)f.click()}});
-$("menuPhoto").addEventListener("change",()=>{$("readMenu").disabled=!$("menuPhoto").files.length||!sampleApi});
+$("menuPhoto").addEventListener("change",()=>{$("readMenu").disabled=!$("menuPhoto").files.length||!sampleApi;if(!$("readMenu").disabled)$("readMenu").click()});
+$("menuPlace").addEventListener("input",e=>{menu.place=e.target.value.slice(0,60);saveMenu()});
 $("readMenu").addEventListener("click",async()=>{
   const file=$("menuPhoto").files[0];if(!file||!sampleApi)return;
   readAbort=new AbortController();busy(true);setStatus(t("menu.reading"));
@@ -3816,9 +4398,9 @@ $("readMenu").addEventListener("click",async()=>{
     const res=await sampleApi.json("menu_photo",claudePlace(),{images:[await prepImage(file)],signal:readAbort.signal});
     const items=toItems(res);
     if(!items.length){setStatus(t("menu.noWinesPhoto"),true)}
-    else{menu={example:false,items};saveMenu();renderMenu();setStatus(t("menu.readCount",items.length))}
+    else{menu={example:false,items,place:menu.place||""};saveMenu();renderMenu();setStatus(t("menu.readCount",items.length))}
   }catch(e){setStatus(sampleError(e),true)}
-  finally{busy(false)}
+  finally{busy(false);$("menuPhoto").value=""}
 });
 $("parseText").addEventListener("click",async()=>{
   const text=$("menuText").value.trim();if(!text)return;
@@ -3828,7 +4410,7 @@ $("parseText").addEventListener("click",async()=>{
     const res=await sampleApi.json("menu_text",{...claudePlace(),text},{signal:readAbort.signal});
     const items=toItems(res);
     if(!items.length)setStatus(t("menu.noWinesText"),true);
-    else{menu={example:false,items};saveMenu();renderMenu();setStatus(t("menu.readCount",items.length))}
+    else{menu={example:false,items,place:menu.place||""};saveMenu();renderMenu();setStatus(t("menu.readCount",items.length))}
   }catch(e){setStatus(sampleError(e),true)}
   finally{busy(false)}
 });
@@ -3846,7 +4428,7 @@ $("estimateRetail").addEventListener("click",async()=>{
   finally{busy(false)}
 });
 $("addWine").addEventListener("click",()=>{const i=$("wineSearch");i.scrollIntoView({block:"center",behavior:"smooth"});i.focus()});
-$("clearMenu").addEventListener("click",()=>{menu={example:false,items:[]};saveMenu();renderMenu()});
+$("clearMenu").addEventListener("click",()=>{menu={example:false,items:[],place:""};saveMenu();renderMenu()});
 $("pour").addEventListener("change",e=>{pour=+e.target.value;setPref("homebar.pour",String(pour));updateMenuStats()});
 $("menuCountry").addEventListener("change",e=>{shop.country=e.target.value;setPref("homebar.country",shop.country);renderMenu()});
 (async()=>{
@@ -3857,7 +4439,7 @@ $("menuCountry").addEventListener("change",e=>{shop.country=e.target.value;setPr
     const img=sampleApi.images?await sampleApi.images():null;
     if(img===false)markNoImages();else obSetPhoto(true);
     renderMenu();
-  }catch(e){sampleApi=null;$("photoBox").hidden=true;setTimeout(()=>obSetPhoto(false),0);renderMenu()}
+  }catch(e){sampleApi=null;$("photoBox").hidden=true;$("menuNoAI").hidden=false;setTimeout(()=>obSetPhoto(false),0);renderMenu()}
 })();
 
 /* ---------- bottle thumbnails: a drawn bottle in the drink's shape and colour ---------- */
@@ -4030,15 +4612,22 @@ function reachable(H=have()){
 }
 function reachGain(id){const H=have();if(H.has(id))return 0;const H2=new Set(H);H2.add(id);return reachable(H2)-reachable(H)}
 
+// Add catalog items, and named bottles where given; returns what was new, so it can be undone.
+function addEntries(entries){
+  const added={items:[],bottles:[],names:[]};
+  entries.forEach(e=>{
+    let isNew=false;
+    if(!state.items.includes(e.id)){state.items.push(e.id);added.items.push(e.id);isNew=true}
+    if(e.name&&STYLES[e.id]&&STYLES[e.id][e.style]&&!state.bottles.some(b=>b.type===e.id&&b.name===e.name)){
+      const b={id:uid(),type:e.id,name:e.name,style:e.style};state.bottles.push(b);added.bottles.push(b.id);isNew=true}
+    if(isNew)added.names.push(e.name?e.name:NAME[e.id]);
+  });
+  commit();return added;
+}
 // Add through onboarding. With rerender=false the caller updates the screen itself.
 function obAdd(entries,rerender=true){
   const before=new Set(makeable());
-  entries.forEach(e=>{
-    if(!state.items.includes(e.id))state.items.push(e.id);
-    if(e.name&&STYLES[e.id]&&STYLES[e.id][e.style]&&!state.bottles.some(b=>b.type===e.id&&b.name===e.name))
-      state.bottles.push({id:uid(),type:e.id,name:e.name,style:e.style});
-  });
-  commit();
+  addEntries(entries);
   ob.last={unlocked:makeable().filter(n=>!before.has(n))};
   ob.q="";ob.notice="";finder.ai=null;
   if(rerender)renderOb(true);
@@ -4208,28 +4797,59 @@ function renderOb(bump){
   foot.append(el("button",{class:"btn ghost",type:"button",onclick:finishBar},t("ob.toBar")));
   if(can.length)foot.append(el("button",{class:"btn",type:"button",onclick:finishOb},t("ob.go")));
 }
+// Claude names the bottles in a photo and maps each to the catalog.
+async function bottlesFromPhoto(file){
+  const catalog=Object.entries(NAME).map(([id,n])=>id+" = "+n).join("\n");
+  const styles=Object.entries(STYLES).map(([ty,ss])=>ty+": "+Object.entries(ss).map(([k,v])=>k+" ("+v.t.join("/")+")").join(", ")).join("\n");
+  const res=await sampleApi.json("bottle_photo",{catalog,styles,lang},{images:[await prepImage(file)]});
+  return (res&&Array.isArray(res.items)?res.items:[]).filter(x=>x&&NAME[x.id]).slice(0,20)
+    .map(x=>({id:x.id,name:x.name?String(x.name).slice(0,60):null,style:STYLES[x.id]&&STYLES[x.id][x.style]?x.style:(STYLES[x.id]?Object.keys(STYLES[x.id])[0]:null)}));
+}
 async function obIdentify(file){
   if(!sampleApi||ob.busy)return;
   ob.busy=true;ob.notice="";renderOb();
-  const catalog=Object.entries(NAME).map(([id,n])=>id+" = "+n).join("\n");
-  const styles=Object.entries(STYLES).map(([ty,ss])=>ty+": "+Object.entries(ss).map(([k,v])=>k+" ("+v.t.join("/")+")").join(", ")).join("\n");
   try{
-    const res=await sampleApi.json("bottle_photo",{catalog,styles,lang},{images:[await prepImage(file)]});
-    const items=(res&&Array.isArray(res.items)?res.items:[]).filter(x=>x&&NAME[x.id]).slice(0,20)
-      .map(x=>({id:x.id,name:x.name?String(x.name).slice(0,60):null,style:STYLES[x.id]&&STYLES[x.id][x.style]?x.style:(STYLES[x.id]?Object.keys(STYLES[x.id])[0]:null)}));
+    const items=await bottlesFromPhoto(file);
     ob.busy=false;
     if(items.length)obAdd(items);
     else{ob.notice=t("ob.photoNone");renderOb()}
   }catch(e){ob.busy=false;ob.notice=sampleError(e);renderOb()}
 }
-function obSetPhoto(ok){ob.photoOK=!!ok;if(!$("ob").hidden)renderOb()}
+function obSetPhoto(ok){ob.photoOK=!!ok;if(!$("ob").hidden)renderOb();renderBarPhoto()}
+
+/* My bar: photograph bottles; what Claude recognises goes straight into the bar, with an undo. */
+let barPh={busy:false,msg:"",err:false,undo:null};
+function renderBarPhoto(){
+  const box=$("barPhoto");box.innerHTML="";
+  box.hidden=!sampleApi||!ob.photoOK;if(box.hidden)return;
+  const file=el("input",{type:"file",accept:"image/*",hidden:""});
+  file.addEventListener("change",()=>{if(file.files[0])barIdentify(file.files[0])});
+  const btn=el("button",{type:"button",class:"photo-cta",onclick:()=>file.click(),disabled:barPh.busy?"":null},el("span",{class:"ic"}),
+    el("span",{},el("b",{},t("bar.photoBtn")),el("small",{},barPh.busy?t("ob.photoBusy"):t("bar.photoSub"))));
+  btn.querySelector(".ic").innerHTML=ICON_CAM;
+  box.append(btn,file);
+  if(barPh.msg)box.append(el("p",{class:"status"+(barPh.err?" err":""),role:"status"},barPh.msg,
+    barPh.undo?el("button",{type:"button",class:"linkbtn",style:"margin-inline-start:8px;min-height:0;padding:0",onclick:()=>{
+      const u=barPh.undo;state.items=state.items.filter(id=>!u.items.includes(id));state.bottles=state.bottles.filter(b=>!u.bottles.includes(b.id));commit();
+      barPh={busy:false,msg:t("bar.photoUndone"),err:false,undo:null};renderBarPhoto()}},t("bar.photoUndo")):null));
+}
+async function barIdentify(file){
+  if(!sampleApi||barPh.busy)return;
+  barPh={busy:true,msg:"",err:false,undo:null};renderBarPhoto();
+  try{
+    const items=await bottlesFromPhoto(file);
+    if(!items.length)barPh={busy:false,msg:t("ob.photoNone"),err:true,undo:null};
+    else{const a=addEntries(items);barPh={busy:false,msg:a.names.length?t("bar.photoAdded",a.names.join(", ")):t("bar.photoHad"),err:false,undo:a.names.length?a:null}}
+  }catch(e){barPh={busy:false,msg:sampleError(e),err:true,undo:null}}
+  renderBarPhoto();
+}
 function openOb(){ob={...ob,step:barEmpty()?0:1,q:"",qType:null,last:null,notice:""};$("ob").hidden=false;document.body.style.overflow="hidden";renderOb()}
 function closeOb(){ob.sheet=null;$("obSheet").hidden=true;$("ob").hidden=true;document.body.style.overflow="";try{localStorage.setItem(OB_KEY,"1")}catch(e){}}
 function finishOb(){closeOb();setTab(barEmpty()?"bar":"mix");window.scrollTo({top:0})}
 function finishBar(){closeOb();setTab("bar");window.scrollTo({top:0})}
 $("obClose").addEventListener("click",closeOb);
 $("sheetClose").addEventListener("click",closeSheet);
-document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("recipe").hidden)closeRecipe();else if(ob.sheet)closeSheet();else if(!$("ob").hidden)closeOb()});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("rateSheet").hidden)closeRate();else if(!$("recipe").hidden)closeRecipe();else if(ob.sheet)closeSheet();else if(!$("ob").hidden)closeOb()});
 $("openOb").addEventListener("click",openOb);
 let obSeen=null;try{obSeen=localStorage.getItem(OB_KEY)}catch(e){}
 
@@ -4293,8 +4913,8 @@ function applyRemote(d){
       let moved=null;
       if(bar.legacy){const old=await bar.legacy.get().catch(()=>null);if(old&&old.exists){applyRemote(old.data()||{});moved=bar.legacy}}
       if(moved||!barEmpty()){
-        const payload={items:state.items,custom:state.custom,bottles:state.bottles,learned:state.learned||[],updatedAt:Date.now()};
-        lastRemote=payloadKey(payload);await docRef.set(payload);
+        const p={...payload(),updatedAt:Date.now()};
+        lastRemote=payloadKey(p);await docRef.set(p);
         if(moved)await moved.delete().catch(()=>{});   // only after the private copy is saved
       }
     }

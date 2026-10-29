@@ -9,19 +9,25 @@
   // The language the user reads the app in; short notes come back in it. Defaults to Hebrew.
   const language=p=>p.lang==="en"?"English":"Hebrew";
 
-  const MENU_ITEM=obj({name:{type:"string"},kind:{type:"string",enum:["wine","spirit"]},glass:num,bottle:num,retail_low:num,retail_high:num,note:{type:"string"}});
+  // Flavours and base spirits use the app's own keys, so menu items can be matched to what the diner liked.
+  const TASTES=["sweet","sour","bitter","fresh","fruity","creamy","boozy"];
+  const BASES=["gin","vodka","white_rum","dark_rum","tequila","mezcal","whisky","brandy","cachaca","pisco","arak","absinthe","campari","aperol","amaretto","kahlua","prosecco","red_wine","white_wine","beer","other"];
+  const MENU_ITEM=obj({name:{type:"string"},kind:{type:"string",enum:["wine","cocktail","beer","spirit","other"]},glass:num,bottle:num,retail_low:num,retail_high:num,note:{type:"string"},
+    tags:{type:"array",items:{type:"string",enum:TASTES}},base:{type:"string",enum:BASES}});
   const WINE_HIT=obj({name:{type:"string"},he_name:{type:"string"},kind:{type:"string",enum:["red","white","rose","sparkling","other"]},note:{type:"string"},retail_low:num,retail_high:num,confidence:{type:"string",enum:["high","medium","low"]}});
   const BOTTLE_HIT=obj({id:{type:"string"},name:{type:"string"},style:{type:"string"},il_low:num,il_high:num,us_low:num,us_high:num});
   const PHOTO_HIT=obj({id:{type:"string"},name:{type:["string","null"]},style:{type:["string","null"]}});
 
   function menuPrompt(extra,p){
-    return "You help a diner in a restaurant judge a drinks menu. "+extra+
-      "\nFor each item estimate the typical retail shop price of one bottle (750 ml for wine, 700 ml for spirits) in "+p.country+" in "+p.currency+
-      ", as retail_low and retail_high numbers, or null if you cannot identify the wine well enough. Be realistic; do not guess wildly."+
-      "\nReturn ONLY JSON: {\"items\":[{\"name\":string,\"kind\":\"wine\"|\"spirit\",\"glass\":number|null,\"bottle\":number|null,\"retail_low\":number|null,\"retail_high\":number|null,\"note\":string}]}"+
-      "\n`note` is a very short description in "+language(p)+" (grape, region, vintage), e.g. \"Cabernet Sauvignon, Upper Galilee, 2021\". Keep names as printed on the menu.";
+    return "You help a diner in a restaurant choose from a drinks menu. "+extra+
+      "\nkind: wine, cocktail, beer, spirit (served neat or on the rocks) or other. glass is the price of one glass or one serving (a cocktail's or a beer's price goes in glass), bottle the price of a whole bottle."+
+      "\nFor wines and spirits estimate the typical retail shop price of one bottle (750 ml for wine, 700 ml for spirits) in "+p.country+" in "+p.currency+
+      ", as retail_low and retail_high numbers, or null if you cannot identify it well enough (always null for cocktails and beer). Be realistic; do not guess wildly."+
+      "\ntags: the flavours that fit the drink, from "+TASTES.join(", ")+" (boozy = strong and spirit-forward). base: its main spirit or drink, from "+BASES.join(", ")+"."+
+      "\nReturn ONLY JSON: {\"items\":[{\"name\":string,\"kind\":string,\"glass\":number|null,\"bottle\":number|null,\"retail_low\":number|null,\"retail_high\":number|null,\"note\":string,\"tags\":[string],\"base\":string}]}"+
+      "\n`note` is a very short description in "+language(p)+": for wine the grape, region and vintage (e.g. \"Cabernet Sauvignon, Upper Galilee, 2021\"), for a cocktail its main ingredients as the menu lists them, for beer the style. Keep names as printed on the menu.";
   }
-  const EXTRACT="Extract every wine, and any spirit sold by the glass, with its glass price and bottle price as printed (numbers only, null if missing). Skip food.";
+  const EXTRACT="Extract every alcoholic drink: wines, cocktails, beers and spirits, with prices as printed (numbers only, null if missing). Skip food and soft drinks.";
 
   const TASKS={
     // Every task also takes p.lang ("he" | "en"), the language for notes.

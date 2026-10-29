@@ -383,6 +383,7 @@ select option{background:var(--surface);color:var(--ink)}
 .summary.plain{background:var(--surface);border:1px solid var(--line)}
 .vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
 #photoBox{display:grid;gap:10px}
+#photoBox[hidden]{display:none}
 #photoBox .photo-cta{padding:22px 18px}
 .menu-filters{display:grid;gap:8px}
 .menu-filters:empty{display:none}
@@ -465,6 +466,10 @@ details summary::-webkit-details-marker{display:none}
 .ob-res .plus{flex:none;font:700 13px var(--body);color:var(--bg);background:var(--cream);border-radius:999px;padding:8px 14px;white-space:nowrap}
 .ob-res:last-child{border-bottom:0}
 .ob-res>.art-box{flex:none}
+.as-is{flex-wrap:wrap;cursor:default}
+.as-is .plus{border:1px solid var(--line2);cursor:pointer;font:700 13px var(--body)}
+.as-kind{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:6px}
+.as-kind .chip{min-height:34px;font-size:13px;padding:0 12px}
 .ob-res .thumb{flex:none;display:flex;align-items:center;justify-content:center;width:44px;height:60px;background:var(--surface);border-radius:8px}
 .ob-res .thumb svg{display:block;width:24px;height:48px}
 .ob-res .thumb.photo{background:var(--photo-bg);overflow:hidden}
@@ -2448,7 +2453,26 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "Chile":"צ'ילה",
     "Argentina":"ארגנטינה",
     "California":"קליפורניה",
-    "Australia":"אוסטרליה"
+    "Australia":"אוסטרליה",
+    "Israel":"ישראל",
+    "Denmark":"דנמרק",
+    "Netherlands":"הולנד",
+    "Belgium":"בלגיה",
+    "Mexico":"מקסיקו",
+    "USA":"ארצות הברית",
+    "Ireland":"אירלנד",
+    "Scotland":"סקוטלנד",
+    "Lager":"לאגר",
+    "Dark lager":"לאגר כהה",
+    "Unfiltered lager":"לאגר לא מסונן",
+    "Pilsner":"פילזנר",
+    "Stout":"סטאוט",
+    "Pale ale":"פייל אייל",
+    "Blonde ale":"בלונד אייל",
+    "Belgian ale":"אייל בלגי",
+    "Witbier":"בירת חיטה בלגית",
+    "Wheat beer":"בירת חיטה",
+    "IPA":"IPA"
    },
   strength:["הכל", "קליל", "בינוני", "חזק"]
 };
@@ -3733,11 +3757,47 @@ function matchBadge(m){
 function starsText(n){return "★".repeat(n)+"☆".repeat(5-n)}
 
 // A small picture for a drink outside the catalog: a bottle for wine, beer and spirits, a glass for the rest.
-function typeIcon(type){
+// A catalog wine (its English name and note) gets its photo or a bottle in its colour.
+function typeIcon(type,name,note){
   const box=el("span",{class:"art-box sm"});
+  if(type==="wine"&&name){box.classList.add("bt");box.append(bottleThumb(null,null,note||"",name));return box}
   if(type==="wine"||type==="beer"||type==="spirit"){box.classList.add("bt");box.append(bottleThumb(type==="wine"?"red_wine":type==="beer"?"beer":"vodka"));return box}
   box.innerHTML='<svg viewBox="0 0 100 140" aria-hidden="true"><path d="'+GLASS.coupe.o+'" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>';
   return box;
+}
+
+/* Beers people order in Israel. Style and country are English terms that the Hebrew locale translates (wineTerm). */
+const BEER_LIST=[
+ ["Goldstar","גולדסטאר","Dark lager · Israel"],["Goldstar Unfiltered","גולדסטאר לא מסוננת","Unfiltered lager · Israel"],["Maccabee","מכבי","Lager · Israel"],
+ ["Shapiro Pale Ale","שפירא פייל אייל","Pale ale · Israel"],["Alexander Blonde","אלכסנדר בלונד","Blonde ale · Israel"],["Malka Pale Ale","מלכה פייל אייל","Pale ale · Israel"],
+ ["Jem's Pils","ג׳מס פילס","Pilsner · Israel"],["Tuborg","טובורג","Lager · Denmark"],["Carlsberg","קרלסברג","Lager · Denmark"],["Heineken","הייניקן","Lager · Netherlands"],
+ ["Stella Artois","סטלה ארטואה","Pilsner · Belgium"],["Corona","קורונה","Lager · Mexico"],["Peroni","פרוני","Lager · Italy"],["Budweiser","בדווייזר","Lager · USA"],
+ ["Guinness","גינס","Stout · Ireland"],["Leffe Blonde","לף בלונד","Belgian ale · Belgium"],["Hoegaarden","הוגרדן","Witbier · Belgium"],["Blue Moon","בלו מון","Witbier · USA"],
+ ["Paulaner Hefe-Weissbier","פאולנר","Wheat beer · Germany"],["Weihenstephaner Hefeweissbier","וייהנשטפן","Wheat beer · Germany"],["Erdinger","ארדינגר","Wheat beer · Germany"],
+ ["BrewDog Punk IPA","ברודוג פאנק IPA","IPA · Scotland"]
+].map(([name,he,note])=>({name,he,note}));
+const BEER_TAGS={"Stout":["bitter","creamy"],"IPA":["bitter","fresh"],"Pale ale":["bitter","fresh"],"Wheat beer":["fresh","fruity"],"Witbier":["fresh","fruity"],"Belgian ale":["fruity","sweet"]};
+const beerTags=note=>BEER_TAGS[note.split(" · ")[0]]||["fresh"];
+let beerIdx=null;
+function localBeers(q){beerIdx=beerIdx||makeIndex(BEER_LIST,b=>[b.name,b.he,b.note,b.note.split(" · ").map(x=>LOCALES.he.wineTerm[x]||"").join(" ")]);return searchIndex(beerIdx,q,3)}
+// What a search finds: cocktails from the app, then wines and beers from the catalogs.
+function drinkHits(q){
+  const nq=normText(q);if(!nq)return [];
+  return [
+    ...DRINKS.filter(d=>[d.name,LOCALES.en.drink[d.id].n,LOCALES.he.drink[d.id].n].some(x=>normText(x).includes(nq))).slice(0,3)
+      .map(d=>({type:"cocktail",ref:d.id,name:d.name,note:"",tags:d.t,base:baseOf(d),pic:()=>drinkPic(d,have(),"sm")})),
+    ...localWines(q).slice(0,3).map(w=>({type:"wine",name:wineDisplay(w),note:wineNote(w.note),tags:[],base:wineKind(w.note),w,pic:()=>typeIcon("wine",w.name,w.note)})),
+    ...localBeers(q).map(b=>({type:"beer",name:lang==="he"?b.he:b.name,note:wineNote(b.note),tags:beerTags(b.note),base:"beer",pic:()=>typeIcon("beer")}))];
+}
+// "Add as it is", with a choice of what kind of drink it is.
+let asIsType=null;
+function asIsRow(q,sub,onAdd,redraw){
+  const ty=asIsType||(/יין|wine/i.test(q)?"wine":/ביר[הת]|beer|לאגר|lager|ipa/i.test(q)?"beer":"other");
+  return el("div",{class:"ob-res manual as-is"},
+    el("span",{},t("list.addAsIs",q),el("small",{},sub)),
+    el("button",{type:"button",class:"plus",onclick:()=>{asIsType=null;onAdd(ty)}},t("common.addPlus")),
+    el("div",{class:"as-kind",role:"group","aria-label":t("menu.kind")},DRINK_TYPES.map(k=>el("button",{type:"button",class:"chip","aria-pressed":String(k===ty),
+      onclick:()=>{asIsType=k;redraw()}},t("dtype."+k)))));
 }
 
 /* Rating sheet: stars, what you liked, a note and where. */
@@ -3788,7 +3848,7 @@ let listView="tried",listAdd="";
 function listItem(e){
   const d=drinkOf(e),H=have();
   const pic=d?drinkPic(d,H,"sm"):typeIcon(e.type);
-  const sub=[t("dtype."+(e.ref?"cocktail":e.type)),e.place,e.status==="tried"&&e.at?new Date(e.at).toLocaleDateString(L.locale,{day:"numeric",month:"short"}):null].filter(Boolean).flatMap((x,i)=>i?[" · ",el("bdi",{},x)]:[el("bdi",{},x)]);
+  const sub=[t("dtype."+(e.ref?"cocktail":e.type)),e.desc,e.place,e.status==="tried"&&e.at?new Date(e.at).toLocaleDateString(L.locale,{day:"numeric",month:"short"}):null].filter(Boolean).flatMap((x,i)=>i?[" · ",el("bdi",{},x)]:[el("bdi",{},x)]);
   const right=e.status==="tried"?(e.rating?el("span",{class:"stars-txt","aria-label":t("rate.starN",e.rating)},starsText(e.rating)):el("button",{type:"button",class:"btn sm",onclick:ev=>{ev.stopPropagation();openRate(e)}},t("rate.rateNow")))
     :el("button",{type:"button",class:"btn ghost sm",onclick:ev=>{ev.stopPropagation();openRate(e)}},t("list.tried"));
   const row=el("article",{class:"li-row",tabindex:"0",role:"button",onclick:()=>d?openRecipe(d):openRate(e),onkeydown:ev=>{if(ev.key==="Enter"){ev.preventDefault();d?openRecipe(d):openRate(e)}}},
@@ -3818,11 +3878,11 @@ function renderList(){
   // Add anything: a cocktail from the app, a wine, or just a name.
   const inp=el("input",{type:"search",id:"listSearch",placeholder:t("list.addPh"),"aria-label":t("list.addPh"),autocomplete:"off",value:listAdd});
   const res=el("div",{class:"ob-results"});
-  const draw=()=>{res.innerHTML="";const q=listAdd.trim();if(!q)return;const nq=normText(q);
-    const hits=DRINKS.filter(d=>normText(d.name).includes(nq)||normText(LOCALES.en.drink[d.id].n).includes(nq)||normText(LOCALES.he.drink[d.id].n).includes(nq)).slice(0,5);
+  const draw=()=>{res.innerHTML="";const q=listAdd.trim();if(!q)return;
     const add=(x)=>{listAdd="";listView==="want"?saveLog(x,{status:"want"}):openRate(x);renderList()};
-    hits.forEach(d=>res.append(el("button",{type:"button",class:"ob-res",onclick:()=>add({ref:d.id})},drinkPic(d,have(),"sm"),el("span",{},d.name,el("small",{},t("dtype.cocktail"))),el("span",{class:"plus"},t("common.addPlus")))));
-    res.append(el("button",{type:"button",class:"ob-res manual",onclick:()=>add({name:q,type:"other"})},el("span",{},t("list.addAsIs",q),el("small",{},t(listView==="want"?"list.addWantSub":"list.addTriedSub"))),el("span",{class:"plus"},t("common.addPlus"))));
+    drinkHits(q).forEach(h=>res.append(el("button",{type:"button",class:"ob-res",onclick:()=>add(h.ref?{ref:h.ref}:{name:h.name,type:h.type,tags:h.tags,base:h.base,desc:h.note})},
+      h.pic(),el("span",{},h.name,el("small",{},[t("dtype."+h.type),h.note].filter(Boolean).join(" · "))),el("span",{class:"plus"},t("common.addPlus")))));
+    res.append(asIsRow(q,t(listView==="want"?"list.addWantSub":"list.addTriedSub"),ty=>add({name:q,type:ty}),draw));
   };
   inp.addEventListener("input",()=>{listAdd=inp.value;draw()});
   box.append(el("div",{class:"sec-h"},el("h3",{},t(listView==="want"?"list.addWant":"list.addTried"))),inp,res);draw();
@@ -4284,8 +4344,10 @@ function renderWineResults(){
   const il=shop.country==="il",nq=normText(q);
   DRINKS.filter(d=>[d.name,LOCALES.en.drink[d.id].n,LOCALES.he.drink[d.id].n].some(x=>normText(x).includes(nq))).slice(0,3).forEach(d=>box.append(el("button",{type:"button",class:"ob-res",
     onclick:()=>addWine({name:d.name,kind:"cocktail",ref:d.id,tags:d.t,base:baseOf(d)})},drinkPic(d,have(),"sm"),el("span",{},d.name,el("small",{},t("dtype.cocktail"))),el("span",{class:"plus"},t("common.addPlus")))));
-  localWines(q).forEach(w=>{const shown=wineDisplay(w),note=wineNote(w.note);box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine({name:shown,note:note+(shown!==w.name?" · "+w.name:""),rl:il?w.il[0]:null,rh:il?w.il[1]:null})},
+  localWines(q).forEach(w=>{const shown=wineDisplay(w),note=wineNote(w.note);box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine({name:shown,note:note+(shown!==w.name?" · "+w.name:""),base:wineKind(w.note),rl:il?w.il[0]:null,rh:il?w.il[1]:null})},
     bottleThumb(null,null,w.note,w.name),el("span",{},shown," ",el("small",{},(shown!==w.name?w.name+" · ":"")+note+(il&&w.il[0]?t("menu.inShopPrice",ltr("₪"+w.il[0]+"–"+w.il[1])):""))),el("span",{class:"plus"},t("common.addPlus"))))});
+  localBeers(q).forEach(b=>{const name=lang==="he"?b.he:b.name;box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine({name,kind:"beer",note:wineNote(b.note),tags:beerTags(b.note),base:"beer"})},
+    typeIcon("beer"),el("span",{},name,el("small",{},t("dtype.beer")+" · "+wineNote(b.note))),el("span",{class:"plus"},t("common.addPlus"))))});
   if(wineAI&&wineAI.q===q){
     if(wineAI.loading)box.append(el("p",{class:"status"},t("menu.aiSearching")));
     else if(wineAI.err)box.append(el("p",{class:"status err"},wineAI.err));
@@ -4294,8 +4356,7 @@ function renderWineResults(){
   }
   if(sampleApi&&!(wineAI&&wineAI.q===q&&!wineAI.err))box.append(el("button",{type:"button",class:"ob-res",onclick:()=>searchWineAI(q)},
     el("span",{},t("menu.aiSearch",q),el("small",{},t("menu.aiSearchSub"))),el("span",{class:"plus"},t("menu.search"))));
-  box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine({name:q,kind:"other"})},
-    el("span",{},t("menu.addAsIs",q),el("small",{},t("menu.noShopPrice"))),el("span",{class:"plus"},t("common.addPlus"))));
+  box.append(asIsRow(q,t("menu.noShopPrice"),kind=>addWine({name:q,kind}),renderWineResults));
 }
 async function searchWineAI(q){
   wineAI={q,loading:true,items:[]};renderWineResults();

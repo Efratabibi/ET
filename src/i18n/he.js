@@ -853,7 +853,26 @@
     "Chile":"צ'ילה",
     "Argentina":"ארגנטינה",
     "California":"קליפורניה",
-    "Australia":"אוסטרליה"
+    "Australia":"אוסטרליה",
+    "Israel":"ישראל",
+    "Denmark":"דנמרק",
+    "Netherlands":"הולנד",
+    "Belgium":"בלגיה",
+    "Mexico":"מקסיקו",
+    "USA":"ארצות הברית",
+    "Ireland":"אירלנד",
+    "Scotland":"סקוטלנד",
+    "Lager":"לאגר",
+    "Dark lager":"לאגר כהה",
+    "Unfiltered lager":"לאגר לא מסונן",
+    "Pilsner":"פילזנר",
+    "Stout":"סטאוט",
+    "Pale ale":"פייל אייל",
+    "Blonde ale":"בלונד אייל",
+    "Belgian ale":"אייל בלגי",
+    "Witbier":"בירת חיטה בלגית",
+    "Wheat beer":"בירת חיטה",
+    "IPA":"IPA"
    },
   strength:["הכל", "קליל", "בינוני", "חזק"]
 };

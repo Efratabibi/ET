@@ -384,6 +384,8 @@ select option{background:var(--surface);color:var(--ink)}
 .vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
 #photoBox{display:grid;gap:10px}
 #photoBox[hidden]{display:none}
+.bar-photo{display:grid;gap:8px}
+.bar-photo[hidden]{display:none}
 #photoBox .photo-cta{padding:22px 18px}
 .menu-filters{display:grid;gap:8px}
 .menu-filters:empty{display:none}
@@ -589,6 +591,7 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
         </div>
         <button class="btn-pill" type="button" id="openOb" data-t="bar.openOb"></button>
       </div>
+      <div class="bar-photo" id="barPhoto" hidden></div>
       <div class="bottles" id="bottleRows"></div>
       <div class="bottles" id="shelfBox"></div>
       <div class="pane-head">
@@ -2830,15 +2833,22 @@ function reachable(H=have()){
 }
 function reachGain(id){const H=have();if(H.has(id))return 0;const H2=new Set(H);H2.add(id);return reachable(H2)-reachable(H)}
 
+// Add catalog items, and named bottles where given; returns what was new, so it can be undone.
+function addEntries(entries){
+  const added={items:[],bottles:[],names:[]};
+  entries.forEach(e=>{
+    let isNew=false;
+    if(!state.items.includes(e.id)){state.items.push(e.id);added.items.push(e.id);isNew=true}
+    if(e.name&&STYLES[e.id]&&STYLES[e.id][e.style]&&!state.bottles.some(b=>b.type===e.id&&b.name===e.name)){
+      const b={id:uid(),type:e.id,name:e.name,style:e.style};state.bottles.push(b);added.bottles.push(b.id);isNew=true}
+    if(isNew)added.names.push(e.name?e.name:NAME[e.id]);
+  });
+  commit();return added;
+}
 // Add through onboarding. With rerender=false the caller updates the screen itself.
 function obAdd(entries,rerender=true){
   const before=new Set(makeable());
-  entries.forEach(e=>{
-    if(!state.items.includes(e.id))state.items.push(e.id);
-    if(e.name&&STYLES[e.id]&&STYLES[e.id][e.style]&&!state.bottles.some(b=>b.type===e.id&&b.name===e.name))
-      state.bottles.push({id:uid(),type:e.id,name:e.name,style:e.style});
-  });
-  commit();
+  addEntries(entries);
   ob.last={unlocked:makeable().filter(n=>!before.has(n))};
   ob.q="";ob.notice="";finder.ai=null;
   if(rerender)renderOb(true);
@@ -3008,21 +3018,52 @@ function renderOb(bump){
   foot.append(el("button",{class:"btn ghost",type:"button",onclick:finishBar},t("ob.toBar")));
   if(can.length)foot.append(el("button",{class:"btn",type:"button",onclick:finishOb},t("ob.go")));
 }
+// Claude names the bottles in a photo and maps each to the catalog.
+async function bottlesFromPhoto(file){
+  const catalog=Object.entries(NAME).map(([id,n])=>id+" = "+n).join("\n");
+  const styles=Object.entries(STYLES).map(([ty,ss])=>ty+": "+Object.entries(ss).map(([k,v])=>k+" ("+v.t.join("/")+")").join(", ")).join("\n");
+  const res=await sampleApi.json("bottle_photo",{catalog,styles,lang},{images:[await prepImage(file)]});
+  return (res&&Array.isArray(res.items)?res.items:[]).filter(x=>x&&NAME[x.id]).slice(0,20)
+    .map(x=>({id:x.id,name:x.name?String(x.name).slice(0,60):null,style:STYLES[x.id]&&STYLES[x.id][x.style]?x.style:(STYLES[x.id]?Object.keys(STYLES[x.id])[0]:null)}));
+}
 async function obIdentify(file){
   if(!sampleApi||ob.busy)return;
   ob.busy=true;ob.notice="";renderOb();
-  const catalog=Object.entries(NAME).map(([id,n])=>id+" = "+n).join("\n");
-  const styles=Object.entries(STYLES).map(([ty,ss])=>ty+": "+Object.entries(ss).map(([k,v])=>k+" ("+v.t.join("/")+")").join(", ")).join("\n");
   try{
-    const res=await sampleApi.json("bottle_photo",{catalog,styles,lang},{images:[await prepImage(file)]});
-    const items=(res&&Array.isArray(res.items)?res.items:[]).filter(x=>x&&NAME[x.id]).slice(0,20)
-      .map(x=>({id:x.id,name:x.name?String(x.name).slice(0,60):null,style:STYLES[x.id]&&STYLES[x.id][x.style]?x.style:(STYLES[x.id]?Object.keys(STYLES[x.id])[0]:null)}));
+    const items=await bottlesFromPhoto(file);
     ob.busy=false;
     if(items.length)obAdd(items);
     else{ob.notice=t("ob.photoNone");renderOb()}
   }catch(e){ob.busy=false;ob.notice=sampleError(e);renderOb()}
 }
-function obSetPhoto(ok){ob.photoOK=!!ok;if(!$("ob").hidden)renderOb()}
+function obSetPhoto(ok){ob.photoOK=!!ok;if(!$("ob").hidden)renderOb();renderBarPhoto()}
+
+/* My bar: photograph bottles; what Claude recognises goes straight into the bar, with an undo. */
+let barPh={busy:false,msg:"",err:false,undo:null};
+function renderBarPhoto(){
+  const box=$("barPhoto");box.innerHTML="";
+  box.hidden=!sampleApi||!ob.photoOK;if(box.hidden)return;
+  const file=el("input",{type:"file",accept:"image/*",hidden:""});
+  file.addEventListener("change",()=>{if(file.files[0])barIdentify(file.files[0])});
+  const btn=el("button",{type:"button",class:"photo-cta",onclick:()=>file.click(),disabled:barPh.busy?"":null},el("span",{class:"ic"}),
+    el("span",{},el("b",{},t("bar.photoBtn")),el("small",{},barPh.busy?t("ob.photoBusy"):t("bar.photoSub"))));
+  btn.querySelector(".ic").innerHTML=ICON_CAM;
+  box.append(btn,file);
+  if(barPh.msg)box.append(el("p",{class:"status"+(barPh.err?" err":""),role:"status"},barPh.msg,
+    barPh.undo?el("button",{type:"button",class:"linkbtn",style:"margin-inline-start:8px;min-height:0;padding:0",onclick:()=>{
+      const u=barPh.undo;state.items=state.items.filter(id=>!u.items.includes(id));state.bottles=state.bottles.filter(b=>!u.bottles.includes(b.id));commit();
+      barPh={busy:false,msg:t("bar.photoUndone"),err:false,undo:null};renderBarPhoto()}},t("bar.photoUndo")):null));
+}
+async function barIdentify(file){
+  if(!sampleApi||barPh.busy)return;
+  barPh={busy:true,msg:"",err:false,undo:null};renderBarPhoto();
+  try{
+    const items=await bottlesFromPhoto(file);
+    if(!items.length)barPh={busy:false,msg:t("ob.photoNone"),err:true,undo:null};
+    else{const a=addEntries(items);barPh={busy:false,msg:a.names.length?t("bar.photoAdded",a.names.join(", ")):t("bar.photoHad"),err:false,undo:a.names.length?a:null}}
+  }catch(e){barPh={busy:false,msg:sampleError(e),err:true,undo:null}}
+  renderBarPhoto();
+}
 function openOb(){ob={...ob,step:barEmpty()?0:1,q:"",qType:null,last:null,notice:""};$("ob").hidden=false;document.body.style.overflow="hidden";renderOb()}
 function closeOb(){ob.sheet=null;$("obSheet").hidden=true;$("ob").hidden=true;document.body.style.overflow="";try{localStorage.setItem(OB_KEY,"1")}catch(e){}}
 function finishOb(){closeOb();setTab(barEmpty()?"bar":"mix");window.scrollTo({top:0})}

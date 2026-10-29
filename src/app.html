@@ -381,6 +381,27 @@ select option{background:var(--surface);color:var(--ink)}
 .summary{background:var(--ok-soft);color:var(--ink);border-radius:12px;padding:12px 14px;display:grid;gap:4px}
 .summary b{color:var(--ok)}
 .summary.plain{background:var(--surface);border:1px solid var(--line)}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+#photoBox{display:grid;gap:10px}
+#photoBox .photo-cta{padding:22px 18px}
+.menu-filters{display:grid;gap:8px}
+.menu-filters:empty{display:none}
+.mi-head{display:flex;gap:12px;align-items:flex-start}
+.mi-main{flex:1;min-width:0;display:grid;gap:4px}
+.mi-main h4{margin:0;font:600 19px/1.1 var(--display);font-synthesis:none}
+.mi-main small{color:var(--muted);font-size:13px}
+.mi-price{display:grid;gap:2px;justify-items:end;flex:none}
+.mi-price span{font:600 18px var(--display);color:var(--gold);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mi-price small{font:500 11px var(--body);color:var(--muted);margin-inline-start:4px}
+.mi-why{color:var(--ok);font-size:13px}
+.mi-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mi-acts .btn[aria-pressed="true"]{border-color:var(--gold);color:var(--gold)}
+.mi-more summary{cursor:pointer;color:var(--muted);font-size:13px;padding:4px 0}
+.mi-more[open]{display:grid;gap:10px}
+.wine-name input{flex:1;min-width:0}
+.wine-name select{flex:none;width:auto;max-width:120px}
+.mi-more select{border:1px solid var(--line2);border-radius:8px;background:var(--bg);color:var(--ink);padding:0 6px;font-size:13px}
+.fields.one{grid-template-columns:minmax(0,140px)}
 .wines{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
 .wine{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px;position:relative}
 .wine.best{border-color:var(--ok)}
@@ -443,6 +464,7 @@ details summary::-webkit-details-marker{display:none}
 .ob-res>span small{font-weight:400}
 .ob-res .plus{flex:none;font:700 13px var(--body);color:var(--bg);background:var(--cream);border-radius:999px;padding:8px 14px;white-space:nowrap}
 .ob-res:last-child{border-bottom:0}
+.ob-res>.art-box{flex:none}
 .ob-res .thumb{flex:none;display:flex;align-items:center;justify-content:center;width:44px;height:60px;background:var(--surface);border-radius:8px}
 .ob-res .thumb svg{display:block;width:24px;height:48px}
 .ob-res .thumb.photo{background:var(--photo-bg);overflow:hidden}
@@ -668,19 +690,16 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     <div class="list-body" id="listBody"></div>
   </section>
   <section class="pane" id="pane-menu">
-    <h2 data-t="menu.title"></h2>
-    <p class="sub" data-t="menu.sub"></p>
-    <div class="card menu-top">
-      <div>
-        <label class="lbl" for="wineSearch" data-t="menu.addLabel"></label>
-        <input type="search" id="wineSearch" data-t-ph="menu.searchPh" autocomplete="off">
-        <div class="ob-results" id="wineResults" style="margin-top:8px"></div>
-      </div>
+    <div class="pane-head">
+      <h2 data-t="menu.title"></h2>
+      <p class="sub" data-t="menu.sub"></p>
+    </div>
+    <div class="menu-top">
       <div id="photoBox">
-        <label class="lbl" for="menuPhoto" data-t="menu.photoLabel"></label>
         <div class="photo-row">
-          <input type="file" id="menuPhoto" accept="image/*" capture="environment">
-          <button class="btn" type="button" id="readMenu" disabled data-t="menu.read"></button>
+          <label class="photo-cta" for="menuPhoto"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><span><b data-t="menu.shoot"></b><small data-t="menu.shootSub"></small></span></label>
+          <input type="file" id="menuPhoto" accept="image/*" class="vh">
+          <button class="btn" type="button" id="readMenu" hidden data-t="menu.read"></button>
           <button class="btn ghost" type="button" id="stopRead" hidden data-t="menu.stop"></button>
         </div>
         <p class="status" id="menuStatus" data-t="menu.status"></p>
@@ -691,12 +710,19 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
           <button class="btn" type="button" id="parseText" data-t="menu.parse"></button>
         </details>
       </div>
-      <div class="shop-controls" style="margin:0">
-        <label><span data-t="menu.pour"></span><select id="pour"><option value="150" data-t="menu.pour150"></option><option value="175" data-t="menu.pour175"></option><option value="187.5" data-t="menu.pour187"></option></select></label>
-        <label><span data-t="shop.country"></span><select id="menuCountry"></select></label>
+      <p class="note" id="menuNoAI" hidden data-t="menu.noAI"></p>
+      <div>
+        <label class="lbl" for="menuPlace" data-t="menu.place"></label>
+        <input type="text" id="menuPlace" data-t-ph="menu.placePh" autocomplete="off">
+      </div>
+      <div>
+        <label class="lbl" for="wineSearch" data-t="menu.addLabel"></label>
+        <input type="search" id="wineSearch" data-t-ph="menu.searchPh" autocomplete="off">
+        <div class="ob-results" id="wineResults" style="margin-top:8px"></div>
       </div>
     </div>
 
+    <div id="menuFilters" class="menu-filters"></div>
     <div id="menuSummary"></div>
     <div class="wines" id="wineList"></div>
     <div class="menu-actions">
@@ -704,6 +730,13 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
       <button class="btn ghost" type="button" id="estimateRetail" hidden data-t="menu.estimate"></button>
       <button class="btn ghost" type="button" id="clearMenu" data-t="menu.clear"></button>
     </div>
+    <details class="paste">
+      <summary data-t="menu.settings"></summary>
+      <div class="shop-controls" style="margin:10px 0 0">
+        <label><span data-t="menu.pour"></span><select id="pour"><option value="150" data-t="menu.pour150"></option><option value="175" data-t="menu.pour175"></option><option value="187.5" data-t="menu.pour187"></option></select></label>
+        <label><span data-t="shop.country"></span><select id="menuCountry"></select></label>
+      </div>
+    </details>
     <p class="note photo-credit" hidden data-t-html="photo.credit"></p>
     <p class="disclaimer" data-t="menu.disclaimer"></p>
   </section>
@@ -2071,7 +2104,7 @@ function renderResults(){
 }
 
 function greet(){$("greet").textContent=t("mix.greet",new Date().getHours())}
-function render(){greet();renderInventory();renderMood();renderResults();renderRatePrompt();renderList();if(document.querySelector(".app").dataset.view==="shop")renderShop()}
+function render(){greet();renderInventory();renderMood();renderResults();renderRatePrompt();renderList();const v=document.querySelector(".app").dataset.view;if(v==="shop")renderShop();if(v==="menu")renderMenu()}
 
 /* ---------- events ---------- */
 $("filter").addEventListener("input",e=>{filterText=e.target.value;renderInventory()});
@@ -2123,8 +2156,8 @@ function setTab(t){
   if(t==="list")renderList();
   try{localStorage.setItem("homebar.tab",t)}catch(e){}
 }
-// The restaurant wine menu is parked for now: its code stays, the tab is hidden. Set to true to bring it back.
-const SHOW_MENU=false;
+// The restaurant tab; set to false to hide it.
+const SHOW_MENU=true;
 if(!SHOW_MENU)document.querySelector('.tabs [data-tab="menu"]').hidden=true;
 let startTab="mix";try{startTab=localStorage.getItem("homebar.tab")||"mix"}catch(e){}
 if(!["bar","mix","shop","list"].concat(SHOW_MENU?["menu"]:[]).includes(startTab))startTab="mix";
@@ -2326,47 +2359,87 @@ function verdict(m){
   if(m<=3)return ["mid",t("menu.typical")];
   return ["bad",t("menu.pricey")];
 }
+const priced=it=>it.kind==="wine"||it.kind==="spirit";
 function bestItem(){
-  const withScore=menu.items.map(it=>({it,c:calc(it)})).filter(x=>x.c.score!=null);
+  const items=menu.items.filter(priced);
+  const withScore=items.map(it=>({it,c:calc(it)})).filter(x=>x.c.score!=null);
   if(withScore.length)return {by:"markup",...withScore.sort((a,b)=>a.c.score-b.c.score)[0]};
-  const withEq=menu.items.map(it=>({it,c:calc(it)})).filter(x=>x.c.glassEq!=null||x.it.bottle);
+  const withEq=items.map(it=>({it,c:calc(it)})).filter(x=>x.c.glassEq!=null||x.it.bottle);
   if(!withEq.length)return null;
   withEq.sort((a,b)=>(a.c.glassEq??a.it.bottle/a.c.perBottle)-(b.c.glassEq??b.it.bottle/b.c.perBottle));
   return {by:"price",...withEq[0]};
 }
 
+// The menu as a list of drinks: what each one is, how well it suits you, want / ordered,
+// and for wine and spirits the price comparison with a shop.
+let menuFilter="all",menuSort="match";const menuOpen=new Set();
+const menuX=it=>({ref:it.ref||null,name:it.name,type:it.kind,tags:it.tags||[],base:it.base||null,desc:it.note||"",place:menu.place||""});
 function renderMenu(){
   const cs=$("menuCountry");if(!cs.options.length)Object.entries(COUNTRIES).forEach(([k,c])=>cs.append(el("option",{value:k},c.n+" ("+c.cur+")")));
   cs.value=shop.country;$("pour").value=String(pour);
-  const box=$("wineList");box.innerHTML="";
-  menu.items.forEach(it=>{
-    const f=(key,label,ph)=>el("label",{},label,el("input",{type:"text",inputmode:"decimal",id:"w-"+key+"-"+it.id,value:it[key]??"",placeholder:ph,oninput:e=>{it[key]=num(e.target.value);touch()}}));
-    const card=el("article",{class:"wine","data-id":it.id},
-      el("div",{class:"wine-name"},
-        el("input",{type:"text",id:"w-name-"+it.id,value:it.name,"aria-label":t("menu.wineName"),oninput:e=>{it.name=e.target.value;touch(false)}}),
-        el("button",{type:"button","aria-label":t("common.remove"),title:t("common.remove"),onclick:()=>{menu.items=menu.items.filter(x=>x!==it);touch();renderMenu()}},"✕")),
-      it.note?el("div",{class:"meta"},it.note):null,
-      el("div",{class:"fields"},f("glass",it.kind==="spirit"?t("menu.serving"):t("menu.glass"),"—"),el("label",{},t("menu.bottleSize"),el("div",{style:"display:flex;gap:4px"},
+  if(document.activeElement!==$("menuPlace"))$("menuPlace").value=menu.place||"";
+  const P=tasteProfile(),box=$("wineList");box.innerHTML="";
+  const kinds=DRINK_TYPES.filter(k=>menu.items.some(it=>it.kind===k));
+  if(!kinds.includes(menuFilter))menuFilter="all";
+  const fb=$("menuFilters");fb.innerHTML="";
+  if(kinds.length>1)fb.append(el("div",{class:"seg"},["all",...kinds].map(k=>el("button",{type:"button",class:"chip","aria-pressed":String(menuFilter===k),
+    onclick:()=>{menuFilter=k;renderMenu()}},k==="all"?t("menu.all"):t("dtype."+k)))));
+  if(P.n&&menu.items.length>1)fb.append(el("div",{class:"seg"},["match","menu"].map(k=>el("button",{type:"button",class:"chip","aria-pressed":String(menuSort===k),
+    onclick:()=>{menuSort=k;renderMenu()}},t(k==="match"?"menu.sortMatch":"menu.sortMenu")))));
+  let list=menu.items.filter(it=>menuFilter==="all"||it.kind===menuFilter);
+  const mm=new Map(list.map(it=>[it,matchFor(menuX(it),P)]));
+  if(menuSort==="match"&&P.n)list=list.map((it,i)=>[it,i]).sort((a,b)=>((mm.get(b[0])||{score:0}).score-(mm.get(a[0])||{score:0}).score)||a[1]-b[1]).map(x=>x[0]);
+  list.forEach(it=>box.append(menuCard(it,mm.get(it))));
+  if(!menu.items.length)box.append(el("div",{class:"empty"},
+    el("b",{},t("menu.howTitle")),el("br"),t("menu.how1"),el("br"),t("menu.how2"),el("br"),t("menu.how3"),el("br"),el("br"),t("menu.how4")));
+  $("estimateRetail").hidden=!sampleApi||!menu.items.some(priced);
+  updateMenuStats();
+}
+function menuCard(it,m){
+  const x=menuX(it),lg=findLog(x),d=it.ref?DRINKS.find(z=>z.id===it.ref):null,pr=priced(it);
+  const mark=lg&&lg.rating?el("span",{class:"mine","aria-label":t("rate.starN",lg.rating)},"★ "+lg.rating)
+    :lg&&lg.status==="want"?el("span",{class:"mine want"},t("list.wantBadge")):lg?el("span",{class:"mine"},t("menu.orderedBadge")):matchBadge(m);
+  const price=it.glass||it.bottle?el("div",{class:"mi-price"},
+    it.glass?el("span",{},money(it.glass),el("small",{},t(it.kind==="wine"?"menu.perGlass1":"menu.perServing"))):null,
+    it.bottle?el("span",{},money(it.bottle),el("small",{},t("menu.perBottle"))):null):null;
+  const acts=el("div",{class:"mi-acts"});
+  if(lg&&lg.status==="tried")acts.append(el("button",{type:"button",class:"btn sm"+(lg.rating?" ghost":""),onclick:()=>openRate(x)},lg.rating?starsText(lg.rating):t("rate.rateNow")));
+  else acts.append(
+    el("button",{type:"button",class:"btn ghost sm","aria-pressed":String(!!lg),onclick:()=>{lg?removeLog(lg):saveLog(x,{status:"want"});renderMenu()}},lg?t("rec.wanted"):t("rec.want")),
+    el("button",{type:"button",class:"btn sm",onclick:()=>{saveLog(x,{status:"tried",place:menu.place||""});setStatus(t("menu.orderedNote"));renderMenu()}},t("menu.ordered")));
+  if(d)acts.append(el("button",{type:"button",class:"linkbtn",onclick:()=>openRecipe(d)},t("menu.recipe")));
+  // Editing (and, for wine and spirits, the price comparison) stays folded away.
+  const f=(key,label,ph)=>el("label",{},label,el("input",{type:"text",inputmode:"decimal",id:"w-"+key+"-"+it.id,value:it[key]??"",placeholder:ph,oninput:e=>{it[key]=num(e.target.value);touch()}}));
+  const kindSel=el("select",{id:"w-kind-"+it.id,"aria-label":t("menu.kind"),onchange:e=>{it.kind=e.target.value;touch(false);renderMenu()}},
+    DRINK_TYPES.map(k=>{const o=el("option",{value:k},t("dtype."+k));if(k===it.kind)o.selected=true;return o}));
+  const more=el("details",{class:"mi-more",ontoggle:e=>e.target.open?menuOpen.add(it.id):menuOpen.delete(it.id)},el("summary",{},t(pr?"menu.compare":"menu.edit")),
+    el("div",{class:"wine-name"},
+      el("input",{type:"text",id:"w-name-"+it.id,value:it.name,"aria-label":t("menu.wineName"),oninput:e=>{it.name=e.target.value;touch(false)}}),kindSel,
+      el("button",{type:"button","aria-label":t("common.remove"),title:t("common.remove"),onclick:()=>{menu.items=menu.items.filter(z=>z!==it);touch();renderMenu()}},"✕")),
+    pr?el("div",{class:"fields"},f("glass",it.kind==="spirit"?t("menu.serving"):t("menu.glass"),"—"),el("label",{},t("menu.bottleSize"),el("div",{style:"display:flex;gap:4px"},
           el("input",{type:"text",inputmode:"decimal",id:"w-bottle-"+it.id,value:it.bottle??"",placeholder:"—",oninput:e=>{it.bottle=num(e.target.value);touch()}}),
           el("select",{id:"w-size-"+it.id,"aria-label":t("menu.sizeAria"),style:"padding:6px 4px;font-size:13px",onchange:e=>{it.size=+e.target.value;touch()}},
             (it.kind==="spirit"?[700,1000]:[375,500,750,1500]).map(ml=>{const o=el("option",{value:String(ml)},String(ml));if(ml===(it.size||(it.kind==="spirit"?700:750)))o.selected=true;return o})))),
         el("label",{},t("menu.shopFor",it.kind==="spirit"?700:750),el("div",{style:"display:flex;gap:4px"},
           el("input",{type:"text",inputmode:"decimal",id:"w-rl-"+it.id,value:it.rl??"",placeholder:t("menu.from"),oninput:e=>{it.rl=num(e.target.value);touch()}}),
-          el("input",{type:"text",inputmode:"decimal",id:"w-rh-"+it.id,value:it.rh??"",placeholder:t("menu.to"),oninput:e=>{it.rh=num(e.target.value);touch()}})))),
-      el("div",{class:"stats"}),el("div",{class:"vwrap"}));
-    box.append(card);
-  });
-  if(!menu.items.length)box.append(el("div",{class:"empty"},
-    el("b",{},t("menu.howTitle")),el("br"),t("menu.how1"),el("br"),t("menu.how2"),el("br"),t("menu.how3"),el("br"),el("br"),t("menu.how4")));
-  $("estimateRetail").hidden=!sampleApi||!menu.items.length;
-  updateMenuStats();
+          el("input",{type:"text",inputmode:"decimal",id:"w-rh-"+it.id,value:it.rh??"",placeholder:t("menu.to"),oninput:e=>{it.rh=num(e.target.value);touch()}}))))
+      :el("div",{class:"fields one"},f("glass",t("menu.price"),"—")),
+    pr?el("div",{class:"stats"}):null);
+  if(menuOpen.has(it.id))more.open=true;
+  return el("article",{class:"wine mi","data-id":it.id},
+    el("div",{class:"mi-head"},d?drinkPic(d,have(),"sm"):typeIcon(it.kind),
+      el("div",{class:"mi-main"},el("h4",{},it.name||t("menu.noName")),
+        el("small",{},[t("dtype."+it.kind),it.note].filter(Boolean).join(" · ")),
+        el("div",{class:"tags"},mark,(it.tags||[]).map(k=>el("span",{class:"tag"},TASTE_NAME[k])))),price),
+    m&&m.why&&m.level!=="maybe"&&!(lg&&lg.rating)?el("small",{class:"mi-why"},m.why):null,
+    pr?el("div",{class:"vwrap"}):null,acts,more);
 }
 function touch(stats=true){menu.example=false;saveMenu();if(stats)updateMenuStats()}
 
 function updateMenuStats(){
   const best=bestItem();
   document.querySelectorAll("#wineList .wine").forEach(card=>{
-    const it=menu.items.find(x=>x.id===card.dataset.id);if(!it)return;
+    const it=menu.items.find(x=>x.id===card.dataset.id);if(!it||!priced(it))return;
     const c=calc(it),rows=[];
     if(c.glassEq!=null){
       rows.push([t("menu.glassWithBottle"),money(c.glassEq)+(c.save>0?t("menu.save",Math.round(c.save*100)):"")]);
@@ -2383,13 +2456,13 @@ function updateMenuStats(){
     // Separate verdicts: a fair bottle price says nothing about the glass price, and vice versa.
     const vw=card.querySelector(".vwrap");vw.innerHTML="";
     [[c.mB,t("menu.bottle")],[c.mG,it.kind==="spirit"?t("menu.serving1"):t("menu.glass")]].forEach(([m,label])=>{const v=verdict(m);if(v)vw.append(el("span",{class:"verdict "+v[0]},label+": "+v[1]+" "+mult(m)))});
-    const isBest=best&&best.it===it&&menu.items.length>1;
+    const isBest=best&&best.it===it&&menu.items.filter(priced).length>1;
     card.classList.toggle("best",!!isBest);
     const old=card.querySelector(".badge");if(old)old.remove();
     if(isBest)card.prepend(el("span",{class:"badge"},t("menu.best")));
   });
   const sm=$("menuSummary");sm.innerHTML="";
-  if(!best||menu.items.length<2)return;
+  if(!best||menu.items.filter(priced).length<2)return;
   const {it,c,by}=best;
   const lines=[el("div",{},t("menu.bestLine"),el("b",{},it.name||t("menu.noName")),
     by==="markup"?" · "+(c.mB?t("menu.bottleCosts",mult(c.mB)):t("menu.glassCosts",mult(c.mG))):" · "+t("menu.perGlass",money(c.glassEq??it.bottle/c.perBottle)))];
@@ -2403,8 +2476,18 @@ function updateMenuStats(){
 /* Claude: read a menu photo, or estimate shop prices for typed wines */
 function toItems(res){
   const arr=res&&Array.isArray(res.items)?res.items:[];
-  return arr.slice(0,80).map((x,i)=>({id:"m"+Date.now().toString(36)+i,name:String(x.name||"").slice(0,80),kind:x.kind==="spirit"?"spirit":"wine",
-    glass:num(x.glass),bottle:num(x.bottle),rl:num(x.retail_low),rh:num(x.retail_high),note:String(x.note||"").slice(0,80)})).filter(x=>x.name);
+  return arr.slice(0,80).map((x,i)=>{
+    const name=String(x.name||"").slice(0,80),kind=DRINK_TYPES.includes(x.kind)?x.kind:"wine";
+    const ref=kind==="cocktail"?refOf(name):null;
+    return {id:"m"+Date.now().toString(36)+i,name,kind,ref,glass:num(x.glass),bottle:num(x.bottle),rl:num(x.retail_low),rh:num(x.retail_high),note:String(x.note||"").slice(0,80),
+      tags:Array.isArray(x.tags)?x.tags.filter(k=>TASTE_KEYS.includes(k)):[],base:x.base&&x.base!=="other"?String(x.base):null};
+  }).filter(x=>x.name);
+}
+// A cocktail on a menu that the app knows by name, in either language.
+function refOf(name){
+  const n=normText(name);if(!n)return null;
+  const d=DRINKS.find(d=>[d.name,LOCALES.en.drink[d.id].n,LOCALES.he.drink[d.id].n].some(x=>normText(x)===n));
+  return d?d.id:null;
 }
 function sampleError(e){
   const code=e&&e.code;
@@ -2441,8 +2524,8 @@ function setStatus(msg,err){const s=$("menuStatus");s.textContent=msg;s.classLis
 function busy(on){$("readMenu").disabled=on||photoUnsupported||!$("menuPhoto").files.length;$("parseText").disabled=on;$("stopRead").hidden=!on;$("estimateRetail").disabled=on}
 
 function addWine(w){
-  const it={id:"m"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name:w.name,kind:"wine",glass:null,bottle:null,rl:w.rl??null,rh:w.rh??null,note:w.note||""};
-  menu.items.push(it);touch(false);wineQ="";wineAI=null;$("wineSearch").value="";renderWineResults();renderMenu();
+  const it={id:"m"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name:w.name,kind:w.kind||"wine",ref:w.ref||null,glass:null,bottle:null,rl:w.rl??null,rh:w.rh??null,note:w.note||"",tags:w.tags||[],base:w.base||null};
+  menu.items.push(it);menuOpen.add(it.id);menuFilter="all";touch(false);wineQ="";wineAI=null;$("wineSearch").value="";renderWineResults();renderMenu();
   const g=$("w-glass-"+it.id);if(g){g.focus();g.scrollIntoView({block:"center",behavior:"smooth"})}
   setStatus(t("menu.added",w.name));
 }
@@ -2450,7 +2533,9 @@ let wineIdx=null;
 function localWines(q){wineIdx=wineIdx||makeIndex(WINE_LIST,w=>[w.name,w.he,w.note,w.note.split(" · ").map(x=>LOCALES.he.wineTerm[x]||"").join(" ")]);return searchIndex(wineIdx,q,6)}
 function renderWineResults(){
   const box=$("wineResults");box.innerHTML="";const q=wineQ.trim();if(!q)return;
-  const il=shop.country==="il";
+  const il=shop.country==="il",nq=normText(q);
+  DRINKS.filter(d=>[d.name,LOCALES.en.drink[d.id].n,LOCALES.he.drink[d.id].n].some(x=>normText(x).includes(nq))).slice(0,3).forEach(d=>box.append(el("button",{type:"button",class:"ob-res",
+    onclick:()=>addWine({name:d.name,kind:"cocktail",ref:d.id,tags:d.t,base:baseOf(d)})},drinkPic(d,have(),"sm"),el("span",{},d.name,el("small",{},t("dtype.cocktail"))),el("span",{class:"plus"},t("common.addPlus")))));
   localWines(q).forEach(w=>{const shown=wineDisplay(w),note=wineNote(w.note);box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine({name:shown,note:note+(shown!==w.name?" · "+w.name:""),rl:il?w.il[0]:null,rh:il?w.il[1]:null})},
     bottleThumb(null,null,w.note,w.name),el("span",{},shown," ",el("small",{},(shown!==w.name?w.name+" · ":"")+note+(il&&w.il[0]?t("menu.inShopPrice",ltr("₪"+w.il[0]+"–"+w.il[1])):""))),el("span",{class:"plus"},t("common.addPlus"))))});
   if(wineAI&&wineAI.q===q){
@@ -2461,7 +2546,7 @@ function renderWineResults(){
   }
   if(sampleApi&&!(wineAI&&wineAI.q===q&&!wineAI.err))box.append(el("button",{type:"button",class:"ob-res",onclick:()=>searchWineAI(q)},
     el("span",{},t("menu.aiSearch",q),el("small",{},t("menu.aiSearchSub"))),el("span",{class:"plus"},t("menu.search"))));
-  box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine({name:q})},
+  box.append(el("button",{type:"button",class:"ob-res",onclick:()=>addWine({name:q,kind:"other"})},
     el("span",{},t("menu.addAsIs",q),el("small",{},t("menu.noShopPrice"))),el("span",{class:"plus"},t("common.addPlus"))));
 }
 async function searchWineAI(q){
@@ -2480,7 +2565,8 @@ async function searchWineAI(q){
 }
 $("wineSearch").addEventListener("input",e=>{wineQ=e.target.value;renderWineResults()});
 $("wineSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();const f=$("wineResults").querySelector(".ob-res");if(f)f.click()}});
-$("menuPhoto").addEventListener("change",()=>{$("readMenu").disabled=!$("menuPhoto").files.length||!sampleApi});
+$("menuPhoto").addEventListener("change",()=>{$("readMenu").disabled=!$("menuPhoto").files.length||!sampleApi;if(!$("readMenu").disabled)$("readMenu").click()});
+$("menuPlace").addEventListener("input",e=>{menu.place=e.target.value.slice(0,60);saveMenu()});
 $("readMenu").addEventListener("click",async()=>{
   const file=$("menuPhoto").files[0];if(!file||!sampleApi)return;
   readAbort=new AbortController();busy(true);setStatus(t("menu.reading"));
@@ -2488,9 +2574,9 @@ $("readMenu").addEventListener("click",async()=>{
     const res=await sampleApi.json("menu_photo",claudePlace(),{images:[await prepImage(file)],signal:readAbort.signal});
     const items=toItems(res);
     if(!items.length){setStatus(t("menu.noWinesPhoto"),true)}
-    else{menu={example:false,items};saveMenu();renderMenu();setStatus(t("menu.readCount",items.length))}
+    else{menu={example:false,items,place:menu.place||""};saveMenu();renderMenu();setStatus(t("menu.readCount",items.length))}
   }catch(e){setStatus(sampleError(e),true)}
-  finally{busy(false)}
+  finally{busy(false);$("menuPhoto").value=""}
 });
 $("parseText").addEventListener("click",async()=>{
   const text=$("menuText").value.trim();if(!text)return;
@@ -2500,7 +2586,7 @@ $("parseText").addEventListener("click",async()=>{
     const res=await sampleApi.json("menu_text",{...claudePlace(),text},{signal:readAbort.signal});
     const items=toItems(res);
     if(!items.length)setStatus(t("menu.noWinesText"),true);
-    else{menu={example:false,items};saveMenu();renderMenu();setStatus(t("menu.readCount",items.length))}
+    else{menu={example:false,items,place:menu.place||""};saveMenu();renderMenu();setStatus(t("menu.readCount",items.length))}
   }catch(e){setStatus(sampleError(e),true)}
   finally{busy(false)}
 });
@@ -2518,7 +2604,7 @@ $("estimateRetail").addEventListener("click",async()=>{
   finally{busy(false)}
 });
 $("addWine").addEventListener("click",()=>{const i=$("wineSearch");i.scrollIntoView({block:"center",behavior:"smooth"});i.focus()});
-$("clearMenu").addEventListener("click",()=>{menu={example:false,items:[]};saveMenu();renderMenu()});
+$("clearMenu").addEventListener("click",()=>{menu={example:false,items:[],place:""};saveMenu();renderMenu()});
 $("pour").addEventListener("change",e=>{pour=+e.target.value;setPref("homebar.pour",String(pour));updateMenuStats()});
 $("menuCountry").addEventListener("change",e=>{shop.country=e.target.value;setPref("homebar.country",shop.country);renderMenu()});
 (async()=>{
@@ -2529,7 +2615,7 @@ $("menuCountry").addEventListener("change",e=>{shop.country=e.target.value;setPr
     const img=sampleApi.images?await sampleApi.images():null;
     if(img===false)markNoImages();else obSetPhoto(true);
     renderMenu();
-  }catch(e){sampleApi=null;$("photoBox").hidden=true;setTimeout(()=>obSetPhoto(false),0);renderMenu()}
+  }catch(e){sampleApi=null;$("photoBox").hidden=true;$("menuNoAI").hidden=false;setTimeout(()=>obSetPhoto(false),0);renderMenu()}
 })();
 
 /* ---------- bottle thumbnails: a drawn bottle in the drink's shape and colour ---------- */

@@ -386,6 +386,20 @@ select option{background:var(--surface);color:var(--ink)}
 #photoBox[hidden]{display:none}
 .bar-photo{display:grid;gap:8px}
 .bar-photo[hidden]{display:none}
+.review-sheet{z-index:75}
+.rev-list{display:grid;gap:8px}
+.rev-row{display:flex;align-items:center;gap:12px;width:100%;text-align:start;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:8px 12px 8px 8px;color:var(--ink);font:inherit;cursor:pointer}
+.rev-row[aria-pressed="true"]{border-color:var(--gold);background:var(--tint)}
+.rev-row[aria-pressed="false"] .rev-pic,.rev-row[aria-pressed="false"] .rev-info{opacity:.5}
+.rev-pic{flex:none;width:64px;height:86px;border-radius:10px;overflow:hidden;background:var(--photo-bg);display:flex;align-items:center;justify-content:center}
+.rev-pic img{width:100%;height:100%;object-fit:contain}
+.rev-pic .thumb svg{width:26px;height:52px}
+.rev-info{flex:1;min-width:0;display:grid;gap:3px}
+.rev-info b{font-size:16px;overflow-wrap:anywhere}
+.rev-info small{color:var(--muted);font-size:13px}
+.rev-info .rev-had{color:var(--gold)}
+.rev-check{flex:none;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line2);display:grid;place-items:center;font-weight:700;color:var(--bg)}
+.rev-row[aria-pressed="true"] .rev-check{background:var(--gold);border-color:var(--gold)}
 .bar-photo-off{margin:0;padding:10px 14px;border:1px dashed var(--line2);border-radius:12px}
 #photoBox .photo-cta{padding:22px 18px}
 .menu-filters{display:grid;gap:8px}
@@ -774,6 +788,9 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
   <div class="rc-body" id="rcBody"></div>
 </div>
 
+<div class="rate-sheet review-sheet" id="reviewSheet" hidden role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+  <div class="rate-in"><div class="rate-body" id="reviewBody"></div><div class="rate-foot" id="reviewFoot"></div></div>
+</div>
 <div class="rate-sheet" id="rateSheet" hidden role="dialog" aria-modal="true" aria-labelledby="rateTitle">
   <div class="rate-in"><div class="rate-body" id="rateBody"></div><div class="rate-foot" id="rateFoot"></div></div>
 </div>
@@ -883,6 +900,14 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "bar.photoNoAI":"Photographing bottles isn't available right now: Claude isn't connected in this view. Sign in to claude.ai and allow the page to use Claude when it asks.",
     "bar.photoNoAIWeb":"Photographing bottles isn't on the website yet. For now, use the claude.ai version, or search for bottles below.",
     "bar.photoNoImg":"Photographing bottles isn't available in this view (on phones this usually happens in the Claude app). Open the link in a browser such as Safari or Chrome and the button appears.",
+    "rev.eyebrow":"Found in your photo",
+    "rev.title":n=>n===1?"1 item":n+" items",
+    "rev.sub":"Ticked ones go into your bar. Tap to tick or untick.",
+    "rev.adds":x=>"Adds to your bar: "+x,
+    "rev.had":"Already in your bar",
+    "rev.add":n=>"Add to bar ("+n+")",
+    "rev.none":"Nothing picked",
+    "rev.picAlt":x=>"The part of the photo where "+x+" was found",
     "bar.sub":"Tap to add, tap again to remove. Saved automatically.",
     "bar.openOb":"Add step by step",
     "bar.addTitle":"Add a bottle",
@@ -1716,6 +1741,14 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     "bar.photoNoAI":"צילום בקבוקים לא זמין כרגע: Claude לא מחובר בתצוגה הזאת. צריך להיות מחוברים ל-claude.ai ולאשר לעמוד להשתמש ב-Claude כשהוא מבקש.",
     "bar.photoNoAIWeb":"צילום בקבוקים עוד לא זמין באתר. בינתיים אפשר לצלם בגרסה של claude.ai, או לחפש בקבוקים כאן למטה.",
     "bar.photoNoImg":"צילום בקבוקים לא זמין בתצוגה הזאת (בטלפון זה קורה לרוב באפליקציה של Claude). פותחים את הקישור בדפדפן, כמו ספארי או כרום, והכפתור יופיע.",
+    "rev.eyebrow":"מה מצאנו בתמונה",
+    "rev.title":n=>n===1?"פריט אחד":n+" פריטים",
+    "rev.sub":"המסומנים יתווספו לבר. נגיעה מסמנת או מבטלת.",
+    "rev.adds":x=>"מוסיף לבר: "+x,
+    "rev.had":"כבר בבר",
+    "rev.add":n=>"הוספה לבר ("+n+")",
+    "rev.none":"לא נבחר כלום",
+    "rev.picAlt":x=>"החלק בתמונה שבו זוהה "+x,
     "bar.sub":"לחיצה מוסיפה בקבוק, לחיצה נוספת מורידה אותו. נשמר אוטומטית.",
     "bar.openOb":"הוספה שלב אחר שלב",
     "bar.addTitle":"הוספת בקבוק",
@@ -2517,7 +2550,8 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     tags:{type:"array",items:{type:"string",enum:TASTES}},base:{type:"string",enum:BASES}});
   const WINE_HIT=obj({name:{type:"string"},he_name:{type:"string"},kind:{type:"string",enum:["red","white","rose","sparkling","other"]},note:{type:"string"},retail_low:num,retail_high:num,confidence:{type:"string",enum:["high","medium","low"]}});
   const BOTTLE_HIT=obj({id:{type:"string"},name:{type:"string"},style:{type:"string"},il_low:num,il_high:num,us_low:num,us_high:num});
-  const PHOTO_HIT=obj({id:{type:"string"},name:{type:["string","null"]},style:{type:["string","null"]}});
+  // x, y, w, h: where the bottle is in the photo, as fractions of its width and height (top-left corner, size).
+  const PHOTO_HIT=obj({id:{type:"string"},name:{type:["string","null"]},style:{type:["string","null"]},x:num,y:num,w:num,h:num});
 
   function menuPrompt(extra,p){
     return "You help a diner in a restaurant choose from a drinks menu. "+extra+
@@ -2559,7 +2593,8 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
     bottle_photo:p=>({tier:"default",effort:"medium",schema:list(PHOTO_HIT),images:true,
       prompt:"The attached photo shows one or more bottles or drink ingredients at someone's home. Identify each one and map it to this catalog (lines are 'id = display name'):\n"+p.catalog+
       "\n\nFor spirits, also give the brand/product name as printed on the label (in Latin letters if the label uses them) and pick the closest style key for that id:\n"+p.styles+
-      "\n\nReturn ONLY JSON: {\"items\":[{\"id\":catalog id,\"name\":string|null,\"style\":style key|null}]}. Use only ids from the catalog; skip anything that does not fit. Empty list if you see no bottles."})
+      "\n\nList each bottle you see once, even two of the same kind. For each give where it is in the photo: x and y of the top-left corner and w and h of a box around the whole bottle, as fractions of the image width and height (0 to 1); null if you cannot tell."+
+      "\n\nReturn ONLY JSON: {\"items\":[{\"id\":catalog id,\"name\":string|null,\"style\":style key|null,\"x\":number|null,\"y\":number|null,\"w\":number|null,\"h\":number|null}]}. Use only ids from the catalog; skip anything that does not fit. Empty list if you see no bottles."})
   };
   if(typeof module!=="undefined"&&module.exports)module.exports=TASKS;
   else root.HB_PROMPTS=TASKS;
@@ -4804,27 +4839,85 @@ function renderOb(bump){
   foot.append(el("button",{class:"btn ghost",type:"button",onclick:finishBar},t("ob.toBar")));
   if(can.length)foot.append(el("button",{class:"btn",type:"button",onclick:finishOb},t("ob.go")));
 }
-// Claude names the bottles in a photo and maps each to the catalog.
+// Claude names the bottles in a photo, maps each to the catalog and says where it is in the photo.
+// Returns {items, image}: image is the photo as sent, for cutting out each bottle.
 async function bottlesFromPhoto(file){
   const catalog=Object.entries(NAME).map(([id,n])=>id+" = "+n).join("\n");
   const styles=Object.entries(STYLES).map(([ty,ss])=>ty+": "+Object.entries(ss).map(([k,v])=>k+" ("+v.t.join("/")+")").join(", ")).join("\n");
-  const res=await sampleApi.json("bottle_photo",{catalog,styles,lang},{images:[await prepImage(file)]});
-  return (res&&Array.isArray(res.items)?res.items:[]).filter(x=>x&&NAME[x.id]).slice(0,20)
-    .map(x=>({id:x.id,name:x.name?String(x.name).slice(0,60):null,style:STYLES[x.id]&&STYLES[x.id][x.style]?x.style:(STYLES[x.id]?Object.keys(STYLES[x.id])[0]:null)}));
+  const image=await prepImage(file);
+  const res=await sampleApi.json("bottle_photo",{catalog,styles,lang},{images:[image]});
+  const frac=v=>typeof v==="number"&&isFinite(v)?Math.min(1,Math.max(0,v)):null;
+  const items=(res&&Array.isArray(res.items)?res.items:[]).filter(x=>x&&NAME[x.id]).slice(0,20).map(x=>{
+    const b=[x.x,x.y,x.w,x.h].map(frac);
+    return {id:x.id,name:x.name?String(x.name).slice(0,60):null,style:STYLES[x.id]&&STYLES[x.id][x.style]?x.style:(STYLES[x.id]?Object.keys(STYLES[x.id])[0]:null),
+      box:b.every(v=>v!=null)&&b[2]>.02&&b[3]>.02?{x:b[0],y:b[1],w:Math.min(b[2],1-b[0]),h:Math.min(b[3],1-b[1])}:null};
+  });
+  return {items,image};
+}
+// Each bottle's part of the photo, as a small JPEG data URL (the whole photo when there is no box).
+async function cropShots(image,items){
+  try{
+    const url=URL.createObjectURL(image);
+    const img=await new Promise((ok,bad)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=bad;i.src=url});
+    const W=img.naturalWidth,H=img.naturalHeight;
+    const out=items.map(e=>{
+      let sx=0,sy=0,sw=W,sh=H;
+      if(e.box){const px=e.box.w*.12,py=e.box.h*.06;
+        sx=Math.max(0,(e.box.x-px)*W);sy=Math.max(0,(e.box.y-py)*H);
+        sw=Math.min(W-sx,(e.box.w+2*px)*W);sh=Math.min(H-sy,(e.box.h+2*py)*H)}
+      const k=Math.min(1,320/sh,320/sw),c=document.createElement("canvas");
+      c.width=Math.max(1,Math.round(sw*k));c.height=Math.max(1,Math.round(sh*k));
+      c.getContext("2d").drawImage(img,sx,sy,sw,sh,0,0,c.width,c.height);
+      return c.toDataURL("image/jpeg",.82);
+    });
+    URL.revokeObjectURL(url);return out;
+  }catch(e){return items.map(()=>null)}
+}
+
+/* Review: each bottle found in the photo, with its part of the photo and what it adds; the person picks what goes in. */
+let review=null;
+const hadEntry=e=>e.name?state.bottles.some(b=>b.type===e.id&&b.name===e.name):owned(e.id);
+async function openReview(found,done){
+  const pics=await cropShots(found.image,found.items);
+  review={rows:found.items.map((e,i)=>({e,pic:pics[i],on:!hadEntry(e)})),done};
+  $("reviewSheet").hidden=false;document.body.style.overflow="hidden";renderReview();
+  setTimeout(()=>{const b=$("reviewSheet").querySelector(".rev-row");if(b)b.focus()},30);
+}
+function closeReview(sel){
+  const r=review;review=null;$("reviewSheet").hidden=true;
+  if($("recipe").hidden&&$("ob").hidden)document.body.style.overflow="";
+  if(r)r.done(sel);
+}
+function renderReview(){
+  const box=$("reviewBody"),foot=$("reviewFoot");box.innerHTML="";foot.innerHTML="";if(!review)return;
+  const rows=review.rows,n=rows.filter(r=>r.on).length;
+  box.append(el("p",{class:"eyebrow gold"},t("rev.eyebrow")),el("h2",{id:"reviewTitle"},t("rev.title",rows.length)),el("p",{class:"note"},t("rev.sub")),
+    el("div",{class:"rev-list"},rows.map(r=>{
+      const e=r.e,st=e.style&&STYLES[e.id]&&STYLES[e.id][e.style],had=hadEntry(e);
+      const pic=r.pic?el("img",{src:r.pic,alt:t("rev.picAlt",e.name||NAME[e.id])}):bottleThumb(e.id,e.style,null,e.name);
+      return el("button",{type:"button",class:"rev-row","aria-pressed":String(r.on),onclick:()=>{r.on=!r.on;renderReview()}},
+        el("span",{class:"rev-pic"},pic),
+        el("span",{class:"rev-info"},el("b",{},e.name||NAME[e.id]),
+          el("small",{},t("rev.adds",NAME[WHISKY.includes(e.id)?"whisky":e.id]+(st&&st.n&&e.name?" · "+st.n:""))),
+          had?el("small",{class:"rev-had"},t("rev.had")):null),
+        el("span",{class:"rev-check","aria-hidden":"true"},r.on?"✓":""));
+    })));
+  foot.append(el("button",{class:"btn ghost",type:"button",onclick:()=>closeReview(null)},t("common.cancel")),
+    el("button",{class:"btn",type:"button",disabled:n?null:"",onclick:()=>closeReview(rows.filter(r=>r.on).map(r=>r.e))},n?t("rev.add",n):t("rev.none")));
 }
 async function obIdentify(file){
   if(!sampleApi||ob.busy)return;
   ob.busy=true;ob.notice="";renderOb();
   try{
-    const items=await bottlesFromPhoto(file);
-    ob.busy=false;
-    if(items.length)obAdd(items);
-    else{ob.notice=t("ob.photoNone");renderOb()}
-  }catch(e){ob.busy=false;ob.notice=sampleError(e);renderOb()}
+    const found=await bottlesFromPhoto(file);
+    if(found.items.length)await openReview(found,sel=>{if(sel&&sel.length)obAdd(sel)});
+    else ob.notice=t("ob.photoNone");
+  }catch(e){ob.notice=sampleError(e)}
+  ob.busy=false;renderOb();
 }
 function obSetPhoto(ok){ob.photoOK=!!ok;if(!$("ob").hidden)renderOb();renderBarPhoto()}
 
-/* My bar: photograph bottles; what Claude recognises goes straight into the bar, with an undo. */
+/* My bar: photograph bottles, check what Claude found, and add it (with an undo). */
 let barPh={busy:false,msg:"",err:false,undo:null};
 function renderBarPhoto(){
   const box=$("barPhoto");box.innerHTML="";
@@ -4848,9 +4941,16 @@ async function barIdentify(file){
   if(!sampleApi||barPh.busy)return;
   barPh={busy:true,msg:"",err:false,undo:null};renderBarPhoto();
   try{
-    const items=await bottlesFromPhoto(file);
-    if(!items.length)barPh={busy:false,msg:t("ob.photoNone"),err:true,undo:null};
-    else{const a=addEntries(items);barPh={busy:false,msg:a.names.length?t("bar.photoAdded",a.names.join(", ")):t("bar.photoHad"),err:false,undo:a.names.length?a:null}}
+    const found=await bottlesFromPhoto(file);
+    if(!found.items.length)barPh={busy:false,msg:t("ob.photoNone"),err:true,undo:null};
+    else{
+      barPh={busy:false,msg:"",err:false,undo:null};
+      await openReview(found,sel=>{
+        if(!sel)return;
+        const a=addEntries(sel);
+        barPh={busy:false,msg:a.names.length?t("bar.photoAdded",a.names.join(", ")):t("bar.photoHad"),err:false,undo:a.names.length?a:null};renderBarPhoto();
+      });
+    }
   }catch(e){barPh={busy:false,msg:sampleError(e),err:true,undo:null}}
   renderBarPhoto();
 }
@@ -4860,7 +4960,7 @@ function finishOb(){closeOb();setTab(barEmpty()?"bar":"mix");window.scrollTo({to
 function finishBar(){closeOb();setTab("bar");window.scrollTo({top:0})}
 $("obClose").addEventListener("click",closeOb);
 $("sheetClose").addEventListener("click",closeSheet);
-document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("rateSheet").hidden)closeRate();else if(!$("recipe").hidden)closeRecipe();else if(ob.sheet)closeSheet();else if(!$("ob").hidden)closeOb()});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("reviewSheet").hidden)closeReview(null);else if(!$("rateSheet").hidden)closeRate();else if(!$("recipe").hidden)closeRecipe();else if(ob.sheet)closeSheet();else if(!$("ob").hidden)closeOb()});
 $("openOb").addEventListener("click",openOb);
 let obSeen=null;try{obSeen=localStorage.getItem(OB_KEY)}catch(e){}
 

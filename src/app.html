@@ -386,6 +386,7 @@ select option{background:var(--surface);color:var(--ink)}
 #photoBox[hidden]{display:none}
 .bar-photo{display:grid;gap:8px}
 .bar-photo[hidden]{display:none}
+.bar-photo-off{margin:0;padding:10px 14px;border:1px dashed var(--line2);border-radius:12px}
 #photoBox .photo-cta{padding:22px 18px}
 .menu-filters{display:grid;gap:8px}
 .menu-filters:empty{display:none}
@@ -2813,7 +2814,7 @@ function manualForm(name,onDone){
 
 /* ---------- onboarding: a short funnel, one question per screen ---------- */
 const OB_KEY="homebar.onboarded";
-let ob={step:0,q:"",qType:null,last:null,photoOK:false,busy:false,notice:""};
+let ob={step:0,q:"",qType:null,last:null,photoOK:null,busy:false,notice:""}; // photoOK: null until we know
 const ICON_CAM='<svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
 
 function makeable(){const H=have();return DRINKS.filter(d=>!analyze(d,H).length).map(d=>d.name)}
@@ -3042,7 +3043,11 @@ function obSetPhoto(ok){ob.photoOK=!!ok;if(!$("ob").hidden)renderOb();renderBarP
 let barPh={busy:false,msg:"",err:false,undo:null};
 function renderBarPhoto(){
   const box=$("barPhoto");box.innerHTML="";
-  box.hidden=!sampleApi||!ob.photoOK;if(box.hidden)return;
+  // Until we know whether this view can send photos, show nothing; after that, say why if it can't.
+  if(ob.photoOK===null){box.hidden=true;return}
+  box.hidden=false;
+  if(!sampleApi||!ob.photoOK){box.append(el("p",{class:"note bar-photo-off"},
+    !sampleApi?t(PLATFORM.name==="web"?"bar.photoNoAIWeb":"bar.photoNoAI"):t("bar.photoNoImg")));return}
   const file=el("input",{type:"file",accept:"image/*",hidden:""});
   file.addEventListener("change",()=>{if(file.files[0])barIdentify(file.files[0])});
   const btn=el("button",{type:"button",class:"photo-cta",onclick:()=>file.click(),disabled:barPh.busy?"":null},el("span",{class:"ic"}),

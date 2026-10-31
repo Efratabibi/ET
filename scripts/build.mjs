@@ -57,5 +57,9 @@ if (existsSync(out("web/cocktails.json"))) {
   for (const f of readdirSync(out("web/cocktails"))) copyFileSync(out("web/cocktails/" + f), out("public/cocktails/" + f));
 }
 copyFileSync(out("node_modules/@supabase/supabase-js/dist/umd/supabase.js"), out("public/supabase.js"));
+// The owner's dashboard (/dashboard.html): the same public config, plus the locales for drink names.
+writeFileSync(out("public/dashboard.html"), read("web/dashboard.html")
+  .replace("/*@@CONFIG@@*/{}", () => JSON.stringify(config))
+  .replace("/*@@I18N@@*/", () => read("src/i18n/en.js") + read("src/i18n/he.js")));
 
 console.log("built dist/artifact.html and public/");

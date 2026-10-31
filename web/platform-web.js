@@ -39,6 +39,28 @@
         return body;
       }};
     },
+    // Usage counts for the owner's dashboard (events table): a name and a few small values, never content.
+    // Fire and forget; a missing table or a network error is ignored.
+    track(name,props){
+      session().then(s=>{if(s)sb.from("events").insert({user_id:s.user.id,name,props:props||{}}).then(()=>{},()=>{})}).catch(()=>{});
+    },
+    // A message from the "Send feedback" button; `view` is the screen it was sent from.
+    async feedback(message,view){
+      const s=await session();if(!s)throw {code:"login_required"};
+      const {error}=await sb.from("feedback").insert({user_id:s.user.id,message,view});
+      if(error)throw {code:"upstream_error"};
+    },
+    // The signed-in account, for "My account" in My bar.
+    async account(){const s=await session();return s?{email:s.user.email||""}:null},
+    async signOut(){await sb.auth.signOut();location.reload()},
+    async deleteAccount(){
+      const s=await session();if(!s)throw {code:"login_required"};
+      const r=await fetch("/api/account",{method:"POST",headers:{"content-type":"application/json",authorization:"Bearer "+s.access_token},body:JSON.stringify({action:"delete"})});
+      if(!r.ok)throw {code:"upstream_error"};
+      await sb.auth.signOut().catch(()=>{});
+      try{Object.keys(localStorage).filter(k=>k.startsWith("homebar.")).forEach(k=>localStorage.removeItem(k))}catch(e){}
+      location.reload();
+    },
     async bar(){
       const s=await session();
       if(!s)return null;
@@ -69,7 +91,7 @@
   if(!sb)return;
   const css=document.createElement("style");
   css.textContent=
-    "html.hb-gate body>.app,html.hb-gate body>.ob{visibility:hidden}"+
+    "html.hb-gate body>.app,html.hb-gate body>.ob,html.hb-gate body>.welcome{visibility:hidden}"+
     ".gate{position:fixed;inset:0;z-index:70;background:var(--bg);color:var(--ink);overflow-y:auto;padding:env(safe-area-inset-top,0px) 26px env(safe-area-inset-bottom,0px)}"+
     ".gate-in{max-width:440px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;gap:14px;padding-block:18px 40px}"+
     ".gate-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:auto;padding-bottom:40px}"+

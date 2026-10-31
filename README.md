@@ -17,6 +17,8 @@ src/i18n/he.js, en.js   Every piece of text the app shows, plus names for catalo
 src/prompts.cjs         Claude prompts and response schemas, used by both versions
 web/                    Web-only files: Supabase sign-in, manifest, service worker, icons, bottle photos
 api/claude.js           Server function: checks the user, enforces the daily limit, calls Claude
+api/stats.js            Server function behind the owner's dashboard (web/dashboard.html → /dashboard.html)
+api/account.js          Server function that deletes the signed-in person's account
 supabase/schema.sql     Tables and access rules
 scripts/build.mjs       Builds dist/artifact.html and public/
 scripts/photos/         Fetches and matches bottle photos from Open Food Facts (see below)
@@ -77,6 +79,19 @@ Steps marked **[you]** need your accounts.
    - Settings → Environment Variables: the names in `.env.example`, with the values from steps 1 and 2.
    - Deploy.
 4. Move your bar: on claude.ai, My bar → "Move your bar to another device or version" → "Copy bar". On the new site, after signing in, paste it and tap "Import".
+
+## Dashboard and feedback (web version)
+
+The web version counts what people do: which screens they open, recipes, photos, ratings, "want to try" and "I ordered this". It stores names and small numbers only, never photos or text. It also has a "Feedback" button in the header. Both go to Supabase (the `events` and `feedback` tables).
+
+The owner reads them at `/dashboard.html`: people, activity per day, who came back, a funnel from signing up to the restaurant, what gets used, top-rated and most-wanted drinks, every feedback message, and a table of users. A checkbox leaves out the owner's own use.
+
+To turn it on:
+1. Supabase → SQL Editor: run `supabase/2026-11-beta.sql`. A database created from the current `schema.sql` already has these tables.
+2. Vercel → Environment Variables: `ADMIN_EMAILS` = the email you sign in with (more than one: separate with commas). Then redeploy.
+3. Sign in to the app with that email and open `/dashboard.html`.
+
+People can delete their account under My bar → My account; that removes their bar and usage counts. First-time visitors see a welcome screen that says what the app does, confirms they are 18 or older and, on the web, what is stored.
 
 ## Costs (estimate)
 

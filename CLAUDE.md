@@ -9,6 +9,8 @@
 - The app talks to its host only through `PLATFORM` (top of the main script in `src/app.html`):
   `PLATFORM.ai()` → `{json(task, params, {images, signal}), images?()}` (`images()` resolves false when the view cannot send photos) and `PLATFORM.bar()` → `{ref:{get,set,onSnapshot}, legacy}`.
   The artifact implementation is the default; `web/platform-web.js` sets `window.HB_PLATFORM` for the web build.
+- Usage counts: call `track("name", {small props})` for anything worth seeing on the owner's dashboard (web only, a no-op on claude.ai).
+  `api/_summary.js` turns events into the dashboard's numbers; add new event names to its `FEATURES` and to `T.feat` in `web/dashboard.html`.
 - New Claude features: add a task to `src/prompts.cjs` (prompt + strict JSON schema: every property required,
   `additionalProperties:false`, nullable as `["type","null"]`) and call `sampleApi.json("<task>", params)`.
   Never send prompt text from the client to `api/claude.js`.

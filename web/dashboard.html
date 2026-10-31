@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>All Cohol · Dashboard</title>
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<!-- The owner's dashboard. Data comes from /api/stats, which only answers emails in ADMIN_EMAILS.
+     Text is Hebrew (the owner's language); the strings live in T below. Drink names come from the app's locales. -->
+<script>window.HB_CONFIG=/*@@CONFIG@@*/{};</script>
+<script src="/supabase.js"></script>
+<script>/*@@I18N@@*/</script>
+<style>
+:root{--bg:#F7F4EF;--surface:#FFFFFF;--ink:#1C1A17;--ink2:#4A453E;--muted:#7A7369;--line:#E6E0D6;--accent:#A8234A;--accent-soft:#F6E3EA;--ok:#2F6B3C;--warn:#B3261E;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Hebrew",Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141210;--surface:#1E1B18;--ink:#F3EEE6;--ink2:#CFC7BD;--muted:#9A9186;--line:#332E29;--accent:#E0698E;--accent-soft:#3A2129;--ok:#7BC48A;--warn:#F28B82}}
+:root[data-theme="dark"]{--bg:#141210;--surface:#1E1B18;--ink:#F3EEE6;--ink2:#CFC7BD;--muted:#9A9186;--line:#332E29;--accent:#E0698E;--accent-soft:#3A2129;--ok:#7BC48A;--warn:#F28B82}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--body)}
+main{max-width:1100px;margin:0 auto;padding:20px 16px 60px;display:grid;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+h1{font-size:22px;margin:0}h1 small{color:var(--muted);font-weight:400;font-size:14px;margin-inline-start:6px}
+h2{font-size:16px;margin:0 0 10px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,.btn{font:600 14px var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:0 14px;min-height:38px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+label.tog{display:inline-flex;gap:6px;align-items:center;font-size:14px;color:var(--ink2);cursor:pointer}
+.when{color:var(--muted);font-size:13px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:2px}
+.kpi .k{color:var(--muted);font-size:13px}
+.kpi .v{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums}
+.kpi .s{color:var(--muted);font-size:12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:18px}
+.hints{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.hints li{background:var(--accent-soft);border-radius:10px;padding:10px 12px;color:var(--ink)}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.axis text{fill:var(--muted);font-size:11px}
+.grid line{stroke:var(--line);stroke-width:1}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:8px;padding:6px 9px;font-size:12px;white-space:nowrap;transform:translate(-50%,-110%);opacity:0;transition:opacity .1s}
+.tip.on{opacity:1}
+.bars{display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:minmax(90px,150px) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:14px}
+.bar .track{height:14px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar .fill{height:100%;background:var(--accent);border-radius:4px;min-width:2px}
+.bar .num{font-variant-numeric:tabular-nums;color:var(--ink2);white-space:nowrap;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:start;padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--muted);font-weight:600}
+td.n{font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+.fb{display:grid;gap:10px}
+.fb div{border-bottom:1px solid var(--line);padding-bottom:10px}
+.fb p{margin:2px 0 0;white-space:pre-wrap}
+.fb small{color:var(--muted)}
+.empty{color:var(--muted)}
+@media (max-width:600px){.bar{grid-template-columns:minmax(0,1fr) auto;row-gap:4px}.bar .track{grid-column:1/-1;grid-row:2}.axis text{font-size:22px}}
+.msg{max-width:520px;margin:60px auto;text-align:center;display:grid;gap:14px;justify-items:center}
+</style>
+</head>
+<body>
+<main id="root"><div class="msg"><p id="status"></p></div></main>
+<script>
+(function(){
+const T={
+  title:"דשבורד",refresh:"רענון",updated:t=>"עודכן "+t,mine:"בלי השימוש שלי",loading:"טוען…",
+  signin:"צריך להתחבר לאפליקציה עם המייל של המנהלת, ואז לחזור לכאן.",toApp:"מעבר לאפליקציה",
+  notAdmin:"המייל הזה לא מורשה לראות את הדשבורד. המיילים המורשים מוגדרים ב-Vercel, במשתנה ADMIN_EMAILS.",
+  notConfigured:"השרת עוד לא מוגדר: חסרים מפתחות Supabase ב-Vercel.",error:"משהו השתבש בטעינה. נסי לרענן.",
+  kUsers:"משתמשים",kNew:n=>n+" חדשים השבוע",kToday:"פעילים היום",kWeek:"פעילים ב-7 ימים",kMonth:n=>n+" ב-30 יום",
+  kReturning:"חזרו ליום נוסף",kBackWeek:"חזרו אחרי שבוע",kBackWeekSub:(a,b)=>a+" מתוך "+b+" שהצטרפו לפני שבוע ויותר",
+  kPhotos:"צילומים",kPhotosSub:(a,b)=>a+" בבר · "+b+" במסעדה",kRatings:"דירוגים",kRatingsSub:(w,u)=>w+" ברשימת רוצה לנסות · "+u+" מחכים לדירוג",
+  kAvgBar:"גודל בר ממוצע",kAvgBarSub:"פריטים, אצל מי שבנה בר",kAI:"פניות ל-Claude",kAISub:"ב-90 הימים האחרונים",kFeedback:"הודעות משוב",
+  hints:"מה כדאי לבדוק",daily:"פעילים בכל יום (30 יום אחרונים)",dailyTip:(d,a,j)=>d+": "+a+" פעילים · "+j+" הצטרפו",
+  funnel:"מההרשמה ועד המסעדה",funnelOf:(n,p)=>n+" ("+p+"%)",
+  fJoined:"נרשמו",fBar:"בנו בר",fRecipe:"פתחו מתכון",fRated:"דירגו משהו",fRestaurant:"השתמשו במסעדה",fReturned:"חזרו ליום נוסף",
+  features:"במה משתמשים",featPeople:(p,e)=>p+" אנשים · "+e+" פעמים",
+  feat:{"view:mix":"מה נכין","view:bar":"הבר שלי","view:shop":"לקנות","view:menu":"במסעדה","view:list":"הרשימה שלי",recipe:"פתיחת מתכון",photo_bar:"צילום בקבוקים",photo_menu:"צילום תפריט",rate:"דירוג",want:"רוצה לנסות",ordered:"הזמנתי (במסעדה)",feedback:"שליחת משוב"},
+  topRated:"הכי מדורגים",topWanted:"הכי רוצים לנסות",drink:"משקה",times:"פעמים",avg:"ממוצע",none:"עוד אין נתונים",
+  kinds:"מה מדרגים",kind:{cocktail:"קוקטייל",wine:"יין",beer:"בירה",spirit:"משקה חריף",other:"אחר"},
+  feedback:"משוב מהמשתמשים",noFeedback:"עוד לא נשלח משוב.",
+  people:"משתמשים",cols:["מייל","הצטרף","פעיל לאחרונה","ימים פעילים","פריטים בבר","דירוגים","רוצה לנסות","צילומים","מסעדה","Claude"],yes:"✓",
+  hBar:(p)=>"רק "+p+"% מהנרשמים בנו בר. אולי מסך הפתיחה לא ברור, או שצריך להזכיר להם.",
+  hRest:(p)=>"רק "+p+"% השתמשו במסעדה. זה החלק שהכי שווה כסף, אז כדאי לעודד את החברים לנסות אותו בפעם הבאה שהם יוצאים.",
+  hReturn:(p)=>p+"% חזרו ליום נוסף. מתחת ל-30% זה סימן שהאפליקציה לא נכנסת לשגרה.",
+  hWaiting:(n)=>n+" משקאות מחכים לדירוג. בקשת הדירוג אולי לא בולטת מספיק.",
+  hPhoto:(a)=>"צילמו "+a+" פעמים. מי שמצלם בונה בר מהר יותר, אז כדאי לבדוק שהכפתור בולט.",
+  hFew:"עוד מעט משתמשים, אז המספרים עוד לא אומרים הרבה. שווה לחכות לפחות לחמישה משתמשים ושבוע של שימוש."
+};
+const $=s=>document.querySelector(s);
+const el=(tag,attrs,...kids)=>{const e=document.createElement(tag);for(const k in attrs||{}){const v=attrs[k];if(v==null)continue;if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v)}
+  kids.flat().forEach(k=>{if(k!=null&&k!==false)e.append(k.nodeType?k:document.createTextNode(k))});return e};
+const cfg=window.HB_CONFIG||{};
+const sb=cfg.supabaseUrl&&window.supabase?window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey):null;
+const he=(window.HB_LOCALES||{}).he||{drink:{}};
+const fmtDate=d=>d?new Date(d).toLocaleDateString("he-IL",{day:"numeric",month:"short"}):"—";
+const pct=(a,b)=>b?Math.round(a/b*100):0;
+let data=null,mineOff=true;
+try{mineOff=localStorage.getItem("hb-dash-mine")!=="0"}catch(e){}
+
+function status(text,link){const r=$("#root");r.innerHTML="";r.append(el("div",{class:"msg"},el("p",{},text),link?el("a",{class:"btn",href:"/"},T.toApp):null))}
+
+async function load(){
+  if(!sb){status(T.notConfigured);return}
+  status(T.loading);
+  const {data:s}=await sb.auth.getSession();
+  if(!s.session){status(T.signin,true);return}
+  let r;
+  try{r=await fetch("/api/stats",{headers:{authorization:"Bearer "+s.session.access_token}})}catch(e){status(T.error);return}
+  const body=await r.json().catch(()=>({}));
+  if(r.status===401){status(T.signin,true);return}
+  if(r.status===403){status(T.notAdmin,true);return}
+  if(!r.ok){status(body.code==="not_configured"?T.notConfigured:T.error);return}
+  data=body;render();
+}
+
+function render(){
+  const d=mineOff?data.others:data.all,k=d.kpis,root=$("#root");root.innerHTML="";
+  const tog=el("input",{type:"checkbox"});tog.checked=mineOff;
+  tog.onchange=()=>{mineOff=tog.checked;try{localStorage.setItem("hb-dash-mine",mineOff?"1":"0")}catch(e){}render()};
+  root.append(el("header",{},el("h1",{},"All Cohol",el("small",{},T.title)),
+    el("div",{class:"tools"},el("label",{class:"tog"},tog,T.mine),el("span",{class:"when"},T.updated(new Date(data.at).toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"}))),
+      el("button",{class:"primary",type:"button",onclick:load},T.refresh))));
+
+  const kpi=(label,value,sub)=>el("div",{class:"kpi"},el("span",{class:"k"},label),el("span",{class:"v"},String(value)),sub?el("span",{class:"s"},sub):null);
+  root.append(el("section",{class:"kpis"},
+    kpi(T.kUsers,k.users,T.kNew(k.new7)),
+    kpi(T.kToday,k.active1),
+    kpi(T.kWeek,k.active7,T.kMonth(k.active30)),
+    kpi(T.kReturning,pct(k.returning,k.users)+"%",k.returning+" / "+k.users),
+    kpi(T.kBackWeek,k.weekOld?pct(k.backAfterWeek,k.weekOld)+"%":"—",T.kBackWeekSub(k.backAfterWeek,k.weekOld)),
+    kpi(T.kPhotos,k.photosBar+k.photosMenu,T.kPhotosSub(k.photosBar,k.photosMenu)),
+    kpi(T.kRatings,k.ratings,T.kRatingsSub(k.wants,k.waiting)),
+    kpi(T.kAvgBar,k.avgBar,T.kAvgBarSub),
+    kpi(T.kAI,k.ai,T.kAISub),
+    kpi(T.kFeedback,k.feedback)));
+
+  // Automatic hints: simple rules over the numbers above, to point at what to look into.
+  const f=Object.fromEntries(d.funnel.map(x=>[x.key,x.people])),hints=[];
+  if(k.users<5)hints.push(T.hFew);
+  if(k.users&&pct(f.bar,f.joined)<60)hints.push(T.hBar(pct(f.bar,f.joined)));
+  if(k.users&&pct(f.restaurant,f.joined)<40)hints.push(T.hRest(pct(f.restaurant,f.joined)));
+  if(k.users>=3&&pct(k.returning,k.users)<30)hints.push(T.hReturn(pct(k.returning,k.users)));
+  if(k.waiting>=3)hints.push(T.hWaiting(k.waiting));
+  if(k.photosBar+k.photosMenu>0&&k.users>=3)hints.push(T.hPhoto(k.photosBar+k.photosMenu));
+  if(hints.length)root.append(el("section",{class:"card"},el("h2",{},T.hints),el("ul",{class:"hints"},hints.map(h=>el("li",{},h)))));
+
+  root.append(el("section",{class:"card"},el("h2",{},T.daily),lineChart(d.daily)));
+
+  const bars=(rows,max)=>el("div",{class:"bars"},rows.map(r=>el("div",{class:"bar",title:r.tip},
+    el("span",{},r.label),el("div",{class:"track"},el("div",{class:"fill",style:"width:"+(max?Math.max(1,r.value/max*100):0)+"%"})),el("span",{class:"num"},r.num))));
+  const fl={joined:T.fJoined,bar:T.fBar,recipe:T.fRecipe,rated:T.fRated,restaurant:T.fRestaurant,returned:T.fReturned};
+  const feats=d.features.slice().sort((a,b)=>b.people-a.people||b.events-a.events);
+  root.append(el("div",{class:"grid2"},
+    el("section",{class:"card"},el("h2",{},T.funnel),bars(d.funnel.map(x=>({label:fl[x.key],value:x.people,num:T.funnelOf(x.people,pct(x.people,f.joined)),tip:fl[x.key]+": "+x.people})),f.joined)),
+    el("section",{class:"card"},el("h2",{},T.features),bars(feats.map(x=>({label:T.feat[x.key]||x.key,value:x.people,num:T.featPeople(x.people,x.events),tip:T.featPeople(x.people,x.events)})),Math.max(1,k.users)))));
+
+  const name=x=>x.ref?((he.drink[x.ref]||{}).n||x.ref):x.name;
+  const tbl=(head,rows)=>rows.length?el("div",{class:"scroll"},el("table",{},el("thead",{},el("tr",{},head.map(h=>el("th",{},h)))),el("tbody",{},rows.map(r=>el("tr",{},r.map((c,i)=>el("td",{class:typeof c==="number"?"n":null},String(c)))))))):el("p",{class:"empty"},T.none);
+  const kindRows=Object.entries(d.kinds).sort((a,b)=>b[1]-a[1]);
+  root.append(el("div",{class:"grid2"},
+    el("section",{class:"card"},el("h2",{},T.topRated),tbl([T.drink,T.times,T.avg],d.topRated.map(x=>[name(x)+" · "+(T.kind[x.type]||x.type),x.n,"★ "+x.avg]))),
+    el("section",{class:"card"},el("h2",{},T.topWanted),tbl([T.drink,T.times],d.topWanted.map(x=>[name(x)+" · "+(T.kind[x.type]||x.type),x.n]))),
+    el("section",{class:"card"},el("h2",{},T.kinds),kindRows.length?bars(kindRows.map(([t,n])=>({label:T.kind[t]||t,value:n,num:String(n),tip:(T.kind[t]||t)+": "+n})),kindRows[0][1]):el("p",{class:"empty"},T.none)),
+    el("section",{class:"card"},el("h2",{},T.feedback),d.feedback.length?el("div",{class:"fb"},d.feedback.map(x=>el("div",{},el("small",{},[x.email,fmtDate(x.at),T.feat["view:"+x.view]||x.view].filter(Boolean).join(" · ")),el("p",{},x.message)))):el("p",{class:"empty"},T.noFeedback))));
+
+  root.append(el("section",{class:"card"},el("h2",{},T.people),tbl(T.cols,d.people.map(p=>[p.email,fmtDate(p.joined),fmtDate(p.last),p.activeDays,p.items,p.ratings,p.wants,p.photos,p.restaurant?T.yes:"",p.ai]))));
+}
+
+// Daily active people: one line, a recessive grid, a hover/touch tooltip per day.
+function lineChart(days){
+  const W=720,H=220,P={t:12,r:12,b:26,l:30},iw=W-P.l-P.r,ih=H-P.t-P.b;
+  const max=Math.max(4,...days.map(d=>d.active)),step=Math.ceil(max/4);
+  const x=i=>P.l+(days.length<2?iw/2:i*iw/(days.length-1)),y=v=>P.t+ih-v/(step*4)*ih;
+  const ns="http://www.w3.org/2000/svg",svg=document.createElementNS(ns,"svg");
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);svg.setAttribute("role","img");svg.setAttribute("aria-label",T.daily);svg.setAttribute("direction","ltr");
+  let g='<g class="grid">';for(let v=0;v<=step*4;v+=step)g+='<line x1="'+P.l+'" x2="'+(W-P.r)+'" y1="'+y(v)+'" y2="'+y(v)+'"/>';g+="</g>";
+  let a='<g class="axis">';for(let v=0;v<=step*4;v+=step)a+='<text x="'+(P.l-6)+'" y="'+(y(v)+4)+'" text-anchor="end">'+v+"</text>";
+  days.forEach((d,i)=>{if(i%7===0||i===days.length-1&&i%7>=4)a+='<text x="'+x(i)+'" y="'+(H-6)+'" text-anchor="middle">'+fmtDate(d.day)+"</text>"});a+="</g>";
+  const pts=days.map((d,i)=>x(i)+","+y(d.active)).join(" ");
+  svg.innerHTML=g+a+'<polyline points="'+pts+'" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'+
+    '<circle class="dot" r="5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2" style="display:none"/>';
+  const wrap=el("div",{class:"chart"}),tip=el("div",{class:"tip"});wrap.append(svg,tip);
+  const dot=svg.querySelector(".dot");
+  const show=ev=>{const r=svg.getBoundingClientRect(),cx=(ev.touches?ev.touches[0].clientX:ev.clientX)-r.left,px=cx/r.width*W;
+    const i=Math.max(0,Math.min(days.length-1,Math.round((px-P.l)/(iw/(days.length-1)))));const d=days[i];
+    dot.style.display="";dot.setAttribute("cx",x(i));dot.setAttribute("cy",y(d.active));
+    tip.textContent=T.dailyTip(fmtDate(d.day),d.active,d.joined);tip.style.left=(x(i)/W*r.width)+"px";tip.style.top=(y(d.active)/H*r.height)+"px";tip.classList.add("on")};
+  const hide=()=>{dot.style.display="none";tip.classList.remove("on")};
+  svg.addEventListener("mousemove",show);svg.addEventListener("touchstart",show,{passive:true});svg.addEventListener("touchmove",show,{passive:true});
+  svg.addEventListener("mouseleave",hide);svg.addEventListener("touchend",hide);
+  return wrap;
+}
+load();
+})();
+</script>
+</body>
+</html>

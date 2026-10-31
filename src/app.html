@@ -37,6 +37,21 @@ a{color:var(--gold)}
 .serif{font-family:var(--serif);font-style:italic;font-weight:400}
 html[lang="he"] .serif{font-style:normal}
 header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.top-act{display:flex;gap:8px;align-items:center;flex:none}
+.welcome{position:fixed;inset:0;z-index:80;background:var(--bg);color:var(--ink);overflow-y:auto;padding:env(safe-area-inset-top,0px) 24px env(safe-area-inset-bottom,0px)}
+.welcome[hidden]{display:none}
+.welcome-in{max-width:460px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center;gap:16px;padding-block:32px}
+.welcome h2{font:600 clamp(56px,18vw,76px)/.9 var(--display);text-transform:uppercase;margin:0;font-synthesis:none}
+.welcome h2 .accent{color:var(--gold)}
+.wel-lead{font:italic 400 19px/1.4 var(--serif);color:var(--ink2);margin:0}
+html[lang="he"] .wel-lead{font-style:normal}
+.wel-row{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.wel-row b{font-size:16px}.wel-row p{margin:2px 0 0;color:var(--muted);font-size:14px;line-height:1.4}
+.wel-ic svg{display:block;width:26px;height:26px;fill:none;stroke:var(--gold);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.welcome .btn{min-height:54px;font-size:16px;margin-top:6px}
+.wel-age{text-align:center;margin:0}
+.wel-lang{align-self:center}
+.account{border-top:1px solid var(--line);padding-top:14px}
 .brand{display:flex;align-items:center;gap:10px;min-width:0}
 .brand svg{width:32px;height:32px;border-radius:8px;flex:none}
 h1{font:600 20px/1 var(--display);text-transform:uppercase;letter-spacing:.06em;margin:0;white-space:nowrap;font-synthesis:none}
@@ -582,7 +597,10 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
       <h1><span data-t="app.h1a"></span><span class="accent" data-t="app.h1b"></span></h1>
       <p class="tagline" data-t="app.tagline"></p>
     </div>
-    <button class="lang-btn" type="button" id="langBtn"></button>
+    <div class="top-act">
+      <button class="lang-btn" type="button" id="fbBtn" hidden data-t="fb.btn"></button>
+      <button class="lang-btn" type="button" id="langBtn"></button>
+    </div>
   </header>
 
   <nav class="tabs" role="tablist">
@@ -644,6 +662,7 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
         </details>
         <span id="clearWrap"><button class="linkbtn warn" type="button" id="clearBtn" data-t="clear.btn"></button></span>
       </div>
+      <div class="cat account" id="accountBox" hidden></div>
       <p class="note photo-credit" hidden data-t-html="photo.credit"></p>
     </section>
 
@@ -788,6 +807,10 @@ try{const r=document.documentElement,th=localStorage.getItem("homebar.theme"),ac
   <div class="rc-body" id="rcBody"></div>
 </div>
 
+<div class="rate-sheet" id="fbSheet" hidden role="dialog" aria-modal="true" aria-labelledby="fbTitle">
+  <div class="rate-in"><div class="rate-body" id="fbBody"></div><div class="rate-foot" id="fbFoot"></div></div>
+</div>
+<div class="welcome" id="welcome" hidden role="dialog" aria-modal="true" aria-labelledby="welTitle"><div class="welcome-in" id="welBody"></div></div>
 <div class="rate-sheet review-sheet" id="reviewSheet" hidden role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
   <div class="rate-in"><div class="rate-body" id="reviewBody"></div><div class="rate-foot" id="reviewFoot"></div></div>
 </div>
@@ -1455,6 +1478,9 @@ const DRINKS=[ // names, methods, glasses and tips come from the locale
  {id:"fuzzy_navel",s:1,t:["sweet", "fruity"],i:[["peach",45],["orange",120]]}
 ];
 
+/* ---------- usage counts for the owner's dashboard (web build only; a no-op on claude.ai) ---------- */
+function track(name,props){try{if(PLATFORM.track)PLATFORM.track(name,props)}catch(e){}}
+
 /* ---------- state ---------- */
 let uidN=0;const uid=()=>"b"+Date.now().toString(36)+(uidN++).toString(36);
 const LS_KEY="homebar.v1";
@@ -1930,7 +1956,7 @@ function openRecipe(d,keep){
     ty?el("button",{class:"btn rc-buy",type:"button",onclick:()=>{closeRecipe();openShop(ty)}},t("rec.whereBuy",NAME[ty])):null,
     shot?el("p",{class:"rc-credit"},t("rec.photo"),el("a",{href:shot.src,target:"_blank",rel:"noopener"},[shot.by,shot.lic,"Wikimedia Commons"].filter(Boolean).join(" · "))):null].filter(Boolean));
   const r=$("recipe");
-  if(r.hidden){r.hidden=false;document.body.style.overflow="hidden";try{history.pushState({recipe:1},"")}catch(e){}}
+  if(r.hidden){r.hidden=false;document.body.style.overflow="hidden";try{history.pushState({recipe:1},"")}catch(e){};track("recipe",{id:d.id})}
   rcOpen=d;if(!keep){r.scrollTop=0;$("rcBack").focus()}
 }
 // Want to try, I made it / my rating, and why it suits you.
@@ -1964,7 +1990,7 @@ function logTags(e){const d=drinkOf(e);return d?d.t:(e.tags||[])}
 function logBase(e){const d=drinkOf(e);return d?baseOf(d):(e.base||null)}
 // Add or update an entry; x describes the drink, patch the change (status, rating…).
 function saveLog(x,patch){
-  let e=findLog(x);
+  let e=findLog(x);const was=e?e.status:null;
   if(!e){
     e={id:uid(),ref:x.ref||null,name:x.ref?"":String(x.name||"").slice(0,80),type:x.ref?"cocktail":DRINK_TYPES.includes(x.type)?x.type:"other",
       tags:(x.tags||[]).filter(k=>TASTE_KEYS.includes(k)),base:x.base||null,desc:String(x.desc||"").slice(0,120),
@@ -1972,6 +1998,7 @@ function saveLog(x,patch){
     state.log.unshift(e);
   }
   if(patch.status==="tried"&&e.status!=="tried")e.at=Date.now();
+  if(patch.status==="want"&&was!=="want")track("want",{type:e.type});
   Object.assign(e,patch);commit();return e;
 }
 function removeLog(e){state.log=state.log.filter(x=>x!==e);commit()}
@@ -2082,6 +2109,7 @@ function renderRate(){
   foot.append(el("button",{class:"btn ghost",type:"button",onclick:closeRate},t("common.cancel")),
     el("button",{class:"btn",type:"button",disabled:f.rating?null:"",onclick:()=>{
       saveLog(f.x,{status:"tried",rating:f.rating,liked:f.liked,comment:f.comment.trim().slice(0,300),place:f.place.trim().slice(0,60)});
+      track("rate",{type:f.x.ref?"cocktail":f.x.type||"other",stars:f.rating,liked:f.liked.length});
       closeRate();if(rcOpen)openRecipe(rcOpen,true);renderList();renderRatePrompt();
     }},t("rate.save")));
   if(has)box.append(el("button",{type:"button",class:"linkbtn warn",onclick:()=>{removeLog(has);closeRate();if(rcOpen)openRecipe(rcOpen,true);renderList()}},t("rate.remove")));
@@ -2205,7 +2233,7 @@ $("rcBack").addEventListener("click",()=>closeRecipe());
 window.addEventListener("popstate",()=>closeRecipe(true));
 // Three places: at home (what to make, my bar, shop), at a restaurant, and my list.
 const HOME=["mix","bar","shop"];let homeSub="mix";
-function go(t){if(document.querySelector(".app").dataset.view!==t){setTab(t);window.scrollTo(0,0)}}
+function go(t){if(document.querySelector(".app").dataset.view!==t){setTab(t);window.scrollTo(0,0);track("view",{v:t})}}
 document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.tab==="home"?homeSub:b.dataset.tab)));
 document.querySelectorAll(".subnav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.sub==="both"?"mix":b.dataset.sub)));
 function setTab(t){
@@ -2468,7 +2496,7 @@ function menuCard(it,m){
   if(lg&&lg.status==="tried")acts.append(el("button",{type:"button",class:"btn sm"+(lg.rating?" ghost":""),onclick:()=>openRate(x)},lg.rating?starsText(lg.rating):t("rate.rateNow")));
   else acts.append(
     el("button",{type:"button",class:"btn ghost sm","aria-pressed":String(!!lg),onclick:()=>{lg?removeLog(lg):saveLog(x,{status:"want"});renderMenu()}},lg?t("rec.wanted"):t("rec.want")),
-    el("button",{type:"button",class:"btn sm",onclick:()=>{saveLog(x,{status:"tried",place:menu.place||""});setStatus(t("menu.orderedNote"));renderMenu()}},t("menu.ordered")));
+    el("button",{type:"button",class:"btn sm",onclick:()=>{saveLog(x,{status:"tried",place:menu.place||""});track("ordered",{kind:it.kind});setStatus(t("menu.orderedNote"));renderMenu()}},t("menu.ordered")));
   if(d)acts.append(el("button",{type:"button",class:"linkbtn",onclick:()=>openRecipe(d)},t("menu.recipe")));
   // Editing (and, for wine and spirits, the price comparison) stays folded away.
   const f=(key,label,ph)=>el("label",{},label,el("input",{type:"text",inputmode:"decimal",id:"w-"+key+"-"+it.id,value:it[key]??"",placeholder:ph,oninput:e=>{it[key]=num(e.target.value);touch()}}));
@@ -2638,6 +2666,7 @@ $("readMenu").addEventListener("click",async()=>{
     const items=toItems(res);
     if(!items.length){setStatus(t("menu.noWinesPhoto"),true)}
     else{menu={example:false,items,place:menu.place||""};saveMenu();renderMenu();setStatus(t("menu.readCount",items.length))}
+    track("photo_menu",{items:items.length});
   }catch(e){setStatus(sampleError(e),true)}
   finally{busy(false);$("menuPhoto").value=""}
 });
@@ -3107,7 +3136,8 @@ async function obIdentify(file){
   ob.busy=true;ob.notice="";renderOb();
   try{
     const found=await bottlesFromPhoto(file);
-    if(found.items.length)await openReview(found,sel=>{if(sel&&sel.length)obAdd(sel)});
+    track("photo_bar",{found:found.items.length,where:"onboarding"});
+    if(found.items.length)await openReview(found,sel=>{if(sel&&sel.length){track("photo_add",{picked:sel.length,found:found.items.length});obAdd(sel)}});
     else ob.notice=t("ob.photoNone");
   }catch(e){ob.notice=sampleError(e)}
   ob.busy=false;renderOb();
@@ -3139,12 +3169,13 @@ async function barIdentify(file){
   barPh={busy:true,msg:"",err:false,undo:null};renderBarPhoto();
   try{
     const found=await bottlesFromPhoto(file);
+    track("photo_bar",{found:found.items.length,where:"bar"});
     if(!found.items.length)barPh={busy:false,msg:t("ob.photoNone"),err:true,undo:null};
     else{
       barPh={busy:false,msg:"",err:false,undo:null};
       await openReview(found,sel=>{
         if(!sel)return;
-        const a=addEntries(sel);
+        const a=addEntries(sel);track("photo_add",{picked:sel.length,found:found.items.length});
         barPh={busy:false,msg:a.names.length?t("bar.photoAdded",a.names.join(", ")):t("bar.photoHad"),err:false,undo:a.names.length?a:null};renderBarPhoto();
       });
     }
@@ -3153,11 +3184,11 @@ async function barIdentify(file){
 }
 function openOb(){ob={...ob,step:barEmpty()?0:1,q:"",qType:null,last:null,notice:""};$("ob").hidden=false;document.body.style.overflow="hidden";renderOb()}
 function closeOb(){ob.sheet=null;$("obSheet").hidden=true;$("ob").hidden=true;document.body.style.overflow="";try{localStorage.setItem(OB_KEY,"1")}catch(e){}}
-function finishOb(){closeOb();setTab(barEmpty()?"bar":"mix");window.scrollTo({top:0})}
+function finishOb(){track("onboarded",{items:state.items.length});closeOb();setTab(barEmpty()?"bar":"mix");window.scrollTo({top:0})}
 function finishBar(){closeOb();setTab("bar");window.scrollTo({top:0})}
 $("obClose").addEventListener("click",closeOb);
 $("sheetClose").addEventListener("click",closeSheet);
-document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("reviewSheet").hidden)closeReview(null);else if(!$("rateSheet").hidden)closeRate();else if(!$("recipe").hidden)closeRecipe();else if(ob.sheet)closeSheet();else if(!$("ob").hidden)closeOb()});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("welcome").hidden)return;if(!$("fbSheet").hidden)closeFeedback();else if(!$("reviewSheet").hidden)closeReview(null);else if(!$("rateSheet").hidden)closeRate();else if(!$("recipe").hidden)closeRecipe();else if(ob.sheet)closeSheet();else if(!$("ob").hidden)closeOb()});
 $("openOb").addEventListener("click",openOb);
 let obSeen=null;try{obSeen=localStorage.getItem(OB_KEY)}catch(e){}
 
@@ -3188,17 +3219,85 @@ function setLang(next){
   const v=document.querySelector(".app").dataset.view;if(v==="shop")renderShop();if(v==="menu")renderMenu();
   if(!$("ob").hidden)renderOb();
   if(ob.sheet)renderSheet();
+  if(!$("welcome").hidden)renderWelcome();
+  if(!$("fbSheet").hidden)renderFeedback();
+  renderAccount();
   if(rcOpen)openRecipe(rcOpen);
   ["bottleSearch","obSearch","wineSearch"].forEach(id=>{const i=$(id);if(i&&i.value.trim())i.dispatchEvent(new Event("input"))});
   window.dispatchEvent(new Event("hb-lang")); // lets the web build repaint its account button
 }
 $("langBtn").addEventListener("click",()=>setLang(lang==="he"?"en":"he"));
 
+/* ---------- feedback: a message to the owner, from any screen (web build) ---------- */
+let fbText="";
+function openFeedback(){
+  const s=$("fbSheet");s.hidden=false;document.body.style.overflow="hidden";renderFeedback();
+  setTimeout(()=>{const a=$("fbText");if(a)a.focus()},30);
+}
+function closeFeedback(){$("fbSheet").hidden=true;if($("recipe").hidden&&$("ob").hidden)document.body.style.overflow=""}
+function renderFeedback(state){
+  const box=$("fbBody"),foot=$("fbFoot");box.innerHTML="";foot.innerHTML="";
+  if(state==="sent"){box.append(el("h2",{id:"fbTitle"},t("fb.thanks")),el("p",{class:"note"},t("fb.thanksSub")));
+    foot.append(el("button",{class:"btn",type:"button",onclick:closeFeedback},t("common.close")));return}
+  const ta=el("textarea",{id:"fbText",rows:"5",placeholder:t("fb.ph"),"aria-label":t("fb.title"),maxlength:"2000"});ta.value=fbText;ta.oninput=()=>fbText=ta.value;
+  const msg=el("p",{class:"status err",role:"status"},state==="error"?t("fb.failed"):"");
+  box.append(el("p",{class:"eyebrow gold"},t("fb.eyebrow")),el("h2",{id:"fbTitle"},t("fb.title")),el("p",{class:"note"},t("fb.sub")),ta,msg);
+  const send=el("button",{class:"btn",type:"button",onclick:async()=>{
+    const text=fbText.trim();if(!text){ta.focus();return}
+    send.disabled=true;send.textContent=t("fb.sending");
+    try{await PLATFORM.feedback(text.slice(0,2000),document.querySelector(".app").dataset.view);fbText="";renderFeedback("sent")}
+    catch(e){renderFeedback("error")}
+  }},t("fb.send"));
+  foot.append(el("button",{class:"btn ghost",type:"button",onclick:closeFeedback},t("common.cancel")),send);
+}
+if(PLATFORM.feedback){$("fbBtn").hidden=false;$("fbBtn").addEventListener("click",openFeedback)}
+
+/* ---------- welcome: the three places, and that the app is for adults ---------- */
+let welcomeDone=null;
+function openWelcome(then){welcomeDone=then;$("welcome").hidden=false;document.body.style.overflow="hidden";renderWelcome()}
+function renderWelcome(){
+  const box=$("welBody");box.innerHTML="";if($("welcome").hidden)return;
+  const place=(icon,k)=>{const r=el("div",{class:"wel-row"},el("span",{class:"wel-ic","aria-hidden":"true"}),el("div",{},el("b",{},t("welcome."+k)),el("p",{},t("welcome."+k+"Sub"))));
+    r.querySelector(".wel-ic").innerHTML='<svg viewBox="0 0 24 24">'+icon+'</svg>';return r};
+  box.append(el("p",{class:"eyebrow gold"},t("welcome.eyebrow")),el("h2",{id:"welTitle"},t("app.h1a").trim()," ",el("span",{class:"accent"},t("app.h1b"))),
+    el("p",{class:"wel-lead"},t("welcome.lead")),
+    place('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',"home"),
+    place('<path d="M8 3h8l-.5 6a3.5 3.5 0 0 1-7 0z"/><path d="M12 12.5V20M8.5 20h7"/>',"out"),
+    place('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',"list"),
+    PLATFORM.name==="web"?el("p",{class:"note"},t("welcome.privacy")):null,
+    el("button",{class:"btn",type:"button",id:"welGo",onclick:()=>{setPref("homebar.welcome","1");$("welcome").hidden=true;document.body.style.overflow="";
+      track("welcome",{});const f=welcomeDone;welcomeDone=null;if(f)f()}},t("welcome.go")),
+    el("p",{class:"note wel-age"},t("welcome.age")),
+    el("button",{class:"lang-btn wel-lang",type:"button",onclick:()=>setLang(lang==="he"?"en":"he")},t("lang.switch")));
+  setTimeout(()=>{const b=$("welGo");if(b)b.focus()},30);
+}
+
+/* ---------- my account (web build): who is signed in, sign out, delete, and what we keep ---------- */
+let delArmed=null;
+async function renderAccount(){
+  const box=$("accountBox");if(!PLATFORM.account){box.hidden=true;return}
+  const a=await PLATFORM.account().catch(()=>null);box.innerHTML="";
+  if(!a){box.hidden=true;return}
+  box.hidden=false;
+  const del=el("button",{class:"linkbtn warn",type:"button",onclick:async()=>{
+    if(!delArmed){del.textContent=t("acct.deleteConfirm");delArmed=setTimeout(()=>{delArmed=null;del.textContent=t("acct.delete")},5000);return}
+    clearTimeout(delArmed);delArmed=null;del.disabled=true;del.textContent=t("acct.deleting");
+    try{await PLATFORM.deleteAccount()}catch(e){del.disabled=false;del.textContent=t("acct.deleteFailed")}
+  }},t("acct.delete"));
+  box.append(el("div",{class:"eyebrow gold"},t("acct.mine")),el("p",{class:"note"},t("acct.signedIn",a.email)),
+    el("div",{class:"menu-actions"},el("button",{class:"btn ghost",type:"button",onclick:()=>PLATFORM.signOut()},t("acct.signOut")),del),
+    el("p",{class:"note"},t("acct.privacy")));
+}
+
 applyLook();
 applyLocale();
 render();
+renderAccount();
 setTab(startTab);
-if(barEmpty()&&!obSeen)setTimeout(()=>{if(barEmpty())openOb()},0);
+track("open",{v:startTab,lang});
+// First visit: the welcome (with the 18+ confirmation), then building the bar.
+const firstBar=()=>{if(barEmpty()&&!obSeen)setTimeout(()=>{if(barEmpty())openOb()},0)};
+if(!pref("homebar.welcome",""))openWelcome(firstBar);else firstBar();
 
 /* ---------- cloud sync (db capability) ---------- */
 function applyRemote(d){

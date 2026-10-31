@@ -61,3 +61,28 @@ begin
   return c <= p_limit;
 end $$;
 revoke execute on function public.hb_use_ai(uuid, int) from public, anon, authenticated;
+
+-- Usage events for the owner's dashboard: which screens people open and what they do.
+-- Names and small counts only; no photos, no free text. People can add their own, nobody can read them
+-- except the server (api/stats.js, for the emails in ADMIN_EMAILS).
+create table if not exists public.events (
+  id      bigint generated always as identity primary key,
+  user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  name    text not null check (char_length(name) <= 40),
+  props   jsonb not null default '{}'::jsonb check (pg_column_size(props) < 2000),
+  at      timestamptz not null default now()
+);
+create index if not exists events_at on public.events (at);
+alter table public.events enable row level security;
+create policy "add own events" on public.events for insert to authenticated with check (auth.uid() = user_id);
+
+-- Messages from the in-app "Send feedback" button. Read by the owner on the dashboard.
+create table if not exists public.feedback (
+  id      bigint generated always as identity primary key,
+  user_id uuid default auth.uid() references auth.users (id) on delete set null,
+  message text not null check (char_length(message) between 1 and 2000),
+  view    text check (char_length(view) <= 20),
+  at      timestamptz not null default now()
+);
+alter table public.feedback enable row level security;
+create policy "send feedback" on public.feedback for insert to authenticated with check (auth.uid() = user_id);

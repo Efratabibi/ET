@@ -2,7 +2,8 @@
 
 - One source, two targets. Edit `src/app.html` / `src/i18n/*.js` / `src/prompts.cjs`, then `npm run build`.
   - `dist/artifact.html` is published to the existing claude.ai Artifact
-    (https://claude.ai/artifact/JBkPbYd8g8tZq1YdS8jTjK, capabilities `db`, `sample`, `user`). Pass that `url` when publishing,
+    (https://claude.ai/artifact/JBkPbYd8g8tZq1YdS8jTjK, runtime contract 0.2.92, capabilities `db`, `sample` with `images: true`, `user`;
+    without `images: true` no view can send photos to Claude). Pass that `url` when publishing,
     with `files` for `photos.json`, `cocktails.json` and `cocktails/<id>.webp` (from `web/`) when photos changed.
   - `public/` is the Vercel web build (gitignored, built on deploy).
 - The app talks to its host only through `PLATFORM` (top of the main script in `src/app.html`):

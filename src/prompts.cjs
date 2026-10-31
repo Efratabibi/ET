@@ -16,7 +16,8 @@
     tags:{type:"array",items:{type:"string",enum:TASTES}},base:{type:"string",enum:BASES}});
   const WINE_HIT=obj({name:{type:"string"},he_name:{type:"string"},kind:{type:"string",enum:["red","white","rose","sparkling","other"]},note:{type:"string"},retail_low:num,retail_high:num,confidence:{type:"string",enum:["high","medium","low"]}});
   const BOTTLE_HIT=obj({id:{type:"string"},name:{type:"string"},style:{type:"string"},il_low:num,il_high:num,us_low:num,us_high:num});
-  const PHOTO_HIT=obj({id:{type:"string"},name:{type:["string","null"]},style:{type:["string","null"]}});
+  // x, y, w, h: where the bottle is in the photo, as fractions of its width and height (top-left corner, size).
+  const PHOTO_HIT=obj({id:{type:"string"},name:{type:["string","null"]},style:{type:["string","null"]},x:num,y:num,w:num,h:num});
 
   function menuPrompt(extra,p){
     return "You help a diner in a restaurant choose from a drinks menu. "+extra+
@@ -58,7 +59,8 @@
     bottle_photo:p=>({tier:"default",effort:"medium",schema:list(PHOTO_HIT),images:true,
       prompt:"The attached photo shows one or more bottles or drink ingredients at someone's home. Identify each one and map it to this catalog (lines are 'id = display name'):\n"+p.catalog+
       "\n\nFor spirits, also give the brand/product name as printed on the label (in Latin letters if the label uses them) and pick the closest style key for that id:\n"+p.styles+
-      "\n\nReturn ONLY JSON: {\"items\":[{\"id\":catalog id,\"name\":string|null,\"style\":style key|null}]}. Use only ids from the catalog; skip anything that does not fit. Empty list if you see no bottles."})
+      "\n\nList each bottle you see once, even two of the same kind. For each give where it is in the photo: x and y of the top-left corner and w and h of a box around the whole bottle, as fractions of the image width and height (0 to 1); null if you cannot tell."+
+      "\n\nReturn ONLY JSON: {\"items\":[{\"id\":catalog id,\"name\":string|null,\"style\":style key|null,\"x\":number|null,\"y\":number|null,\"w\":number|null,\"h\":number|null}]}. Use only ids from the catalog; skip anything that does not fit. Empty list if you see no bottles."})
   };
   if(typeof module!=="undefined"&&module.exports)module.exports=TASKS;
   else root.HB_PROMPTS=TASKS;
